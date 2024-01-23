@@ -1,22 +1,12 @@
 import esbuild from 'esbuild'
 import mdx from '@mdx-js/esbuild'
-//import { nodeExternalsPlugin } from 'esbuild-node-externals'
 import autoprefixer from "autoprefixer"
 import tailwindcss from "autoprefixer"
 import postCssPlugin from "esbuild-style-plugin"
 
-const css = [
-  './style/globals.css',
-  './style/lux-tw-base-layer.css',
-  './style/social-svg.css',
-]
-
 esbuild
   .build({
-    entryPoints: [
-      {in: './index', 'out': './index'},
-      ...css
-    ],
+    entryPoints: ['./index'],
     outdir: 'dist',
     bundle: true,
     minify: false,
@@ -24,7 +14,6 @@ esbuild
     format: 'esm',
     target: ['chrome90', 'firefox74', 'safari14', 'edge90'],
     plugins: [
-      //nodeExternalsPlugin(),
       mdx(),
       postCssPlugin({
         plugins: [tailwindcss, autoprefixer],

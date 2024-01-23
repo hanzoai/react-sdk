@@ -1,6 +1,6 @@
 {
   "name": "@luxdefi/ui",
-  "version": "0.1.40",
+  "version": "0.1.41",
   "description": "Library that contains shared UI primitives, styles, and core types",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
@@ -37,7 +37,7 @@
     "luxdefi"
   ],
   "scripts": {
-    "build": "rm -rf dist && node ./esbuild.mjs && tsc",
+    "build": "rm -rf dist && node ./esbuild.mjs",
     "tc": "tsc --noEmit --emitDeclarationOnly false",
     "clean": "rm -rf dist && rm -rf node_modules"
   },
@@ -86,7 +86,6 @@
     "@types/react-dom": "^18.2.18",
     "autoprefixer": "^10.4.16",
     "esbuild": "^0.17.19",
-    "esbuild-node-externals": "^1.12.0",
     "postcss": "^8.4.33",
     "postcss-import": "^16.0.0",
     "typescript": "^5.3.3"

@@ -21,9 +21,7 @@
     "declarationMap": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "noEmit": false,
-    "emitDeclarationOnly": true,
-    "outDir": "./dist/types",
+    "outDir": "./dist",
     "lib": [
       "dom",
       "es2015"
