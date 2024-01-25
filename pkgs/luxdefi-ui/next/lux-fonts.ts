@@ -28,7 +28,7 @@ const inter = Inter({
   variable: "--font-inter",
 })
 
-export {
+export default [
   inter,
   drukTextWide
-}
+]
