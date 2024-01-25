@@ -1,6 +1,8 @@
 import { Inter } from 'next/font/google'
 import localFont from 'next/font/local'
 
+import type NextFontDesc from './next-font-desc'
+
 const drukTextWide = localFont({
   src: [
     {
@@ -28,7 +30,16 @@ const inter = Inter({
   variable: "--font-inter",
 })
 
+  // first is automatically injected as default font for body (in app router) 
 export default [
-  inter,
-  drukTextWide
-]
+  {
+    font: inter,
+    cssVar: '--font-inter',
+    twName: 'sans'
+  },
+  {
+    font: drukTextWide,
+    cssVar: '--font-druk-text-wide',
+    twName: 'heading'
+  },
+] as NextFontDesc[]

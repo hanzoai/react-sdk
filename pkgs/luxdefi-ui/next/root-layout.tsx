@@ -3,6 +3,7 @@ import React, { type PropsWithChildren } from 'react'
 import luxFonts from './lux-fonts'
 import Header from '../common/header'
 import type { SiteDef } from '../types'
+import type { NextFontDesc } from '.'
 
 // Next 14: https://nextjs.org/docs/app/building-your-application/upgrading/codemods#use-viewport-export
 const viewport = {
@@ -29,7 +30,7 @@ const viewport = {
 
 const bodyClasses = 
   'bg-background text-foreground ' + 
-  `${luxFonts.map((el) => (el.variable)).join(' ')}  font-sans` 
+  `${luxFonts.map((fd: NextFontDesc) => (fd.font.variable)).join(' ')} font-sans` 
     
 const RootLayout: React.FC<PropsWithChildren & { siteDef: SiteDef }> = ({ 
   siteDef,
