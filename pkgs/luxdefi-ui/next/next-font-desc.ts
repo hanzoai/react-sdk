@@ -1,5 +1,4 @@
-// from next repo
-type CssVariable = `--${string}`
+import type TwFontDesc from '../tailwind/tw-font-desc'
 
 // from next repo
 type NextFont = {
@@ -12,15 +11,18 @@ type NextFontWithVariable = NextFont & {
   variable: string
 }
 
-interface NextFontDesc {
-  font: NextFontWithVariable
-  twName: string
-  cssVar: CssVariable
+
+/*
+  NextFontDesc and TwFontDesc have to be seperate because they are needed 
+  at different times during the next compile / build.  Otherwise a nasty 
+  race condition happens! That's why they are in different files.
+*/
+
+interface NextFontDesc extends TwFontDesc {
+  nextFont: NextFontWithVariable 
 }
 
 export {
   type NextFontDesc as default,
-  type NextFont,
   type NextFontWithVariable,
-  type CssVariable
 }

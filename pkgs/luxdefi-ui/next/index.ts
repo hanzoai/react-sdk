@@ -2,19 +2,19 @@ import { determineDeviceMiddleware } from './determine-device-middleware'
 import NotFoundMDX from './not-found-content.mdx'
 import NotFound from './not-found'
 import RootLayout from './root-layout'
-import luxFonts from './lux-fonts'
-import type {default as NextFontDesc, NextFont, NextFontWithVariable, CssVariable} from './next-font-desc'
-import getBodyFontClasses from './generate-font-classes'
+import luxNextFonts from './lux-next-fonts'
+import type {default as NextFontDesc,  NextFontWithVariable,} from './next-font-desc'
+import getAppRouterBodyFontClasses from './get-app-router-font-classes'
+import PagesRouterFontVars from './pages-router-font-vars'
 
 export {
   determineDeviceMiddleware,
   NotFoundMDX,
   NotFound,
   RootLayout,
-  getBodyFontClasses,
-  luxFonts,
+  getAppRouterBodyFontClasses,
+  PagesRouterFontVars,
+  luxNextFonts,
   type NextFontDesc,
-  type NextFont,
   type NextFontWithVariable,
-  type CssVariable
 }

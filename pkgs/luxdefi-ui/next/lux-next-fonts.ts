@@ -2,6 +2,9 @@ import { Inter } from 'next/font/google'
 import localFont from 'next/font/local'
 
 import type NextFontDesc from './next-font-desc'
+import type TwFontDesc from '../tailwind/tw-font-desc'
+
+import twFonts from '../tailwind/lux-tw-fonts'
 
 const drukTextWide = localFont({
   src: [
@@ -30,16 +33,32 @@ const inter = Inter({
   variable: "--font-inter",
 })
 
-  // first is automatically injected as default font for body (in app router) 
+
+/*
+  NextFontDesc and TwFontDesc have to be seperate because they are needed 
+  at different times during the next compile / build.  Otherwise a nasty 
+  race condition happens! That's why they are in different files.
+*/
+
 export default [
   {
     font: inter,
-    cssVar: '--font-inter',
     twName: 'sans'
-  },
+  }, 
   {
     font: drukTextWide,
-    cssVar: '--font-druk-text-wide',
     twName: 'heading'
-  },
-] as NextFontDesc[]
+  } 
+].map (
+  (el) => {
+    const twFont: TwFontDesc | undefined = twFonts.find((twf: TwFontDesc) => (el.twName === twf.twName))
+    if (!twFont) {
+      throw new Error('lux-next-fonts: Next font is not paired to a TW font!')
+    }
+
+    return ({
+      ...twFont,
+      nextFont: el.font,
+    })
+  }
+) as NextFontDesc[]
