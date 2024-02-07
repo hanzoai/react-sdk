@@ -86,7 +86,7 @@ const Content: React.FC<{
       // 44 + 24 = 68, 80 + 32 = 104
     'px-6 lg:px-8 2xl:px-2 pb-6 pt-[68px] md:pt-[104px] lg:pt-[112px] ' 
     : 
-    'px-[8vw] 2xl:px-[2vw] pb-[8vh] pt-[calc(44px+8vh)] md:pt-[calc(80px+8vh)] ') 
+    'px-[8vw] xl:px-[1vw] pb-[8vh] pt-[calc(44px+8vh)] md:pt-[calc(80px+8vh)] ') 
     // + 'border border-accent ' // debug
     + ' overflow-y-hidden' // safety valve
 
@@ -99,7 +99,7 @@ const Content: React.FC<{
   const multiColumnLayoutClx = (agent === 'phone') ? 
     'flex flex-col gap-6'
     :
-    `grid grid-cols-${b.contentColumns.length} gap-6`
+    `grid grid-cols-${b.contentColumns.length} gap-8`
 
   const orderclx = (columnIndex: number): string => {
     if ((agent !== 'phone') || !b.mobileOrder || !b.mobileOrder.includes(columnIndex)) return ''
