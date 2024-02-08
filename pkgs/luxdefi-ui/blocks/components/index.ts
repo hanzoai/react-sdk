@@ -4,6 +4,7 @@ import Blocks from './content'
 import CardBlock from './card-block'
 import CTABlock from './cta-block'
 import GroupBlock from './group-block'
+import EnhHeadingBlock from './enh-heading-block'
 import HeadingBlock from './heading-block'
 import ImageBlock from './image-block'
 import VideoBlock from './video-block'
@@ -19,6 +20,7 @@ export {
    CardBlock as CardBlockComponent,
    CTABlock as CTABlockComponent,
    GroupBlock as GroupBlockComponent,
+   EnhHeadingBlock as EnhHeadingBlockComponent,
    HeadingBlock as HeadingBlockComponent,
    ImageBlock as ImageBlockComponent,
    VideoBlock as VideoBlockComponent,

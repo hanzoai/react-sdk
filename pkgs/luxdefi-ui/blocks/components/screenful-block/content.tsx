@@ -42,6 +42,9 @@ const ContentColumn: React.FC<{
     if (specified('bottom')) {
       modifiers += 'justify-end ' 
     }
+    else if (specified('vert-center')) {
+      modifiers += 'justify-center ' 
+    }
       // default to top 
     else {
       modifiers += 'justify-start ' 
