@@ -108,7 +108,7 @@ const EnhHeadingBlockComponent: React.FC<
 
     return <>
       {toRender.map(({tag, clx, text}, index) => (
-        <Element asTag={tag} text={text} className={clx} key={`el-${index}`}/>
+        !!tag && (<Element asTag={tag} text={text} className={clx} key={`el-${index}`}/>)
       ))}
     </>
   }

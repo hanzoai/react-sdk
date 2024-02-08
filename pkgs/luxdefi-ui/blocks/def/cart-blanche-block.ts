@@ -1,16 +1,15 @@
 
-import type CTABlock from './cta-block'
 import type Block from './block'
+import type CTABlock from './cta-block'
 import type ImageBlock from './image-block'
-import type VideoBlock from './video-block'
-import type ElementBlock from './element-block'
 import type EnhHeadingBlock from './enh-heading-block'
+import type VideoBlock from './video-block'
 
 interface CartBlancheBlock extends Block {
   blockType: 'cart-blanche'
-  specifiers?: string // 'media-left' or 'appear-disabled' or 'no-borders', etc... can be combined
+  specifiers?: string 
   heading?: EnhHeadingBlock
-  body?: string | ElementBlock 
+  content?: Block[] 
   media?: ImageBlock | VideoBlock
   cta?: CTABlock
 }

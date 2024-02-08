@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { type PropsWithChildren } from 'react'
 
 import { cn } from '../../util'
 
@@ -7,10 +7,20 @@ import Content from './content'
 
 import type BlockComponentProps from './block-component-props'
 
-const GridBlockComponent: React.FC<BlockComponentProps> = ({
+const gridClx = (d: number | { columns: number, gap: number}, prefix?: string ): string => (
+  (typeof d === 'number') ? 
+    `${(prefix ?? '')}grid-cols-${d} ` 
+    : 
+    `${(prefix ?? '')}grid-cols-${d.columns} ${(prefix ?? '')}gap-${d.gap} ` 
+)
+
+const GridBlockComponent: React.FC<
+  BlockComponentProps & PropsWithChildren
+> = ({
   block,
   className='',
-  agent
+  agent,
+  children
 }) => {
 
   if (block.blockType !== 'grid') {
@@ -23,24 +33,28 @@ const GridBlockComponent: React.FC<BlockComponentProps> = ({
     // All variants in use MUST be in style/safelist.tailwind.js
   let clx = 'grid '
   if (agent === 'phone') {
-    clx += (grid.mobile) ? grid.mobile : (grid.bkpts.xs ? grid.bkpts.xs : grid.bkpts.sm)
+    const d = (grid.mobile) ? grid.mobile : (grid.at.xs ? grid.at.xs : grid.at.sm!);
+    clx += gridClx(d)
   }
   else {
     let defaultSet = false
-    for (const [key, value] of Object.entries(grid.bkpts)) {
+    for (const [key, value] of Object.entries(grid.at)) {
       if (!defaultSet) {
-        clx += `grid-cols-${value} `
+        clx += gridClx(value)
         defaultSet = true
       }
       else {
-        clx += `${key}:grid-cols-${value} `
+        clx += gridClx(value, `${key}:`)
       }
     }   
   }
 
   return (
     <div className={cn('grid gap-2 md:gap-4 xl:gap-6', clx, className)}>
-      <Content blocks={cells} />
+    {cells?.length ? (
+        <Content blocks={cells} />
+      ) : children
+    }
     </div>
   )
 }

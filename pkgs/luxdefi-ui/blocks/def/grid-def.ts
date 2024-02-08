@@ -2,10 +2,10 @@ import type { Breakpoint } from '../../types'
 
 interface GridDef {
     // Please define in ACCENDING order.
-  bkpts: {
-    [key in (Breakpoint)]?: number
+  at: {
+    [key in (Breakpoint)]?: number | { columns: number, gap: number}
   },
-  mobile?: number 
+  mobile?: number | { columns: number, gap: number} 
 }
 
 export {
