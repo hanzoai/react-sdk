@@ -129,7 +129,7 @@ const EnhHeadingBlockComponent: React.FC<
     const toRender = [
       {
         tag: (b.preheading) ? 
-          (b.preheading.level ? tagFromLevel(b.preheading.level) : DEFAULTS.preheading.tag) 
+          (b.preheading.level !== undefined  ? tagFromLevel(b.preheading.level) : DEFAULTS.preheading.tag) 
           : 
           undefined, 
         clx: (b.preheading) ? 
@@ -140,13 +140,13 @@ const EnhHeadingBlockComponent: React.FC<
         text: (b.preheading) ? (b.preheading.text ) : undefined,
       },
       {
-        tag: (b.heading.level ? tagFromLevel(b.heading.level) : DEFAULTS.heading.tag), 
+        tag: (b.heading.level !== undefined ? tagFromLevel(b.heading.level) : DEFAULTS.heading.tag), 
         clx: (b.heading.mb !== undefined ? `mb-${b.heading.mb}` : `mb-${DEFAULTS.heading.mb}`) + ' ' + positionclx.heading,
         text: b.heading.text,
       },
       {
         tag: (b.byline) ? 
-          (b.byline.level ? tagFromLevel(b.byline.level) : DEFAULTS.byline.tag) 
+          (b.byline.level !== undefined ? tagFromLevel(b.byline.level) : DEFAULTS.byline.tag) 
           : 
           undefined, 
         clx: positionclx.byline,
