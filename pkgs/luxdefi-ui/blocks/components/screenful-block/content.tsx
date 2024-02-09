@@ -94,9 +94,9 @@ const Content: React.FC<{
     + ' overflow-y-hidden' // safety valve
 
   let moreModifiers = ''
-    // 40px + 32px
+    // 40px + 24px
   if (agent && agent !== 'desktop') {
-    moreModifiers += 'pt-[72px] pb-0 px-4 ' 
+    moreModifiers += 'pt-[64px] pb-0 px-4 ' 
   }
 
   const multiColumnLayoutClx = (agent === 'phone') ? 

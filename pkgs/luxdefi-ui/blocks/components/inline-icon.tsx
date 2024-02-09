@@ -8,16 +8,22 @@ import { cn } from '../../util'
 const InlineIcon: React.FC<{
   icon: Icon | string
   size?: number
+  agent?: string,
   className?: string
 }> = ({
   icon,
-  size,
+  size, // default should be handled by calling code.
+  agent,
   className=''
 }) => {
   if (!icon) return null
 
+  const phone = agent === 'phone'
+
   if (typeof icon === 'string') {
-    return <Image src={icon} width={size} height={size} alt='icon' className={cn('mr-4', className)}/>
+    const sz = (phone && size) ? (size * .75) : size
+    const mclx = phone ? 'mr-2' : 'mr-4'
+    return <Image src={icon} width={sz} height={sz} alt='icon' className={cn(mclx, className)}/>
   }
   return icon as Icon
 }

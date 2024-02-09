@@ -166,7 +166,7 @@ const EnhHeadingBlockComponent: React.FC<
           iconRendered = true
           return (
             <div className={cn('flex flex-row items-center', clx)} key={`div-${index}`}>
-              <InlineIcon icon={b.icon} size={b.iconSize ?? 32} className='mr-4'/>
+              <InlineIcon icon={b.icon} size={b.iconSize ?? 32} agent={agent}/>
               <Element asTag={tag} text={text} />
             </div>
           )
