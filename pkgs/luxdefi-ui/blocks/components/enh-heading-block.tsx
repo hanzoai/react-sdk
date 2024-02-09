@@ -1,10 +1,11 @@
 import React, {type ElementType} from 'react'
 
+import type { Icon } from '../../types'
 import type { EnhHeadingBlock } from '../def'
 import { ApplyTypography } from '../../primitives'
+import { cn, containsToken } from '../../util'
 
 import type BlockComponentProps from './block-component-props'
-import type { Icon } from '../..'
 
 const DEFAULTS = {
   preheading: {
@@ -44,6 +45,7 @@ const tagFromLevel = (level: number): ElementType => {
   return 'p'
 }
 
+  // TODO Impl icon support
 const Element: React.FC<{
   asTag: ElementType 
   text: string
@@ -60,12 +62,55 @@ const Element: React.FC<{
   <Tag className={elClassName}>{text}</Tag>
 )
 
+const getPositionClx = (
+  specified: (s: string) => boolean,
+  agent: string | undefined
+): {
+  preheading: string 
+  heading: string
+  byline: string
+} => {
+
+  const mobileHeadingCentered = specified('mobile-heading-centered')
+  const headingCentered = specified('center')
+  const headingRight = specified('right')
+  const bylineCentered = specified('byline-center')
+  const bylineRight = specified('byline-right')
+
+  let headerclx = ''
+  if (agent === 'phone') {
+    headerclx = (mobileHeadingCentered || headingCentered) ? 
+      'self-center text-center' : (headingRight ? 'self-end text-right' : 'self-start text-left')
+  }
+  else {
+    const largerclx = (headingCentered) ? 
+      'self-center text-center' : (headingRight ? 'self-end text-right' : 'self-start text-left')
+
+    if (mobileHeadingCentered) {
+      headerclx = 'self-center text-center md:' + largerclx.split(' ').join(' md:')
+    }
+    else {
+      headerclx = largerclx 
+    }
+  }
+
+  const bylineclx = (bylineCentered) ? 
+    'self-center' : (bylineRight ? 'self-end' : 'self-start')
+
+  return {
+    preheading: headerclx,
+    heading: headerclx,
+    byline: bylineclx
+  }
+}
+
 const EnhHeadingBlockComponent: React.FC<
   BlockComponentProps & {
   applyTypography: boolean
 }> = ({
   block,
   className='',
+  agent,
   applyTypography=true
 }) => {
 
@@ -73,6 +118,9 @@ const EnhHeadingBlockComponent: React.FC<
     return <>enhance heading block required</>
   }
   const b = block as EnhHeadingBlock
+  const specified = (s: string) => (containsToken(b.specifiers, s))
+
+  const positionclx = getPositionClx(specified, agent)
 
   const Inner: React.FC = () => {
     const toRender = [
@@ -82,14 +130,14 @@ const EnhHeadingBlockComponent: React.FC<
           : 
           undefined, 
         clx: (b.preheading) ? 
-          (b.preheading.mb ? `mb-${b.preheading.mb}` : `mb-${DEFAULTS.preheading.mb}`) 
+          (b.preheading.mb ? `mb-${b.preheading.mb}` : `mb-${DEFAULTS.preheading.mb}`) + ' ' + positionclx.preheading
           : 
-          '',
+          positionclx.preheading,
         text: (b.preheading) ? (b.preheading.text ) : undefined,
       },
       {
         tag: (b.heading.level ? tagFromLevel(b.heading.level) : DEFAULTS.heading.tag), 
-        clx: (b.heading.mb ? `mb-${b.heading.mb}` : `mb-${DEFAULTS.heading.mb}`),
+        clx: (b.heading.mb ? `mb-${b.heading.mb}` : `mb-${DEFAULTS.heading.mb}`) + ' ' + positionclx.heading,
         text: b.heading.text,
       },
       {
@@ -97,7 +145,7 @@ const EnhHeadingBlockComponent: React.FC<
           (b.byline.level ? tagFromLevel(b.byline.level) : DEFAULTS.byline.tag) 
           : 
           undefined, 
-        clx: '',
+        clx: positionclx.byline,
         text: (b.byline) ? (b.byline.text ) : undefined,
       },
     ] as {
@@ -114,11 +162,11 @@ const EnhHeadingBlockComponent: React.FC<
   }
 
   return applyTypography ? (
-    <ApplyTypography className={className}>
+    <ApplyTypography className={cn('flex flex-col w-full', className)}>
       <Inner />
     </ApplyTypography>
   ) : (
-    <div className={className}>
+    <div className={cn('flex flex-col w-full', className)}>
       <Inner />  
     </div>
   )

@@ -15,6 +15,9 @@ interface EnhHeadingBlock extends Block {
     // icon-w-byline (if preheading and heading is present), 
     // icon-above: object first element
     // icon-to-right: to right of corresponding element or right justified if 'icon-above'
+    // mobile-heading-centered
+    // left / right / center for preheading and heading (byline stays left)
+    // byline-left / byline-right / byline-center
   specifiers?: string  
     // By default, appears inline to left of first element (preheading or heading) 
     // unless indicated otherwise in specifiers 

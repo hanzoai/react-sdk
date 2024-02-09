@@ -80,5 +80,11 @@ export default [
   'mb-10',
   'mb-11',
   'mb-12',
+  'md:text-left', // EnhHeadingBlock
+  'md:text-center',
+  'md:text-right',
+  'md:self-start',
+  'md:self-center',
+  'md:self-end',
 
 ]
