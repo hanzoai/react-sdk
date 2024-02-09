@@ -6,6 +6,7 @@ import { ApplyTypography } from '../../primitives'
 import { cn, containsToken } from '../../util'
 
 import type BlockComponentProps from './block-component-props'
+import InlineIcon from './inline-icon'
 
 const DEFAULTS = {
   preheading: {
@@ -119,6 +120,8 @@ const EnhHeadingBlockComponent: React.FC<
   }
   const b = block as EnhHeadingBlock
   const specified = (s: string) => (containsToken(b.specifiers, s))
+  const preheadingHeadingFont = specified('preheading-heading-font')
+  const phFontClx = preheadingHeadingFont ? 'font-heading' : ''
 
   const positionclx = getPositionClx(specified, agent)
 
@@ -130,14 +133,15 @@ const EnhHeadingBlockComponent: React.FC<
           : 
           undefined, 
         clx: (b.preheading) ? 
-          (b.preheading.mb ? `mb-${b.preheading.mb}` : `mb-${DEFAULTS.preheading.mb}`) + ' ' + positionclx.preheading
+          (b.preheading.mb !== undefined ? 
+            `mb-${b.preheading.mb}` : `mb-${DEFAULTS.preheading.mb}`) + ' ' + positionclx.preheading + ' ' + phFontClx
           : 
-          positionclx.preheading,
+          positionclx.preheading + ' ' + phFontClx,
         text: (b.preheading) ? (b.preheading.text ) : undefined,
       },
       {
         tag: (b.heading.level ? tagFromLevel(b.heading.level) : DEFAULTS.heading.tag), 
-        clx: (b.heading.mb ? `mb-${b.heading.mb}` : `mb-${DEFAULTS.heading.mb}`) + ' ' + positionclx.heading,
+        clx: (b.heading.mb !== undefined ? `mb-${b.heading.mb}` : `mb-${DEFAULTS.heading.mb}`) + ' ' + positionclx.heading,
         text: b.heading.text,
       },
       {
@@ -154,19 +158,32 @@ const EnhHeadingBlockComponent: React.FC<
       text: string
     }[]
 
+    let iconRendered = false
     return <>
-      {toRender.map(({tag, clx, text}, index) => (
-        !!tag && (<Element asTag={tag} text={text} className={clx} key={`el-${index}`}/>)
-      ))}
+      {toRender.map(({tag, clx, text}, index) => {
+        if (!tag) return null
+        if (b.icon && !iconRendered) {
+          iconRendered = true
+          return (
+            <div className={cn('flex flex-row items-center', clx)} key={`div-${index}`}>
+              <InlineIcon icon={b.icon} size={b.iconSize ?? 32} className='mr-4'/>
+              <Element asTag={tag} text={text} />
+            </div>
+          )
+        }
+        return (
+          (<Element asTag={tag} text={text} className={clx} key={`el-${index}`}/>)
+        )
+      })}
     </>
   }
 
   return applyTypography ? (
-    <ApplyTypography className={cn('flex flex-col w-full', className)}>
+    <ApplyTypography className={cn('flex flex-col w-full !gap-0', className)}>
       <Inner />
     </ApplyTypography>
   ) : (
-    <div className={cn('flex flex-col w-full', className)}>
+    <div className={cn('flex flex-col w-full gap-0', className)}>
       <Inner />  
     </div>
   )
