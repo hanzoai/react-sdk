@@ -56,7 +56,6 @@ const CarteBlancheBlockComponent: React.FC<
   if (block.blockType !== 'carte-blanche') {
     return <>carte blanche block required</>
   }
-  console.log("CB AGENT: ", agent === undefined)
 
   const b = block as CarteBlancheBlock
 
