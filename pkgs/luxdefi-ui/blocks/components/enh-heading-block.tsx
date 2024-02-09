@@ -107,19 +107,21 @@ const getPositionClx = (
 
 const EnhHeadingBlockComponent: React.FC<
   BlockComponentProps & {
-  applyTypography: boolean
+  applyTypography?: boolean
+  extraSpecifiers?: string
 }> = ({
   block,
   className='',
   agent,
-  applyTypography=true
+  applyTypography=true,
+  extraSpecifiers=''
 }) => {
 
   if (block.blockType !== 'enh-heading') {
     return <>enhance heading block required</>
   }
   const b = block as EnhHeadingBlock
-  const specified = (s: string) => (containsToken(b.specifiers, s))
+  const specified = (s: string) => (containsToken(b.specifiers + extraSpecifiers, s))
   const preheadingHeadingFont = specified('preheading-heading-font')
   const phFontClx = preheadingHeadingFont ? 'font-heading' : ''
 

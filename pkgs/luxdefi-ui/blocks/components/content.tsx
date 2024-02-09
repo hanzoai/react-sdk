@@ -6,6 +6,7 @@ import AccordianBlockComponent from './accordian-block'
 import BulletCardsBlockComponent from './bullet-cards-block'
 import CTABlockComponent from './cta-block'
 import CardBlockComponent from './card-block'
+import CarteBlancheBlockComponent from './carte-blanche-block'
 import EnhHeadingBlockComponent from './enh-heading-block'
 import HeadingBlockComponent from './heading-block'
 import GroupBlockComponent from './group-block'
@@ -20,6 +21,7 @@ const map = new Map<string, ComponentType<BlockComponentProps>>()
 map.set('accordian', AccordianBlockComponent)
 map.set('bullet-cards', BulletCardsBlockComponent)
 map.set('card', CardBlockComponent)
+map.set('carte-blanche', CarteBlancheBlockComponent)
 map.set('cta', CTABlockComponent)
 map.set('heading', HeadingBlockComponent)
 map.set('enh-heading', EnhHeadingBlockComponent as ComponentType<BlockComponentProps>)
@@ -49,7 +51,7 @@ const ContentComponent: React.FC<{
 }> = ({
   blocks,
   className='',
-  agent=''
+  agent
 }) => {
   if (!blocks) return null
   if (Array.isArray(blocks)) {

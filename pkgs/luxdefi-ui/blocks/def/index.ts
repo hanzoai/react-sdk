@@ -3,6 +3,7 @@ import type Block from './block'
 import type BulletItem from './bullet-item'
 import type BulletCardsBlock from './bullet-cards-block'
 import type CardBlock from './card-block'
+import type CarteBlancheBlock from './carte-blanche-block'
 import type CTABlock from './cta-block'
 import type ElementBlock from './element-block'
 import type GridDef from './grid-def'
@@ -15,12 +16,15 @@ import type VideoBlock from './video-block'
 import type SpaceBlock from './space-block'
 import type ScreenfulBlock from './screenful-block'
 
+import { COMMON_GRID_2_COL, COMMON_GRID_3_COL } from './grid-def'
+
 export { 
    type AccordianBlock, 
    type Block,
    type BulletCardsBlock,
    type BulletItem,
    type CardBlock,
+   type CarteBlancheBlock,
    type CTABlock,
    type ElementBlock,
    type GridDef,
@@ -32,4 +36,6 @@ export {
    type VideoBlock,
    type SpaceBlock,
    type ScreenfulBlock,
+   COMMON_GRID_2_COL, 
+   COMMON_GRID_3_COL
 }

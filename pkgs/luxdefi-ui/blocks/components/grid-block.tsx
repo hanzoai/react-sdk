@@ -52,7 +52,7 @@ const GridBlockComponent: React.FC<
   return (
     <div className={cn('grid gap-2 md:gap-4 xl:gap-6', clx, className)}>
     {cells?.length ? (
-        <Content blocks={cells} />
+        <Content blocks={cells} agent={agent}/>
       ) : children
     }
     </div>
