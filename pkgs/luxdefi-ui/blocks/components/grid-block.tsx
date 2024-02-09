@@ -6,7 +6,6 @@ import type { GridBlock } from '../def'
 import Content from './content'
 
 import type BlockComponentProps from './block-component-props'
-import { number } from 'zod'
 
 const gridClx = (d: number | { columns: number, gap: number}, prefix?: string ): string => (
   (typeof d === 'number') ? 
