@@ -107,6 +107,14 @@ export {
   TabsContent 
 } from './tabs'
 
+export { 
+  Avatar, 
+  AvatarImage, 
+  AvatarFallback 
+} from './avatar'
+
+export { ScrollArea, ScrollBar } from './scroll-area' 
+
 export { Toaster } from './toaster'
 export { useToast, toast } from './use-toast'
 
@@ -116,3 +124,7 @@ export { default as Switch } from './switch'
 export { default as TextArea } from './text-area' 
 export { default as Calendar } from './calendar' 
 export { default as Checkbox } from './checkbox' 
+export { default as Progress } from './progress' 
+export { default as Separator } from './separator' 
+export { default as Skeleton } from './skeleton' 
+
