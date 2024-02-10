@@ -68,8 +68,23 @@ export {
   ToastAction,
 } from './toast'
 
+export {
+  Select,
+  SelectGroup,
+  SelectValue,
+  SelectTrigger,
+  SelectContent,
+  SelectLabel,
+  SelectItem,
+  SelectSeparator,
+  SelectScrollUpButton,
+  SelectScrollDownButton,
+} from './select'
+
 export { Toaster } from './toaster'
 export { useToast, toast } from './use-toast'
 
 export { default as VideoPlayer } from './video-player'
 export { default as YouTubeEmbed } from './youtube-embed'
+export { default as Switch } from './switch' 
+export { default as TextArea } from './text-area' 
