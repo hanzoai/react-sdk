@@ -45,6 +45,7 @@ const ScreenfulComponent: React.FC<{
           />
         )}
         <Content block={b} agent={agent} className={contentclx} />
+        {b.footer}
       </Poster>
       </ApplyTypography>
     </section>
