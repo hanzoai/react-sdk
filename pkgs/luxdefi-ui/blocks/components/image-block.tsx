@@ -58,7 +58,8 @@ const ImageBlockComponent: React.FC<BlockComponentProps & {
       const toSpread: any =  {
         style: {
           width: '100%',
-          height: 'auto'
+          height: 'auto',
+          maxWidth: '420px'
         },
         sizes: '100vw',
       }
