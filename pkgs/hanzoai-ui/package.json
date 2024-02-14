@@ -1,18 +1,18 @@
 {
-  "name": "@luxdefi/ui",
+  "name": "@hanzoai/ui",
   "version": "0.5.10",
-  "description": "Library that contains shared UI primitives, common design system components, and boilerplate.",
+  "description": "Library that contains shared UI primitives, support for a common design system, and other boilerplate support.",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
     "access": "public",
-    "scope": "@luxdefi"
+    "scope": "@hanzoai"
   },
-  "author": "Lux Partners Limited <dev@lux.partners> (https://lux.partners)",
+  "author": "Hanzo AI, Inc.",
   "license": "BSD-3-Clause",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/luxdefi/ui.git",
-    "directory": "pkgs/luxdefi-ui"
+    "url": "git+https://github.com/hanzoai/ui.git",
+    "directory": "pkgs/hanzoai-ui"
   },
   "files": [
     "assets",
@@ -27,16 +27,15 @@
     "tailwind",
     "types",
     "util",
-    "declare.d.ts"
   ],
   "keywords": [
     "components",
     "ui",
     "radix-ui",
-    "luxdefi"
+    "hanzoai"
   ],
   "scripts": {
-    "latest": "npm show @luxdefi/ui version",
+    "latest": "npm show @hanzoai/ui version",
     "pub": "npm publish",
     "build": "tsc",
     "tc": "tsc",
