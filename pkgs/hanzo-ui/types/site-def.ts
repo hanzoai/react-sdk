@@ -17,8 +17,8 @@ interface SiteDef {
      * {
      *    footer[myColumn, ...commonColumnsFromUi]
      * }
-     * see: @hanzoai/ui/siteDef/footer (default export)
-     * or @hanzoai/ui/siteDef/footer/common
+     * see: @hanzo/ui/siteDef/footer (default export)
+     * or @hanzo/ui/siteDef/footer/common
      */
   footer: LinkDef[][]  
 
