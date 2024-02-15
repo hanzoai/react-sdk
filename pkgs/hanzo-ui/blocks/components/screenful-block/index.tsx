@@ -35,8 +35,6 @@ const ScreenfulComponent: React.FC<{
   const specified = (s: string) => (containsToken(b.specifiers, s))
   const narrowGutters = specified('narrow-gutters') // eg, for a table object that is large
 
-
-  <footer></footer>
     // content wrapper clx:
     // [
     //    positioning, 
