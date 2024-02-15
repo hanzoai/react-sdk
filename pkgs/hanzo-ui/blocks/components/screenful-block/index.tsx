@@ -40,7 +40,7 @@ const ScreenfulComponent: React.FC<{
     //    p&m-modifiers
     // ]
   const cwclx = [
-    'z-10 min-h-screen xl:mx-auto max-w-screen-xl overflow-y-hidden ',
+    'flex z-10 min-h-screen xl:mx-auto max-w-screen-xl overflow-y-hidden ',
       // desktop header: 80px / pt-20
       // mobile header: 44px / pt-11  
     narrowGutters ? 
