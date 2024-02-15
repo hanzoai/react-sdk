@@ -34,6 +34,13 @@ const _getClx = (specifier: string, section: CardSection): string => {
       } break
     }
   }
+  if (specifier === 'big-padding-content') {
+    switch (section) {
+      case 'content': {
+        result = 'md:p-8 lg:p-12 xl:p-16'
+      } break
+    }
+  }
   else if (specifier === 'no-inner-borders') {
     switch (section) {
       case 'header': {
@@ -71,6 +78,10 @@ const CarteBlancheBlockComponent: React.FC<
     getClx('no-inner-borders', 'header'),
   ].join(' ')
 
+  const contentclx = [
+    getClx('big-padding-content', 'content'),
+  ].join(' ')
+
   return (
     <Card className={cn('flex flex-col ', className)} >
     {b.heading && (
@@ -82,7 +93,7 @@ const CarteBlancheBlockComponent: React.FC<
       </CardHeader>
     )}
     {b.content && (
-      <CardContent className={cn('typography flex flex-col justify-center', className)}>
+      <CardContent className={cn('typography flex flex-col justify-center', contentclx, className)}>
         <Content blocks={b.content} agent={agent}/>
       </CardContent>
     )}
