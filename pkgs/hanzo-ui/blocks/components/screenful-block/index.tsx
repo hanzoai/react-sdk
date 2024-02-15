@@ -30,6 +30,8 @@ const ScreenfulComponent: React.FC<{
 
   const hasBannerVideo = (): boolean => (!!b.banner && (typeof b.banner === 'object'))
 
+  const tileHeight = (agent === 'desktop') ? 'h-full ' : 'h-[100svh] '
+
   const specified = (s: string) => (containsToken(b.specifiers, s))
   const narrowGutters = specified('narrow-gutters') // eg, for a table object that is large
 
@@ -40,7 +42,7 @@ const ScreenfulComponent: React.FC<{
     //    p&m-modifiers
     // ]
   const cwclx = [
-    'z-10 min-h-screen xl:mx-auto max-w-screen-xl overflow-y-hidden ',
+    'z-10 absolute left-0 right-0  top-0 bottom-0 xl:mx-auto max-w-screen-xl overflow-y-hidden ',
       // desktop header: 80px / pt-20
       // mobile header: 44px / pt-11  
     narrowGutters ? 
@@ -52,8 +54,8 @@ const ScreenfulComponent: React.FC<{
   ]
 
   return (
-    <section className={cn(snapTile ? 'snap-start snap-always min-h-screen' : '', className)}>
-      <ApplyTypography className='w-full flex flex-row justify-center self-stretch' >
+    <section className={cn('h-[100vh]', (snapTile ? 'snap-start snap-always' : ''), className)}>
+      <ApplyTypography className={tileHeight + 'w-full flex flex-row justify-center self-stretch'} >
         <Poster banner={b.banner}>
         {hasBannerVideo() && (
           <Video 
