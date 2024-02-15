@@ -29,7 +29,7 @@ const BulletCardsBlockComponent: React.FC<BlockComponentProps> = ({
   return (
     <GridBlockComponent block={{blockType: 'grid', grid: b.grid} as Block} className={className} agent={agent}>
     {b.cards.map((card, index) => (
-      <div key={index} className={cn('px-0 sm:px-4 py-1 md:py-4 rounded ' + 
+      <div key={index} className={cn('px-0 sm:px-4 py-1 md:py-4 rounded-lg ' + 
         'flex flex-row justify-start items-center not-typography text-foreground',
         noBorder,
         borderclx
