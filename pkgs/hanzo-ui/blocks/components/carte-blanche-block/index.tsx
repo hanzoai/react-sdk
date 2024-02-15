@@ -82,8 +82,10 @@ const CarteBlancheBlockComponent: React.FC<
     getClx('big-padding-content', 'content'),
   ].join(' ')
 
+  const noOuterBorders = specified('no-outer-borders')
+
   return (
-    <Card className={cn('flex flex-col ', className)} >
+    <Card className={cn('flex flex-col ', className, noOuterBorders ? 'border-none' : '')} >
     {b.heading && (
       <CardHeader className={cn('typography-img:m-0', headingclx)} >
       {b.topContent && (
