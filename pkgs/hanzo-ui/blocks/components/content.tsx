@@ -14,7 +14,6 @@ import GridBlockComponent from './grid-block'
 import ImageBlockComponent from './image-block'
 import SpaceBlockComponent from './space-block'
 import VideoBlockComponent from './video-block'
-import VideoCardBlockComponent from './video-card-block'
 
 import type BlockComponentProps from './block-component-props'
 
@@ -29,7 +28,6 @@ map.set('enh-heading', EnhHeadingBlockComponent as ComponentType<BlockComponentP
 map.set('space', SpaceBlockComponent)
 map.set('image', ImageBlockComponent)
 map.set('video', VideoBlockComponent)
-map.set('video-card', VideoCardBlockComponent)
 map.set('group', GroupBlockComponent)
 map.set('grid', GridBlockComponent)
 

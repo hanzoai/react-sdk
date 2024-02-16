@@ -11,7 +11,6 @@ import ImageBlock from './image-block'
 import SpaceBlock from './space-block'
 import ScreenfulBlock from './screenful-block'
 import VideoBlock from './video-block'
-import VideoCardBlock from './video-card-block'
 
 export { 
    AccordianBlock as AccordianBlockComponent, 
@@ -28,5 +27,4 @@ export {
    SpaceBlock as SpaceBlockComponent,
    ScreenfulBlock as ScreenfulBlockComponent,
    VideoBlock as VideoBlockComponent,
-   VideoCardBlock as VideoCardBlockComponent,
 }
