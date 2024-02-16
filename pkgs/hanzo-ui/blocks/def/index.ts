@@ -14,6 +14,7 @@ import type VideoBlock from './video-block'
 import type SpaceBlock from './space-block'
 import { SPACE_DEFAULTS } from './space-block'
 import type ScreenfulBlock from './screenful-block'
+import type VideoCardBlock from './video-card-block'
 
 export { 
    type AccordianBlock, 
@@ -29,6 +30,7 @@ export {
    type EnhHeadingBlock, 
    type ImageBlock,
    type VideoBlock,
+   type VideoCardBlock,
    type SpaceBlock,
    type ScreenfulBlock,
    SPACE_DEFAULTS
