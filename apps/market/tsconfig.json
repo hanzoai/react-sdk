@@ -5,7 +5,8 @@
     "src/**/*.ts",
     "src/**/*.tsx",
     ".next/types/**/*.ts",
-    "node_modules/@hanzo/ui"
+    "node_modules/@hanzo/ui",
+    "node_modules/@hanzo/cart"
   ],
   "exclude": [
     "node_modules"
@@ -19,7 +20,8 @@
       "@/*": ["./src/*"],
       // https://remarkablemark.org/blog/2023/06/30/react-types-reactnode-error/
       "react": ["node_modules/@types/react"],
-      "@hanzo/ui": ["node_modules/@hanzo/ui"]
+      "@hanzo/ui": ["node_modules/@hanzo/ui"],
+      "@hanzo/cart": ["node_modules/@hanzo/cart"]
     },
     "plugins": [
       {

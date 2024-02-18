@@ -1,10 +1,12 @@
 'use client'
 
 import React, { useState } from 'react'
-import { useCart, type Product } from '../context/cart-context'
 import { Button } from '@hanzo/ui/primitives'
-import { CartItemActions } from './update-cart'
 import Badge from '@hanzo/ui/primitives/badge'
+
+import { useCart, type Product } from '../context/cart-context'
+import { CartItemActions } from './update-cart'
+
 
 interface AddToCartFormProps {
   product?: Product

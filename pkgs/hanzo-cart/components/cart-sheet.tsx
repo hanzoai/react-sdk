@@ -13,6 +13,7 @@ import {
   ScrollArea,
   SheetClose
 } from '@hanzo/ui/primitives'
+
 import { useCart } from '../context/cart-context'
 import { CartItem } from './cart-item'
 import CartIcon from './cart-icon'
@@ -62,7 +63,7 @@ export default function CartSheet() {
               </ScrollArea>
             </div>
             <CTABlockComponent block={{blockType: 'cta',
-              elements: [{title: `CHECKOUT (${sumPrice} USD)`, href: 'https://lux.market/checkout', variant: 'primary'} as LinkDef]} as CTABlock
+              elements: [{title: `CHECKOUT (${sumPrice} USD)`, href: '/checkout', variant: 'primary'} as LinkDef]} as CTABlock
             } itemSize='lg'/>
           </>
         ) : (
