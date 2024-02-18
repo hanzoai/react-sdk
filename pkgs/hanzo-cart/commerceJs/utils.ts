@@ -8,7 +8,7 @@ export const setLogLevel = (level: string) => {
   printLevel = level
 }
 
-export const log = (...args) => {
+export const log = (...args: any) => {
   if (printLevel != 'none') {
     console.log.apply(null, args as any)
   }
@@ -17,8 +17,8 @@ export const log = (...args) => {
 // These functions need to be synced with the backend
 
 // Input sanitization for georate compared
-export const clean = function(str) {
-  if (str == null) { str = '' }
+export const clean = function(str: string | undefined | null) {
+  str = str ?? ''
   return str.toUpperCase().replace(/\s/g, '')
 }
 

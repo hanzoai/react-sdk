@@ -14,5 +14,8 @@
     "verbatimModuleSyntax": true,
     "isolatedModules": true,
     "jsx": "preserve",
-  }
+    "declaration": false,
+    "noEmit": true
+  },
+  "plugins": [{ "name": "next"}],
 }

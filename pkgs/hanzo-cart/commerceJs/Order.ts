@@ -101,7 +101,7 @@ export default class Order implements IOrder {
     this.taxRates = taxRates
     this.shippingRates = shippingRates
 
-    this.items = raw.items ? raw.items.map((x) => new LineItem(x, client)): []
+    this.items = raw.items ? raw.items.map((x: any) => new LineItem(x, client)): []
     this.bootstrapPromise = Promise.all(this.items.map((x) => x.bootstrapPromise))
 
     this.type = raw.type ?? 'stripe'
@@ -142,7 +142,7 @@ export default class Order implements IOrder {
     )
   }
 
-  get(id): LineItem | undefined {
+  get(id: string): LineItem | undefined {
     for (const item of this.items) {
       if (item.id !== id && item.productId !== id && item.productSlug !== id) {
         continue

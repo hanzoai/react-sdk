@@ -172,7 +172,7 @@ export default class Commerce implements ICartAPI {
   }
 
   @observable
-  async setStoreId(sId): Promise<void> {
+  async setStoreId(sId: string): Promise<void> {
     this._storeId = sId
     this.order.storeId = sId
 
@@ -262,7 +262,7 @@ export default class Commerce implements ICartAPI {
    * @return promise for when all set operations are completed
    */
   @action
-  async set(id, quantity, locked=false, ignore=false, force=false): Promise<void> {
+  async set(id: string, quantity: number, locked=false, ignore=false, force=false): Promise<void> {
     if (this.updateQueue.length === 0) {
       this.updateQueue.push([id, quantity, locked, ignore, force])
       this.updateQueuePromise = this.executeUpdates()
@@ -278,7 +278,7 @@ export default class Commerce implements ICartAPI {
    * @return return the LineItem if it exists or nothing if it doesn't.
    */
   @action
-  async refresh(id): Promise<LineItem | undefined> {
+  async refresh(id: string): Promise<LineItem | undefined> {
     // console.log('refresh', id)
     let item = await this.get(id)
     if (item) {
