@@ -5,13 +5,16 @@ import '@hanzo/ui/style/globals.css'
 
 import siteDef from '../siteDef'
 import metadata from '../metadata'
+import { CartProvider } from '@hanzo/cart/context/cart-context'
 
 const RootLayout: React.FC<PropsWithChildren> = ({
   children
 }) => (
-  <RootLayoutCommon siteDef={siteDef} >
-    {children}
-  </RootLayoutCommon>
+  <CartProvider>
+    <RootLayoutCommon siteDef={siteDef} >
+        {children}
+    </RootLayoutCommon>
+  </CartProvider>
 )
 
 export {

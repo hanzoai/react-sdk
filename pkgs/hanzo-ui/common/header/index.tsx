@@ -28,27 +28,33 @@ const Header: React.FC<{
         <Logo size='md' className='hidden lg:flex' key='two'/>
         <Logo size='sm' className='hidden md:flex lg:hidden' key='one'/>
         {/* md or larger */}
-        <NavItems 
-          currentAs={siteDef.currentAs}
-          items={allElements} 
-          className='hidden md:flex md:gap-4 lg:justify-between lg:gap-7 ' 
-          itemClx={navItemClx} 
-          key='three'
-        />
+        <div className='flex gap-2 items-center'>
+          <NavItems 
+            currentAs={siteDef.currentAs}
+            items={allElements} 
+            className='hidden md:flex md:gap-4 lg:justify-between lg:gap-7 ' 
+            itemClx={navItemClx} 
+            key='three'
+          />
+          {siteDef.nav.cart}
+        </div>
       </div>
       {/* smaller than md: mobile style drawer menu */}
       <div className="flex md:hidden h-[44px] items-center justify-between px-2">
         <Logo size='sm' />
-        <DrawerMenu 
-          className='p-0 text-primary' // ui has 'text-inherit', so need this for close buttons to appear.
-          trigger={<Icons.burger className='h-7 w-7'/>}
-        >
-          <MobileNav 
-            siteDef={siteDef}
-            className='pt-12' 
-            commonItemClx='px-10 text-l h-10 justify-start border-b rounded-none' 
-          />
-        </DrawerMenu>
+        <div className='flex gap-2'>
+          {siteDef.nav.cart}
+          <DrawerMenu 
+            className='p-0 text-primary' // ui has 'text-inherit', so need this for close buttons to appear.
+            trigger={<Icons.burger className='h-7 w-7'/>}
+          >
+            <MobileNav 
+              siteDef={siteDef}
+              className='pt-12' 
+              commonItemClx='px-10 text-l h-10 justify-start border-b rounded-none' 
+            />
+          </DrawerMenu>
+        </div>
       </div>
     </header>
   )

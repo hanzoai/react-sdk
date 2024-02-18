@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "@hanzo/cart": "^0.0.1",
-    "@hanzo/ui": "0.5.14",
+    "@hanzo/ui": "^0.5.14",
     "@hookform/resolvers": "^3.3.4",
     "@next/mdx": "14.1.0",
     "hanzo.js": "^2.5.13",
