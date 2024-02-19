@@ -4,7 +4,7 @@ import React, { useState } from 'react'
 import { Button } from '@hanzo/ui/primitives'
 import Badge from '@hanzo/ui/primitives/badge'
 
-import { useCart, type Product } from '../context/cart-context'
+import { useCart, type Product } from '../service/commerce/context'
 import { CartItemActions } from './update-cart'
 
 

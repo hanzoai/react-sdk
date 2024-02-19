@@ -1,25 +1,10 @@
 'use client'
-
 import { createContext, useContext, useState } from 'react'
 import { useEffect } from 'react'
 
-export type CartItem = {
-  product: Product
-  quantity: number
-}
 
 
-interface CartContextValue {
-  cartItems: CartItem[]
-  addToCart: (product: Product) => void
-  removeFromCart: (productId: string) => void
-  updateCartItemQuantity: (productId: string, quantity: number) => void
-  cartTotal: number
-  cartCount: number
-  data: Product[]
-}
-
-const CartContext = createContext<CartContextValue>({
+const CartContext = createContext<CartService>({
   cartItems: [],
   addToCart: () => {},
   removeFromCart: () => {},

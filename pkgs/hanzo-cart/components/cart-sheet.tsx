@@ -14,7 +14,7 @@ import {
   SheetClose
 } from '@hanzo/ui/primitives'
 
-import { useCart } from '../context/cart-context'
+import { useCart } from '../service/commerce/context'
 import { CartItem } from './cart-item'
 import CartIcon from './cart-icon'
 import { X } from 'lucide-react'

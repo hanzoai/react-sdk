@@ -1,7 +1,8 @@
 'use client'
 
 import React from 'react'
-import { useCart, type CartItem } from '../context/cart-context'
+import { useCart } from '../service/commerce/context'
+import type { LineItem } from '../types'
 import {
   Button,
   Input,
@@ -9,7 +10,7 @@ import {
 import { Trash } from 'lucide-react'
 
 interface CartItemActionsProps {
-  item: CartItem
+  item: LineItem
 }
 
 export function CartItemActions({ item }: CartItemActionsProps) {
@@ -18,12 +19,12 @@ export function CartItemActions({ item }: CartItemActionsProps) {
   const handleQuantityChange = (qty: number) => {
     const quantity = Number(qty)
     if (quantity >= 1) {
-      updateCartItemQuantity(item.product.id, quantity)
+      updateCartItemQuantity(item.sku, quantity)
     }
   }
 
   const handleRemoveClick = () => {
-    removeFromCart(item.product.id)
+    removeFromCart(item.sku)
   }
 
   return (<>
