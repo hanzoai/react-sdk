@@ -21,6 +21,7 @@ import CTABlockComponent from '../cta-block'
 import Content from '../content'
 import type BlockComponentProps from '../block-component-props'
 import { EnhHeadingBlockComponent } from '..'
+import VariantContentLeft from './variant-content-left'
 
 type CardSection = 'entire' | 'header' | 'content' | 'footer'
 
@@ -45,6 +46,9 @@ const _getClx = (specifier: string, section: CardSection): string => {
     switch (section) {
       case 'header': {
         result = 'border-none'
+      } break
+      case 'footer': {
+        result = 'border-t-0'
       } break
     }
   }
@@ -82,28 +86,40 @@ const CarteBlancheBlockComponent: React.FC<
     getClx('big-padding-content', 'content'),
   ].join(' ')
 
+  const footerclx = [
+    getClx('no-inner-borders', 'footer'),
+  ].join(' ')
+
   const noOuterBorders = specified('no-outer-borders')
+  const contentLeft = specified('variant-content-left')
+  const mobileContentLeft = specified('variant-mobile-content-left')
 
   return (
-    <Card className={cn('flex flex-col ', className, noOuterBorders ? 'border-none' : '')} >
-    {b.heading && (
-      <CardHeader className={cn('typography-img:m-0', headingclx)} >
-      {b.topContent && (
-        <Content blocks={b.topContent} agent={agent} className=''/>
-      )}
-        <EnhHeadingBlockComponent block={b.heading} className='text-accent' agent={agent}/>
-      </CardHeader>
-    )}
-    {b.content && (
-      <CardContent className={cn('typography flex flex-col justify-center', contentclx, className)}>
-        <Content blocks={b.content} agent={agent}/>
-      </CardContent>
-    )}
-    {b.cta && (
-      <CardFooter className={'grid grid-cols-1 gap-2 md:flex md:flex-row md:justify-center ' /*+ paddingclx*/} >
-        <CTABlockComponent block={b.cta} agent={agent}/>
-      </CardFooter>
-    )}
+    <Card className={cn('flex flex-col', className, noOuterBorders ? 'border-none' : '')} >
+      {contentLeft || (mobileContentLeft && agent === 'phone') ? (
+        <VariantContentLeft block={b} agent={agent} className={className} headingclx={headingclx} contentclx={contentclx} footerclx={footerclx}/>
+      ) : (<>
+        {(b.heading || b.topContent) && (
+          <CardHeader className={cn('typography-img:m-0', headingclx)} >
+            {b.topContent && (
+              <Content blocks={b.topContent} agent={agent} className=''/>
+            )}
+            {b.heading && (
+              <EnhHeadingBlockComponent block={b.heading} className='text-accent' agent={agent}/>
+            )}
+          </CardHeader>
+        )}
+        {b.content && (
+          <CardContent className={cn('typography flex flex-col justify-center', contentclx, className)}>
+            <Content blocks={b.content} agent={agent}/>
+          </CardContent>
+        )}
+        {b.cta && (
+          <CardFooter className={cn('grid grid-cols-1 gap-2 md:flex md:flex-row md:justify-center', footerclx)} >
+            <CTABlockComponent block={b.cta} agent={agent}/>
+          </CardFooter>
+        )}
+      </>)}
     </Card> 
   )
 }
