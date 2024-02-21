@@ -4,18 +4,19 @@ interface Product {
   id: string    // DB index
   sku: string   // human visible on orders etc.
   title: string
-  desc: string
+  desc?: string
   price: number
     /** empty string means use categories image */
-  image?: string | ImageDef
+  img?: string | ImageDef
     /** eg, silver, vs individual products */  
 }
 
 interface Category {
   id: string
   title: string
+  level?: number // for combining cat texts in meaningful ways
   desc?: string
-  image?: string | ImageDef
+  img?: string | ImageDef
   in: (sku: string) => boolean
 }
 

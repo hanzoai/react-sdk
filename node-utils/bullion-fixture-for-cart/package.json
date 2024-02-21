@@ -2,14 +2,20 @@
   "name": "bullion-fixture-for-cart",
   "version": "1.0.0",
   "description": "creates json for bullion data fixture",
-  "main": "index.ts",
+  "type": "module",
+  "main": "compiled/index.js",
   "scripts": {
-    "go": "node index.ts" 
+    "go": "tsc && node compiled/index.js"
   },
   "dependencies": {
-    "@hanzo/ui" : "workspace:*"
+    "@hanzo/cart": "workspace:*",
+    "uuid": "^9.0.1"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "@types/uuid": "^9.0.8",
+    "typescript": "^5.3.3"
+  }
 }
