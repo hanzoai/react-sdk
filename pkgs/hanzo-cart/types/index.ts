@@ -14,7 +14,7 @@ interface Product {
 interface Category {
   id: string
   title: string
-  desc: string
+  desc?: string
   image?: string | ImageDef
   in: (sku: string) => boolean
 }
