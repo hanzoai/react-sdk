@@ -17,7 +17,6 @@ interface Category {
   level?: number // for combining cat texts in meaningful ways
   desc?: string
   img?: string | ImageDef
-  in: (sku: string) => boolean
 }
 
 interface LineItem extends Product {

@@ -1,33 +1,33 @@
 import { v4 as unique} from 'uuid'
 import type { Product, Category } from '@hanzo/cart/types'
+import {
+  type ItemData,
+  type CategoryData
+} from './types'
 
-import d from './data/index.js'
+import d from './data/root'
 
 const TS = '-' // token separator
-
-interface ItemData {
-  t: string
-  price: number
-  img?: string
-  desc?: string
+const ASSETS_PATH = 'assets/img/cart/'
+const IMG = {
+  AU_B: 'gold-bar-700x700.png',
+  AG_B: 'silver-bar-700x700.png',
+  AU_C: 'gold-coin-700x700.png',
+  AG_C: 'silver-coin-700x700.png',
+  AU_MB: 'gold-multibar-700x700.png',
+  AG_MB: 'silver-multibar-700x700.png',
+  B: 'gold-silver-bars-700x700.png',
+  C: 'gold-silver-coins-700x700.png',
 }
 
-interface CategoryData {
-  t: string
-  titleToken?: string
-  label: string
-  level: number
-  img?: string
-  desc?: string
-  sub: CategoryData[] | ItemData[]
-}
-
-//const cats = new Map<string, Category>
+const categories: any = {}
 const products: Product[] = []
 
 const massStringFromItemToken = (t: string): string => {
   const tokens = t.split(TS)
-  return tokens[0] + tokens[1].toLowerCase() 
+  const amount = tokens[0].includes('_') ? tokens[0].split('_').join('.') : tokens[0]
+  const unit = tokens[1].toLowerCase()
+  return amount + unit
 }
 
 const parseCategoryData = (
@@ -42,17 +42,28 @@ const parseCategoryData = (
     titleTokens.push(tToken)   
   }
   skuTokens.push(parent.t)
+  const cat = {
+    id: parent.t,
+    title: parent.label,
+    level: parent.level,
+    desc: parent.desc,
+    img: parent.img,
+  } satisfies Category
+
+  categories[cat.id] = cat
 
   if (parent.sub.length > 0 && 'price' in parent.sub[0]) {
 
     (parent.sub as ItemData[]).forEach((item) => {
 
-      // Lux Bullion, Gold, 1oz Minted Bar
-      const bullionForm = titleTokens.pop()
-      const previousTitle = titleTokens.join(', ') // so we support n levels
+      const _titleTokens = [...titleTokens]
 
-      skuTokens.push(item.t)
-      const sku = skuTokens.join('-')
+      // Lux Bullion, Gold, 1oz Minted Bar
+      const bullionForm = _titleTokens.pop()
+      const previousTitle = _titleTokens.join(', ') // so we support n levels
+
+      const _skuTokens = [...skuTokens, item.t]
+      const sku = _skuTokens.join('-')
 
       const p = {
         id: unique(),
@@ -60,7 +71,7 @@ const parseCategoryData = (
         title: `${previousTitle}, ${massStringFromItemToken(item.t)} ${bullionForm}`,
         desc: item.desc ? item.desc : parent.desc,
         price: item.price,
-        img: item.img ?? parent.img   
+        img: ASSETS_PATH + IMG[item.img ?? parent.img!]   
       } satisfies Product
       products.push(p)
     })
@@ -87,4 +98,8 @@ const parseCategoryData = (
 
 parseCategoryData(d as unknown as CategoryData)
 
-console.log(products)
+categories.B.img = '/'
+
+Bun.write('bullion-categories.json', JSON.stringify(categories, null, 2))
+Bun.write('bullion.json', JSON.stringify(products, null, 2))
+console.log('done')

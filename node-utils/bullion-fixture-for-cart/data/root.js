@@ -1,5 +1,5 @@
-import AU_B from './AU-B.js'
-import AG_B from './AG-B.js'
+import AU_B from './AU-B'
+import AG_B from './AG-B'
 
 export default {
   t: 'LUX',
@@ -10,8 +10,8 @@ export default {
       t: 'AU',
       titleToken: 'Lux Gold Bullion',
       label: 'Lux Gold Bullion',
-      img: 'assets/img/cart/bar-gold-1072x1072.png',
-      desc: 'gold desc',
+      img: 'AU_B',
+      desc: "Forge your connection to the real world with Lux Gold, crafted with excellence in Dubai.",
       sub: [
         {
           t: 'B',
@@ -24,7 +24,8 @@ export default {
           sub: [
             {
               t: '1-OZ',
-              price: 1938
+              price: 1938,
+              img: 'AU_C'
             }
           ]
         },
@@ -52,8 +53,8 @@ export default {
     },
     {
       t: 'AG',
-      img: 'assets/img/cart/bar-silver-1072x1072.png',
-      desc: 'silver desc',
+      img: 'AG_B',
+      desc: 'Get unprecedented access to silver with 1:1 asset-backed Lux Silver NFTs, sovereign ownership of physical silver without management fees, and mine-direct discount pricing.',
       titleToken: 'Lux Silver Bullion',
       label: 'Lux Silver Bullion',
       sub: [
@@ -68,7 +69,8 @@ export default {
           sub: [
             {
               t: '1-OZ',
-              price: 23.04
+              price: 23.04,
+              img: 'AG_C',
             }
           ]
         },
@@ -78,7 +80,8 @@ export default {
           sub: [
             {
               t: '100x1-G',
-              price: 74.15
+              price: 74.15,
+              img: 'AG_MB',
             }
           ]
         },

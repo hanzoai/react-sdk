@@ -11,7 +11,8 @@
     "node-utils/*", "apps/*", "pkgs/*"
   ],
   "scripts": {
-    "clean:all": "rm -rf node_modules && pnpm -r clean"
+    "clean:all": "rm -rf node_modules && pnpm -r clean",
+    "clean:all:b": "rm -rf node_modules && bun -r clean"
   },
   "packageManager": "pnpm@8.14.1",
   "dependencies": {
