@@ -5,20 +5,10 @@ import {
   type CategoryData
 } from './types'
 
+import { IMG, IMG_LEVEL_3, ASSETS_PATH } from './consts'
 import d from './data/root'
 
 const TS = '-' // token separator
-const ASSETS_PATH = 'assets/img/cart/'
-const IMG = {
-  AU_B: 'gold-bar-700x700.png',
-  AG_B: 'silver-bar-700x700.png',
-  AU_C: 'gold-coin-700x700.png',
-  AG_C: 'silver-coin-700x700.png',
-  AU_MB: 'gold-multibar-700x700.png',
-  AG_MB: 'silver-multibar-700x700.png',
-  B: 'gold-silver-bars-700x700.png',
-  C: 'gold-silver-coins-700x700.png',
-}
 
 const categories: any = {}
 const products: Product[] = []
@@ -45,7 +35,7 @@ const parseCategoryData = (
   const cat = {
     id: parent.t,
     title: parent.label,
-    level: parent.level,
+    level: parent.level ?? 1,
     desc: parent.desc,
     img: parent.img,
   } satisfies Category
@@ -81,7 +71,7 @@ const parseCategoryData = (
       parseCategoryData({
           t,
           label,
-          level: parent.level + 1,
+          level: (parent.level ?? 1) + 1,
           img: img ?? parent.img, 
           desc: desc ?? parent.desc,
           sub,
@@ -98,7 +88,17 @@ const parseCategoryData = (
 
 parseCategoryData(d as unknown as CategoryData)
 
-categories.B.img = '/'
+const keys = Object.keys(categories)
+keys.forEach((key) => {
+  if (categories[key].img) {
+    if (categories[key].level === 3) {
+      categories[key].img = ASSETS_PATH + IMG_LEVEL_3[categories[key].id] 
+    }
+    else {
+      categories[key].img = ASSETS_PATH + IMG[categories[key].img] 
+    }
+  }
+})
 
 Bun.write('bullion-categories.json', JSON.stringify(categories, null, 2))
 Bun.write('bullion.json', JSON.stringify(products, null, 2))

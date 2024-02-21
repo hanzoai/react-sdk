@@ -32,6 +32,7 @@ export default {
         {
           t: 'MB',
           label: 'Minted Multibar',
+          img: 'AU_MB',
           sub: [
             {
               t: '100x1-G',
@@ -77,11 +78,11 @@ export default {
         {
           t: 'MB',
           label: 'Minted Multibar',
+          img: 'AG_MB',
           sub: [
             {
               t: '100x1-G',
               price: 74.15,
-              img: 'AG_MB',
             }
           ]
         },
