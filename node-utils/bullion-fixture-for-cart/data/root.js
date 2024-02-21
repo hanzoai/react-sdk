@@ -5,23 +5,23 @@ export default {
   t: 'LUX',
   label: 'Lux Bullion',
   titleToken: '',
-  sub: [
+  chn: [
     {
       t: 'AU',
       titleToken: 'Lux Gold Bullion',
       label: 'Lux Gold Bullion',
       img: 'AU_B',
       desc: "Forge your connection to the real world with Lux Gold, crafted with excellence in Dubai.",
-      sub: [
+      chn: [
         {
           t: 'B',
           label: 'Minted Bar',
-          sub: AU_B
+          chn: AU_B
         },
         {
           t: 'C',
           label: 'Coin',
-          sub: [
+          chn: [
             {
               t: '1-OZ',
               price: 1938,
@@ -33,7 +33,7 @@ export default {
           t: 'MB',
           label: 'Minted Multibar',
           img: 'AU_MB',
-          sub: [
+          chn: [
             {
               t: '100x1-G',
               price: 6221.39
@@ -43,7 +43,7 @@ export default {
         {
           t: 'GD',
           label: 'Good Delivery Bar',
-          sub: [
+          chn: [
             {
               t: '400-OZ',
               price: 800000
@@ -58,16 +58,16 @@ export default {
       desc: 'Get unprecedented access to silver with 1:1 asset-backed Lux Silver NFTs, sovereign ownership of physical silver without management fees, and mine-direct discount pricing.',
       titleToken: 'Lux Silver Bullion',
       label: 'Lux Silver Bullion',
-      sub: [
+      chn: [
         {
           t: 'B',
           label: 'Minted Bar',
-          sub: AG_B
+          chn: AG_B
         }, 
         {
           t: 'C',
           label: 'Coin',
-          sub: [
+          chn: [
             {
               t: '1-OZ',
               price: 23.04,
@@ -79,7 +79,7 @@ export default {
           t: 'MB',
           label: 'Minted Multibar',
           img: 'AG_MB',
-          sub: [
+          chn: [
             {
               t: '100x1-G',
               price: 74.15,
@@ -89,7 +89,7 @@ export default {
         {
           t: 'GD',
           label: 'Good Delivery Bar',
-          sub: [
+          chn: [
             {
               t: '1000-OZ',
               price: 22000

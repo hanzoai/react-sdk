@@ -12,7 +12,7 @@ interface CategoryData {
   level: number
   img?: string
   desc?: string
-  sub: CategoryData[] | ItemData[]
+  chn: CategoryData[] | ItemData[]
 }
 
 export {

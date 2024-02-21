@@ -5,78 +5,91 @@ import {
   type CategoryData
 } from './types'
 
-import { IMG, IMG_LEVEL_3, ASSETS_PATH } from './consts'
+import { 
+  IMG, 
+  IMG_LEVEL_3, 
+  ASSETS_PATH, 
+  OUT_DIR, 
+  CAT_FN,
+  PROD_FN
+} from './consts'
+
 import d from './data/root'
 
-const TS = '-' // token separator
+const TS = '-'  // token separator
+const DEC = '_' // decimal substitue
 
-const categories: any = {}
-const products: Product[] = []
+const allCategories: any = {}
+const allProducts: Product[] = []
 
-const massStringFromItemToken = (t: string): string => {
+const getAmount = (t: string): string => {
   const tokens = t.split(TS)
-  const amount = tokens[0].includes('_') ? tokens[0].split('_').join('.') : tokens[0]
+  const amount = tokens[0].includes(DEC) ? tokens[0].split(DEC).join('.') : tokens[0]
   const unit = tokens[1].toLowerCase()
   return amount + unit
 }
 
 const parseCategoryData = (
-  parent: CategoryData, 
+  category: CategoryData, 
   titleTokens: string[] = [],
   skuTokens: string[] = [], 
 ): Product[] => {
 
-  const tToken = parent.titleToken ?? parent.label
+  const tToken = category.titleToken ?? category.label
     // otherwise extra comma if titleToken is '' at this level
   if (tToken?.length > 0) {
     titleTokens.push(tToken)   
   }
-  skuTokens.push(parent.t)
-  const cat = {
-    id: parent.t,
-    title: parent.label,
-    level: parent.level ?? 1,
-    desc: parent.desc,
-    img: parent.img,
+  skuTokens.push(category.t)
+
+    // from CategoryData to hanzo Category
+  allCategories[category.t] = {
+    id: category.t,
+    title: category.label,
+    level: category.level ?? 1,
+    desc: category.desc,
+    img: category.img,
   } satisfies Category
 
-  categories[cat.id] = cat
+  if (category.chn.length > 0 && 'price' in category.chn[0]) {
 
-  if (parent.sub.length > 0 && 'price' in parent.sub[0]) {
+      // Since we are at the leaf level,
+      // these are valid for the entire array.
+    const bullionForm = titleTokens.pop()
+    const previousTitle = titleTokens.join(', ')
 
-    (parent.sub as ItemData[]).forEach((item) => {
+    const products = category.chn as ItemData[]
 
-      const _titleTokens = [...titleTokens]
-
-      // Lux Bullion, Gold, 1oz Minted Bar
-      const bullionForm = _titleTokens.pop()
-      const previousTitle = _titleTokens.join(', ') // so we support n levels
-
-      const _skuTokens = [...skuTokens, item.t]
-      const sku = _skuTokens.join('-')
-
-      const p = {
+    products.forEach((prod) => {
+        // from ProductData to hanzo Product
+      allProducts.push({
         id: unique(),
-        sku,
-        title: `${previousTitle}, ${massStringFromItemToken(item.t)} ${bullionForm}`,
-        desc: item.desc ? item.desc : parent.desc,
-        price: item.price,
-        img: ASSETS_PATH + IMG[item.img ?? parent.img!]   
-      } satisfies Product
-      products.push(p)
+          // add myself to the string
+        sku: [...skuTokens, prod.t].join('-'), 
+          // Desired result: "Lux Bullion, Gold, 1oz Minted Bar", ie,
+          //  `<previous title tokens joined>, <amount> <form>`
+        title: `${previousTitle}, ${getAmount(prod.t)} ${bullionForm}`,
+        desc: prod.desc ? prod.desc : category.desc,
+        price: prod.price,
+        img: ASSETS_PATH + IMG[prod.img ?? category.img!]   
+      } satisfies Product)
     })
   }
-  else if (parent.sub.length > 0 && 'sub' in parent.sub[0]) {
-    (parent.sub as CategoryData[]).forEach(({t, label, img, desc, sub}) => {
+  else if (category.chn.length > 0 && 'chn' in category.chn[0]) {
+
+    const {level: parentLevel, img: parentImg, desc: parentDesc} = category
+    const subCategories = category.chn as CategoryData[]
+    
+    subCategories.forEach(({t, label, img, desc, chn}) => {
       parseCategoryData({
           t,
           label,
-          level: (parent.level ?? 1) + 1,
-          img: img ?? parent.img, 
-          desc: desc ?? parent.desc,
-          sub,
+          level: (parentLevel ?? 1) + 1,
+          img: img ?? parentImg, 
+          desc: desc ?? parentDesc,
+          chn,
         } satisfies CategoryData,
-          // each sub category must have it's own branch
+          // Each branch (chn category) must have it's own fresh copies to reduce
         [...titleTokens], 
         [...skuTokens]
       )
@@ -88,18 +101,20 @@ const parseCategoryData = (
 
 parseCategoryData(d as unknown as CategoryData)
 
-const keys = Object.keys(categories)
+const keys = Object.keys(allCategories)
 keys.forEach((key) => {
-  if (categories[key].img) {
-    if (categories[key].level === 3) {
-      categories[key].img = ASSETS_PATH + IMG_LEVEL_3[categories[key].id] 
+  if (allCategories[key].img) {
+    if (allCategories[key].level === 3) {
+      allCategories[key].img = ASSETS_PATH + IMG_LEVEL_3[allCategories[key].id] 
     }
     else {
-      categories[key].img = ASSETS_PATH + IMG[categories[key].img] 
+      allCategories[key].img = ASSETS_PATH + IMG[allCategories[key].img] 
     }
   }
 })
 
-Bun.write('bullion-categories.json', JSON.stringify(categories, null, 2))
-Bun.write('bullion.json', JSON.stringify(products, null, 2))
+console.log(`Writing products to ${OUT_DIR + PROD_FN}...`)
+Bun.write(OUT_DIR + PROD_FN, JSON.stringify(allProducts, null, 2))
+console.log(`Writing product categories to ${OUT_DIR + CAT_FN}...`)
+Bun.write(OUT_DIR + CAT_FN, JSON.stringify(allCategories, null, 2))
 console.log('done')
