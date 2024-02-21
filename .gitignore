@@ -40,3 +40,5 @@ yarn-error.log*
 **/.next
 
 etc
+
+bun.lockb
