@@ -1,6 +1,6 @@
-import { makeObservable, observable, action, computed, remove, runInAction } from "mobx";
-import type { Product, Category, LineItem } from "../../../../types";
-import type CommerceService from "../../service";
+import { makeObservable, observable, action, computed, remove, runInAction } from 'mobx'
+import type { Product, Category, LineItem } from '../../../../types'
+import type CommerceService from '../../service'
 
 class LineItemImpl implements LineItem {
 
@@ -128,17 +128,21 @@ class StandaloneCommerceService
     return this.specifiedProducts
   }
 
-    @computed
+  @computed
   get specifiedCategories(): Category[] {
     return this._specifiedCategories  
   }
 
-   @computed
+  @computed
   get specifiedProducts(): Product[] {
-    const set = this._entireStore.filter((prod) => (
-      this._specifiedCategories.some((cat) => (prod.sku.includes(cat.id)))
-    ))
-    return set.sort((a, b) => (a.sku.localeCompare(b.sku)))
+    let result: Product[] = []
+    if (this._specifiedCategories.length > 0) {
+      result = this._entireStore.filter((prod) => (
+        this._specifiedCategories.some((cat) => (prod.sku.includes(cat.id)))
+      ))
+    }
+    result = [...this._entireStore]
+    return result.sort((a, b) => (a.sku.localeCompare(b.sku)))
   }
 
   getCategorySubtotal(categoryId: string): number {
