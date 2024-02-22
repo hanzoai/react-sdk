@@ -5,6 +5,8 @@ import type { Viewport } from 'next'
 import Header from '../common/header'
 import type { SiteDef } from '../types'
 import getAppRouterBodyFontClasses from './get-app-router-font-classes'
+import { FacebookPixelHead, FacebookPixel } from './analytics/pixel-analytics'
+import { GoogleAnalytics, GoogleAnalyticsHead } from './analytics/google-analytics'
 
 // Next 14: https://nextjs.org/docs/app/building-your-application/upgrading/codemods#use-viewport-export
 const viewport = {
@@ -41,8 +43,12 @@ const RootLayout: React.FC<PropsWithChildren & {
     <head >
       {/* https://stackoverflow.com/a/75716588/11645689 */ }
       <base target='_blank' />
+      <FacebookPixelHead/>
+      <GoogleAnalyticsHead/>
     </head>
     <body className={bodyClasses}>
+      <FacebookPixel />
+      <GoogleAnalytics />
       {header && <Header siteDef={siteDef}/>}
       {children}
     </body>
