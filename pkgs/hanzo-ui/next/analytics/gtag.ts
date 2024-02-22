@@ -1,3 +1,9 @@
+declare global {
+  interface Window {
+    gtag: any;
+  }
+}
+
 // specific to site.  In GA Console, under each Data Stream
 export const GA_TRACKING_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID
 
