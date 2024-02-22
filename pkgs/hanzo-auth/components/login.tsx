@@ -2,12 +2,19 @@
 
 import { Button } from '@hanzo/ui/primitives'
 import { signInWithGoogle } from '../lib/firebase/auth'
+import { useRouter } from 'next/navigation'
 
-const LoginUi = () => {
+const LoginUi: React.FC<{redirectUrl?: string}> = ({redirectUrl}) => {
+  const router = useRouter()
 
-  return <div className='flex flex-col gap-2'>
+  const signIn = async () => {
+    const isOk = await signInWithGoogle()
+    if (isOk && redirectUrl) router.push(redirectUrl)
+  }
+
+  return <div className='flex flex-col gap-6 text-center'>
     <h1>Login</h1>
-    <Button onClick={() => signInWithGoogle()}>Sign in with Google</Button>
+    <Button onClick={() => signIn()}>Sign in with Google</Button>
   </div>
 }
 
