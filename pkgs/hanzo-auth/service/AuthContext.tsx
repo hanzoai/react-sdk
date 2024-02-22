@@ -1,15 +1,13 @@
 'use client'
-
-import {
+import React, {
   useContext, 
   useRef, 
-  type PropsWithChildren,
-  createContext
+  type PropsWithChildren
 } from 'react'
  
 import { type UserRecord } from '../lib/firebase/firebase-admin'
  
-const AuthServiceContext = createContext<UserRecord | null>(null) 
+const AuthServiceContext = React.createContext<UserRecord | null>(null) 
  
 export const useCurrentUser = (): UserRecord | null =>  (
   useContext(AuthServiceContext) as UserRecord | null
@@ -20,7 +18,8 @@ export const AuthServiceProvider: React.FC<
 > = ({ 
   children,
   user 
-}) => {   
+}) => {
+   
    const serviceRef = useRef<UserRecord | null>(user)
    
    return (

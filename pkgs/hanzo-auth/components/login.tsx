@@ -1,7 +1,7 @@
 'use client'
 
 import { Button } from '@hanzo/ui/primitives'
-import { signInWithGoogle } from '..'
+import { signInWithGoogle } from '../lib/firebase/auth'
 
 const LoginUi = () => {
 
