@@ -1,6 +1,6 @@
 {
   "name": "@hanzo/ui",
-  "version": "0.5.19",
+  "version": "0.5.20",
   "description": "Library that contains shared UI primitives, support for a common design system, and other boilerplate support.",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
@@ -44,6 +44,7 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^3.3.2",
+    "@next/third-parties": "^14.1.0",
     "@radix-ui/react-accordion": "^1.1.2",
     "@radix-ui/react-aspect-ratio": "^1.0.3",
     "@radix-ui/react-avatar": "^1.0.3",
