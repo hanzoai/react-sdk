@@ -9,41 +9,41 @@
     "title": "Lux Gold Bullion",
     "level": 2,
     "desc": "Forge your connection to the real world with Lux Gold, crafted with excellence in Dubai.",
-    "img": "assets/img/cart/gold-bar-700x700.png"
+    "img": "/assets/img/cart/gold-bar-700x700.png"
   },
   "B": {
     "id": "B",
     "title": "Minted Bar",
     "level": 3,
     "desc": "Get unprecedented access to silver with 1:1 asset-backed Lux Silver NFTs, sovereign ownership of physical silver without management fees, and mine-direct discount pricing.",
-    "img": "assets/img/cart/gold-silver-bars-700x700.png"
+    "img": "/assets/img/cart/gold-silver-bars-700x700.png"
   },
   "C": {
     "id": "C",
     "title": "Coin",
     "level": 3,
     "desc": "Get unprecedented access to silver with 1:1 asset-backed Lux Silver NFTs, sovereign ownership of physical silver without management fees, and mine-direct discount pricing.",
-    "img": "assets/img/cart/gold-silver-coins-700x700.png"
+    "img": "/assets/img/cart/gold-silver-coins-700x700.png"
   },
   "MB": {
     "id": "MB",
     "title": "Minted Multibar",
     "level": 3,
     "desc": "Get unprecedented access to silver with 1:1 asset-backed Lux Silver NFTs, sovereign ownership of physical silver without management fees, and mine-direct discount pricing.",
-    "img": "assets/img/cart/gold-multibar-700x700.png"
+    "img": "/assets/img/cart/gold-multibar-700x700.png"
   },
   "GD": {
     "id": "GD",
     "title": "Good Delivery Bar",
     "level": 3,
     "desc": "Get unprecedented access to silver with 1:1 asset-backed Lux Silver NFTs, sovereign ownership of physical silver without management fees, and mine-direct discount pricing.",
-    "img": "assets/img/cart/gold-silver-bars-700x700.png"
+    "img": "/assets/img/cart/gold-silver-bars-700x700.png"
   },
   "AG": {
     "id": "AG",
     "title": "Lux Silver Bullion",
     "level": 2,
     "desc": "Get unprecedented access to silver with 1:1 asset-backed Lux Silver NFTs, sovereign ownership of physical silver without management fees, and mine-direct discount pricing.",
-    "img": "assets/img/cart/silver-bar-700x700.png"
+    "img": "/assets/img/cart/silver-bar-700x700.png"
   }
 }

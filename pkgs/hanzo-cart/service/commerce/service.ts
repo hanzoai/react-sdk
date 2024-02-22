@@ -6,14 +6,11 @@ import type {
 
 interface CommerceService {
 
-  getQuantity: (productId: string) => number
-  incrementQuantity: (productId: string) => void
-    /** removes if only one left */
-  decrementQuantity: (productId: string) => void 
     /** alpha by SKU */
-  get cartContents(): LineItem[]
-  get cartTotal(): number
-  get itemCount(): number
+  get cartItems(): LineItem[]
+  get cartTotalValue(): number
+  get cartItemCount(): number
+  
   getCategorySubtotal: (categoryId: string) => number
 
     // Specified set
@@ -23,17 +20,14 @@ interface CommerceService {
      * 
      * null resets the specified set to all products in the store
      * */ 
-  setSpecifiedCategories(categoryIds: string[] | null): Product[]
+  setSpecifiedCategories(categoryIds: string[] | null): LineItem[]
   get specifiedCategories(): Category[] // or empty array
-
-
-    /** return cached Product (set by above) */
-  get specifiedProducts(): Product[]
+  get specifiedItems(): LineItem[]
 
     /** sorted by level */
   get allCategories(): Category[]
     /** for dev convenience */ 
-  get entireStore(): Product[] 
+  get entireStore(): LineItem[] 
 }
 
 export {

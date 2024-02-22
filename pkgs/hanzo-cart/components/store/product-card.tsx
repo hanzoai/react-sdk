@@ -6,7 +6,7 @@ import { observer } from 'mobx-react'
 import { cn } from '@hanzo/ui/util'
 
 import { formatPrice } from '../../util'
-import type { Product } from '../../types'
+import type { LineItem } from '../../types'
 
 import { 
   AspectRatio, 
@@ -25,27 +25,25 @@ import { useCommerce } from '../../service/commerce'
 import type { ImageDef } from '@hanzo/ui/types'
 
 interface ProductCardProps extends React.HTMLAttributes<HTMLDivElement> {
-  product: Product
+  item: LineItem
 }
 
-const ProductCard: React.FC<ProductCardProps> = observer(({
-  product,
+const ProductCard: React.FC<ProductCardProps> = ({
+  item,
   className,
   ...props
 }: ProductCardProps) => {
 
-  const commerce = useCommerce()
+  //const commerce = useCommerce()
 
-  const count = commerce.getQuantity(product.id)
-
-  const Buttons: React.FC = () => {
-    if (count === 0) {
+  const Buttons: React.FC = observer(() => {
+    if (item.quantity === 0) {
       return (
         <Button
-          aria-label={'Add a ' + product.title + ' to cart'}
+          aria-label={'Add a ' + item.product.title + ' to cart'}
           size='sm'
           className='h-8 rounded-sm text-muted flex flex-row'
-          onClick={() => {commerce.incrementQuantity(product.id)}}
+          onClick={item.increment}
         >
           <Icons.plus className='h-8 w-8 text-muted' aria-hidden='true'/>
           Add
@@ -55,47 +53,51 @@ const ProductCard: React.FC<ProductCardProps> = observer(({
       return (
         <div className='flex flex-row'>
           <Button
-            aria-label={'Remove a ' + product.title + ' from the cart'}
+            aria-label={'Remove a ' + item.product.title + ' from the cart'}
             size='sm'
             className='h-8 rounded-sm'
-            onClick={() => {commerce.decrementQuantity(product.id)}}
+            onClick={() => {item.decrement}
           >
-          {(count > 1) ? (
+          {(item.canDecrement) ? (
             <Icons.minus className='h-8 w-8 text-muted' aria-hidden='true'/>
           ) : (
             <Icons.trash className='h-8 w-8 text-muted' aria-hidden='true'/>
           )}
           </Button>
-            <span className='text-muted'>{count}</span>
+            <span className='text-muted'>{item.quantity}</span>
           <Button
-            aria-label={'Add another ' + product.title + ' to the cart'}
+            aria-label={'Add another ' + item.product.title + ' to the cart'}
             size='sm'
             className='h-8 rounded-sm'
-            onClick={() => {commerce.incrementQuantity(product.id)}}
+            onClick={() => {item.increment}}
           >
             <Icons.plus className='h-8 w-8 text-muted' aria-hidden='true'/>
           </Button>
         </div>
       )
-  }
+  })
 
   const Image_: React.FC = () => {
-    if (typeof product.img === 'string') {
-      <Image
-        src={product.img}
-        alt={product.title}
-        className='object-cover w-full h-auto'
-        loading='lazy'
-      />
+    if (typeof item.product.img === 'string') {
+      return (
+        <Image
+          src={item.product.img}
+          alt={item.product.title}
+          className='object-cover w-full h-auto'
+          loading='lazy'
+          width={700}
+          height={700}
+        />
+      )
     }
-    const {dim, src, alt} = (product.img as ImageDef)
+    const {dim, src, alt} = (item.product.img as ImageDef)
 
     return (
       <Image 
         width={dim.w}
         height={dim.h}
         src={src}
-        alt={alt ?? product.title}
+        alt={alt ?? item.product.title}
         className='w-full w-full h-auto'
         loading='lazy'
       />
@@ -109,7 +111,7 @@ const ProductCard: React.FC<ProductCardProps> = observer(({
     >
         <CardHeader className='border-b p-0'>
           <AspectRatio ratio={4 / 3}>
-            {product.img ? (
+            {item.product.img ? (
               <Image_ />
             ) : (
               <div
@@ -125,10 +127,10 @@ const ProductCard: React.FC<ProductCardProps> = observer(({
         </CardHeader>
         <CardContent className='grid gap-2.5 p-4'>
           <CardTitle className='line-clamp-1 text-base'>
-            {product.title}
+            {item.product.title}
           </CardTitle>
           <CardDescription className='line-clamp-2'>
-            {formatPrice(product.price)}
+            {formatPrice(item.product.price)}
           </CardDescription>
         </CardContent>
       <CardFooter className='p-4'>
@@ -136,6 +138,6 @@ const ProductCard: React.FC<ProductCardProps> = observer(({
       </CardFooter>
     </Card>
   )
-})
+}
 
 export default ProductCard

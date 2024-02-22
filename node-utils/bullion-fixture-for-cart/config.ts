@@ -1,4 +1,4 @@
-export const ASSETS_PATH = 'assets/img/cart/'
+export const ASSETS_PATH = '/assets/img/cart/'
 export const IMG = {
   AU_B: 'gold-bar-700x700.png',
   AG_B: 'silver-bar-700x700.png',

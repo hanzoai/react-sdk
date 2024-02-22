@@ -21,7 +21,14 @@ interface Category {
 
 interface LineItem {
   product: Product
-  quantity: number
+
+  /** all observable */
+  get quantity(): number
+  get canDecrement(): boolean
+  get isInCart(): boolean
+
+  increment(): void
+  decrement(): void
 }
 
 export {

@@ -5,99 +5,88 @@ import type CommerceService from '../../service'
 class LineItemImpl implements LineItem {
 
   product: Product
-  @observable quantity: number = 1
+  @observable qu: number = 0
 
   constructor(prod: Product) {
     this.product = prod
   }
+
+  @computed
+  get canDecrement(): boolean {
+    return this.qu > 0
+  }
+
+  @computed 
+  get quantity(): number {return this.qu}
+
+  @computed
+  get isInCart(): boolean {return this.qu > 0}
+
+  @action.bound
+  increment(): void {
+    this.qu++
+  }
+
+  @action.bound 
+  decrement(): void {
+    if (this.qu > 0) {
+      this.qu--
+    }
+  }
+  
 }
 
 class StandaloneCommerceService 
   implements CommerceService
 {
-  private _entireStore: Product[] = []
-  private _categories: Category[] = []
-
-  private _cartContents: LineItem[] = []
-
+  private _entireStore: LineItem[]
+  private _categories: Category[]
   private _specifiedCategories: Category[] = []
 
   constructor(
-    all: Product[], 
+    products: Product[], 
     categories: Category[]=[]
   ) {
 
-    this._entireStore = all
+    this._entireStore = products.map((p) => (new LineItemImpl(p)))
     this._categories = categories
 
     makeObservable<StandaloneCommerceService, 
-      '_cartContents' |
-      '_addToCart' | 
-      '_removeFromCart' |
       '_specifiedCategories'
     >(this, {
-      _cartContents: observable.shallow,
-      _addToCart: action,  
-      _removeFromCart: action, 
       _specifiedCategories: observable.shallow,
     })
 
     makeObservable(this, {
-      cartContents: computed,
-      itemCount: computed,
-      cartTotal: computed, 
-      incrementQuantity: action,
-      decrementQuantity: action,
+      cartItems: computed,
+      cartItemCount: computed,
+      cartTotalValue: computed, 
       specifiedCategories: computed,
-      specifiedProducts: computed,
+      specifiedItems: computed,
     })
   }
-  
 
-  get entireStore(): Product[] {return (this._entireStore)}
+  get entireStore(): LineItem[] {return (this._entireStore)}
   get allCategories(): Category[] {return (this._categories)}
 
-  get cartContents(): LineItem[] {return (this._cartContents)}
-  get itemCount(): number { return (this._cartContents.length) }
+  get cartItems(): LineItem[] {
+    const result = this._entireStore.filter((item) => (item.isInCart))
+    return result.sort((a, b) => (a.product.sku.localeCompare(b.product.sku)))
+  }
+
+  get cartItemCount(): number { 
+    const result = this._entireStore.filter((item) => (item.isInCart))
+    return result.length
+  }
   
-  get cartTotal(): number {
-    return this._cartContents.reduce((total, item) => total + item.product.price * item.quantity, 0)
+  get cartTotalValue(): number {
+    return this._entireStore.reduce(
+      (total, item) => (total + item.product.price * item.quantity), 
+      0
+    )
   }
 
-  incrementQuantity(productId: string) {
-    const found = this._getLineItem(productId)
-    if (found) {
-      found.quantity++
-    }
-    else {
-      this._addToCart(productId)
-    }
-  }
-
-  decrementQuantity(productId: string) {
-    const found = this._getLineItem(productId)
-    if (found) {
-      if (found.quantity === 1) {
-        this._removeFromCart(productId)
-      }
-      else {
-        found.quantity--
-      }
-    }
-  }
-    // https://mobx.js.org/computeds-with-args.html#1-derivations-dont-_need_-to-be-computed
-    // https://mobx.js.org/computeds-with-args.html#2-close-over-the-arguments
-  getQuantity(productId: string) {
-    return computed(() => {
-      const found = this._getLineItem(productId)
-      if (found) {
-        return found.quantity
-      }
-      return 0    
-    }).get()
-  }
-
-  setSpecifiedCategories(categoryIds: string[] | null): Product[] {
+  setSpecifiedCategories(categoryIds: string[] | null): LineItem[] {
     runInAction(() => {
       if (categoryIds == null || categoryIds.length === 0) {
         this._specifiedCategories = []
@@ -108,49 +97,29 @@ class StandaloneCommerceService
         )) 
       }
     })
-    return this.specifiedProducts
+    return this.specifiedItems
   }
 
   get specifiedCategories(): Category[] {
     return this._specifiedCategories  
   }
 
-  get specifiedProducts(): Product[] {
-    let result: Product[] = []
+  get specifiedItems(): LineItem[] {
+    let result: LineItem[] = []
     if (this._specifiedCategories.length > 0) {
-      result = this._entireStore.filter((prod) => (
-        this._specifiedCategories.some((cat) => (prod.sku.includes(cat.id)))
+      result = this._entireStore.filter((item) => (
+        this._specifiedCategories.some((cat) => (item.product.sku.includes(cat.id)))
       ))
     }
-    result = [...this._entireStore]
-    return result.sort((a, b) => (a.sku.localeCompare(b.sku)))
+    else {
+      result = [...this._entireStore]
+    }
+    return result.sort((a, b) => (a.product.sku.localeCompare(b.product.sku)))
   }
 
   getCategorySubtotal(categoryId: string): number {
     const lineItemsInCat = this._cartContents.filter((item) => (item.product.sku.includes(categoryId)))
     return lineItemsInCat.reduce((total, item) => total + item.product.price * item.quantity, 0)
-  }
-
-  _addToCart(id: string) {
-    const prod = this._entireStore.find((el => (el.sku === id)))
-    if (prod) {
-      this._cartContents.push(new LineItemImpl(prod))
-    }
-    throw new Error('_addToCart: Trying to add an ID not in the store.')
-  }
-
-  _removeFromCart(id: string) {
-      //runInAction(() => {
-    const index = this._cartContents.findIndex((el => (el.product.sku !== id)))
-    if (index > -1) {
-      remove(this._cartContents, `${index}`)
-    }
-        //this._cartContents = this._cartContents.filter((el => (el.product.sku !== id)))
-      //})
-  }
-
-  _getLineItem(id: string): LineItem | undefined {
-    return this._cartContents.find((el => (el.product.sku === id)))
   }
 }
 
