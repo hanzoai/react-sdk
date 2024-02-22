@@ -16,7 +16,7 @@ import {
 
 import { useCart } from '../service/commerce/context'
 import { CartItem } from './cart-item'
-import CartIcon from './cart-icon'
+import CartIcon from '../common/cart-icon'
 import { X } from 'lucide-react'
 import  { CTABlockComponent, type CTABlock } from '@hanzo/ui/blocks'
 import type { LinkDef } from '@hanzo/ui/types'

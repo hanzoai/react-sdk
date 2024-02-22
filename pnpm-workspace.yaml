@@ -1,6 +1,5 @@
 packages:
   - "apps/*"
-  - "node-utils/*"
   - "pkgs/*"
   - "templates/*"
   - "!**/test/**"

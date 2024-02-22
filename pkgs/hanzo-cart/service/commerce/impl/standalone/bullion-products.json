@@ -1,0 +1,202 @@
+[
+  {
+    "id": "74eeb080-1cbf-48e4-b850-e3dc5eda1d94",
+    "sku": "LUX-AU-B-100-OZ",
+    "title": "Lux Gold Bullion, 100oz Minted Bar",
+    "desc": "Forge your connection to the real world with Lux Gold, crafted with excellence in Dubai.",
+    "price": 193800,
+    "img": "assets/img/cart/gold-bar-700x700.png"
+  },
+  {
+    "id": "7d986910-dcf1-451d-a217-da3f44f5ec9d",
+    "sku": "LUX-AU-B-10-OZ",
+    "title": "Lux Gold Bullion, 10oz Minted Bar",
+    "desc": "Forge your connection to the real world with Lux Gold, crafted with excellence in Dubai.",
+    "price": 19380,
+    "img": "assets/img/cart/gold-bar-700x700.png"
+  },
+  {
+    "id": "94c7d071-07b0-45e2-975f-a97b84179632",
+    "sku": "LUX-AU-B-5-OZ",
+    "title": "Lux Gold Bullion, 5oz Minted Bar",
+    "desc": "Forge your connection to the real world with Lux Gold, crafted with excellence in Dubai.",
+    "price": 9690,
+    "img": "assets/img/cart/gold-bar-700x700.png"
+  },
+  {
+    "id": "73fa3268-b60f-4f9c-8be1-3e308be931f0",
+    "sku": "LUX-AU-B-1-OZ",
+    "title": "Lux Gold Bullion, 1oz Minted Bar",
+    "desc": "Forge your connection to the real world with Lux Gold, crafted with excellence in Dubai.",
+    "price": 1938,
+    "img": "assets/img/cart/gold-bar-700x700.png"
+  },
+  {
+    "id": "b6b14c68-7e3e-4717-b45c-c50c0987b3be",
+    "sku": "LUX-AU-B-1-KG",
+    "title": "Lux Gold Bullion, 1kg Minted Bar",
+    "desc": "Forge your connection to the real world with Lux Gold, crafted with excellence in Dubai.",
+    "price": 62213.92,
+    "img": "assets/img/cart/gold-bar-700x700.png"
+  },
+  {
+    "id": "cd5d1e07-02ec-4e50-bb49-b1301374b98b",
+    "sku": "LUX-AU-B-500-G",
+    "title": "Lux Gold Bullion, 500g Minted Bar",
+    "desc": "Forge your connection to the real world with Lux Gold, crafted with excellence in Dubai.",
+    "price": 31106.96,
+    "img": "assets/img/cart/gold-bar-700x700.png"
+  },
+  {
+    "id": "310d4efe-0604-4ca0-8dcd-8f2daae184d9",
+    "sku": "LUX-AU-B-250-G",
+    "title": "Lux Gold Bullion, 250g Minted Bar",
+    "desc": "Forge your connection to the real world with Lux Gold, crafted with excellence in Dubai.",
+    "price": 15553.48,
+    "img": "assets/img/cart/gold-bar-700x700.png"
+  },
+  {
+    "id": "dd7e2163-133d-4715-9bea-d0893a438de2",
+    "sku": "LUX-AU-B-100-G",
+    "title": "Lux Gold Bullion, 100g Minted Bar",
+    "desc": "Forge your connection to the real world with Lux Gold, crafted with excellence in Dubai.",
+    "price": 6221.39,
+    "img": "assets/img/cart/gold-bar-700x700.png"
+  },
+  {
+    "id": "98fd6aad-f086-4a69-8e0a-84004bf369c4",
+    "sku": "LUX-AU-B-50-G",
+    "title": "Lux Gold Bullion, 50g Minted Bar",
+    "desc": "Forge your connection to the real world with Lux Gold, crafted with excellence in Dubai.",
+    "price": 3110.7,
+    "img": "assets/img/cart/gold-bar-700x700.png"
+  },
+  {
+    "id": "729a8a96-bfc1-49c8-bff4-dcdbbd4f1c35",
+    "sku": "LUX-AU-B-20-G",
+    "title": "Lux Gold Bullion, 20g Minted Bar",
+    "desc": "Forge your connection to the real world with Lux Gold, crafted with excellence in Dubai.",
+    "price": 1244.28,
+    "img": "assets/img/cart/gold-bar-700x700.png"
+  },
+  {
+    "id": "080df96b-0ea9-4b6e-99fb-2fad9f9fe774",
+    "sku": "LUX-AU-B-10-G",
+    "title": "Lux Gold Bullion, 10g Minted Bar",
+    "desc": "Forge your connection to the real world with Lux Gold, crafted with excellence in Dubai.",
+    "price": 622.14,
+    "img": "assets/img/cart/gold-bar-700x700.png"
+  },
+  {
+    "id": "2d13bd0a-c061-43d7-b741-e42d89f6dc69",
+    "sku": "LUX-AU-B-5-G",
+    "title": "Lux Gold Bullion, 5g Minted Bar",
+    "desc": "Forge your connection to the real world with Lux Gold, crafted with excellence in Dubai.",
+    "price": 311.07,
+    "img": "assets/img/cart/gold-bar-700x700.png"
+  },
+  {
+    "id": "36061ff9-fa25-4f3b-8e62-c87c7764c956",
+    "sku": "LUX-AU-B-2_5-G",
+    "title": "Lux Gold Bullion, 2.5g Minted Bar",
+    "desc": "Forge your connection to the real world with Lux Gold, crafted with excellence in Dubai.",
+    "price": 155.53,
+    "img": "assets/img/cart/gold-bar-700x700.png"
+  },
+  {
+    "id": "6684bc3e-ee30-471b-9f7d-e2ce285be096",
+    "sku": "LUX-AU-B-1-G",
+    "title": "Lux Gold Bullion, 1g Minted Bar",
+    "desc": "Forge your connection to the real world with Lux Gold, crafted with excellence in Dubai.",
+    "price": 62.21,
+    "img": "assets/img/cart/gold-bar-700x700.png"
+  },
+  {
+    "id": "bb4fea59-a8cc-43c6-9426-4c4ac1e307e9",
+    "sku": "LUX-AU-C-1-OZ",
+    "title": "Lux Gold Bullion, 1oz Coin",
+    "desc": "Forge your connection to the real world with Lux Gold, crafted with excellence in Dubai.",
+    "price": 1938,
+    "img": "assets/img/cart/gold-coin-700x700.png"
+  },
+  {
+    "id": "6080b071-3401-46cd-80d6-5c95a4b39dc9",
+    "sku": "LUX-AU-MB-100x1-G",
+    "title": "Lux Gold Bullion, 100x1g Minted Multibar",
+    "desc": "Forge your connection to the real world with Lux Gold, crafted with excellence in Dubai.",
+    "price": 6221.39,
+    "img": "assets/img/cart/gold-multibar-700x700.png"
+  },
+  {
+    "id": "bec50cbc-2439-4a3f-ab70-ef148e331767",
+    "sku": "LUX-AU-GD-400-OZ",
+    "title": "Lux Gold Bullion, 400oz Good Delivery Bar",
+    "desc": "Forge your connection to the real world with Lux Gold, crafted with excellence in Dubai.",
+    "price": 800000,
+    "img": "assets/img/cart/gold-bar-700x700.png"
+  },
+  {
+    "id": "9643a2ab-4769-448f-8927-353cced94a3d",
+    "sku": "LUX-AG-B-100-OZ",
+    "title": "Lux Silver Bullion, 100oz Minted Bar",
+    "desc": "Get unprecedented access to silver with 1:1 asset-backed Lux Silver NFTs, sovereign ownership of physical silver without management fees, and mine-direct discount pricing.",
+    "price": 2304,
+    "img": "assets/img/cart/silver-bar-700x700.png"
+  },
+  {
+    "id": "d607e744-3550-49bb-8213-4c3699e0f1cc",
+    "sku": "LUX-AG-B-10-OZ",
+    "title": "Lux Silver Bullion, 10oz Minted Bar",
+    "desc": "Get unprecedented access to silver with 1:1 asset-backed Lux Silver NFTs, sovereign ownership of physical silver without management fees, and mine-direct discount pricing.",
+    "price": 230.4,
+    "img": "assets/img/cart/silver-bar-700x700.png"
+  },
+  {
+    "id": "1f0e6cb8-c8eb-4847-834f-0e779f6c8c99",
+    "sku": "LUX-AG-B-5-OZ",
+    "title": "Lux Silver Bullion, 5oz Minted Bar",
+    "desc": "Get unprecedented access to silver with 1:1 asset-backed Lux Silver NFTs, sovereign ownership of physical silver without management fees, and mine-direct discount pricing.",
+    "price": 115.2,
+    "img": "assets/img/cart/silver-bar-700x700.png"
+  },
+  {
+    "id": "d2c02c13-ea02-4534-b9f4-2f6513562668",
+    "sku": "LUX-AG-B-1-OZ",
+    "title": "Lux Silver Bullion, 1oz Minted Bar",
+    "desc": "Get unprecedented access to silver with 1:1 asset-backed Lux Silver NFTs, sovereign ownership of physical silver without management fees, and mine-direct discount pricing.",
+    "price": 23.04,
+    "img": "assets/img/cart/silver-bar-700x700.png"
+  },
+  {
+    "id": "ffb4f949-cddc-4d92-bf21-e36742a9efbe",
+    "sku": "LUX-AG-B-1-KG",
+    "title": "Lux Silver Bullion, 1kg Minted Bar",
+    "desc": "Get unprecedented access to silver with 1:1 asset-backed Lux Silver NFTs, sovereign ownership of physical silver without management fees, and mine-direct discount pricing.",
+    "price": 741.51,
+    "img": "assets/img/cart/silver-bar-700x700.png"
+  },
+  {
+    "id": "fcd96850-0060-4f58-a065-d793f8f18827",
+    "sku": "LUX-AG-C-1-OZ",
+    "title": "Lux Silver Bullion, 1oz Coin",
+    "desc": "Get unprecedented access to silver with 1:1 asset-backed Lux Silver NFTs, sovereign ownership of physical silver without management fees, and mine-direct discount pricing.",
+    "price": 23.04,
+    "img": "assets/img/cart/silver-coin-700x700.png"
+  },
+  {
+    "id": "be32e936-06a3-4467-8690-c2e9ef9c4878",
+    "sku": "LUX-AG-MB-100x1-G",
+    "title": "Lux Silver Bullion, 100x1g Minted Multibar",
+    "desc": "Get unprecedented access to silver with 1:1 asset-backed Lux Silver NFTs, sovereign ownership of physical silver without management fees, and mine-direct discount pricing.",
+    "price": 74.15,
+    "img": "assets/img/cart/silver-multibar-700x700.png"
+  },
+  {
+    "id": "2e1c0977-3fcd-4e7e-b071-ed3d022bbe40",
+    "sku": "LUX-AG-GD-1000-OZ",
+    "title": "Lux Silver Bullion, 1000oz Good Delivery Bar",
+    "desc": "Get unprecedented access to silver with 1:1 asset-backed Lux Silver NFTs, sovereign ownership of physical silver without management fees, and mine-direct discount pricing.",
+    "price": 22000,
+    "img": "assets/img/cart/silver-bar-700x700.png"
+  }
+]

@@ -19,14 +19,15 @@ interface Category {
   img?: string | ImageDef
 }
 
-interface LineItem extends Product {
+interface LineItem {
+  product: Product
   quantity: number
 }
 
 export {
   type Product,
   type Category,
-  type LineItem
+  type LineItem,
 }
 
 

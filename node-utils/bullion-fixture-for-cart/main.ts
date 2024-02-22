@@ -31,7 +31,7 @@ const visitCategoryData = (
   category: CategoryData, 
   titleTokens: string[] = [],
   skuTokens: string[] = [], 
-): Product[] => {
+): void => {
 
   const tToken = category.titleToken ?? category.label
     // otherwise extra comma if titleToken is '' at this level
@@ -93,8 +93,6 @@ const visitCategoryData = (
       )
     })
   }
-
-  return []
 }
 
 visitCategoryData(d as unknown as CategoryData)
