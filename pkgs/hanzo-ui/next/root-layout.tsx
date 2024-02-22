@@ -1,5 +1,7 @@
 import React, { type PropsWithChildren } from 'react'
 
+import type { Viewport } from 'next'
+
 import Header from '../common/header'
 import type { SiteDef } from '../types'
 import getAppRouterBodyFontClasses from './get-app-router-font-classes'
@@ -10,7 +12,7 @@ const viewport = {
     { media: '(prefers-color-scheme: light)', color: 'white' },
     { media: '(prefers-color-scheme: dark)', color: 'black' },
   ],
-}
+} satisfies Viewport
 
 /*
   These '.variable' fields are actually autogenerate css classnames that *define* the actual

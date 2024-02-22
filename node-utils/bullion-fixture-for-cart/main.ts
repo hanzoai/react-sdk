@@ -1,9 +1,7 @@
 import { v4 as unique} from 'uuid'
 import type { Product, Category } from '@hanzo/cart/types'
-import {
-  type ItemData,
-  type CategoryData
-} from './types'
+
+import { type ItemData, type CategoryData } from './types'
 
 import { 
   IMG, 
@@ -12,12 +10,12 @@ import {
   OUT_DIR, 
   CAT_FN,
   PROD_FN
-} from './consts'
+} from './config'
 
 import d from './data/root'
 
 const TS = '-'  // token separator
-const DEC = '_' // decimal substitue
+const DEC = '_' // decimal substitute
 
 const allCategories: any = {}
 const allProducts: Product[] = []
@@ -29,7 +27,7 @@ const getAmount = (t: string): string => {
   return amount + unit
 }
 
-const parseCategoryData = (
+const visitCategoryData = (
   category: CategoryData, 
   titleTokens: string[] = [],
   skuTokens: string[] = [], 
@@ -81,7 +79,7 @@ const parseCategoryData = (
     const subCategories = category.chn as CategoryData[]
     
     subCategories.forEach(({t, label, img, desc, chn}) => {
-      parseCategoryData({
+      visitCategoryData({
           t,
           label,
           level: (parentLevel ?? 1) + 1,
@@ -99,7 +97,7 @@ const parseCategoryData = (
   return []
 }
 
-parseCategoryData(d as unknown as CategoryData)
+visitCategoryData(d as unknown as CategoryData)
 
 const keys = Object.keys(allCategories)
 keys.forEach((key) => {
