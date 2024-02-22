@@ -8,9 +8,7 @@
     "prod": "next start",
     "cn": "rm -rf ./.next",
     "clean": "rm -rf ./.next && rm -rf node_modules",
-    "tc": "tsc --noEmit",
-    "ln:ui": "pnpm link -g @hanzo/ui",
-    "ul:ui": "pnpm unlink -g @hanzo/ui"
+    "tc": "tsc --noEmit"
   },
   "dependencies": {
     "@hanzo/cart": "workspace:*",
