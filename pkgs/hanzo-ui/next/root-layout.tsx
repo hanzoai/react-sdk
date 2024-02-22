@@ -3,8 +3,10 @@ import React, { type PropsWithChildren } from 'react'
 import Header from '../common/header'
 import type { SiteDef } from '../types'
 import getAppRouterBodyFontClasses from './get-app-router-font-classes'
+import { FacebookPixelHead, FacebookPixel } from './analytics/pixel-analytics'
+import { GoogleAnalytics } from '@next/third-parties/google'
 
-// Next 14: https://nextjs.org/docs/app/building-your-application/upgrading/codemods#use-viewport-export
+  // Next 14: https://nextjs.org/docs/app/building-your-application/upgrading/codemods#use-viewport-export
 const viewport = {
   themeColor: [
     { media: '(prefers-color-scheme: light)', color: 'white' },
@@ -25,7 +27,9 @@ const viewport = {
   re body: overflow-y-hidden overflow-x-hidden, h-full
   We cannot have these on body tag for scroll-snap to work on iOS!
 */
-const bodyClasses = 'bg-background text-foreground flex flex-col min-h-full ' + getAppRouterBodyFontClasses() 
+const bodyClasses = 
+  'bg-background text-foreground flex flex-col min-h-full ' + 
+  getAppRouterBodyFontClasses() 
     
 const RootLayout: React.FC<PropsWithChildren & { 
   siteDef: SiteDef 
@@ -39,8 +43,11 @@ const RootLayout: React.FC<PropsWithChildren & {
     <head >
       {/* https://stackoverflow.com/a/75716588/11645689 */ }
       <base target='_blank' />
+      <FacebookPixelHead/>
     </head>
     <body className={bodyClasses}>
+      <FacebookPixel />
+      <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID ?? ''} />
       {header && <Header siteDef={siteDef}/>}
       {children}
     </body>
