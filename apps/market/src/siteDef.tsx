@@ -1,7 +1,6 @@
 import type { SiteDef } from '@hanzo/ui/types'
 import common from '@hanzo/ui/siteDef/main-nav'
 import footer from '@hanzo/ui/siteDef/footer'
-import CartSheet from '@hanzo/cart/components/cart-sheet'
 
 export default {
   currentAs: 'https://lux.market',
@@ -14,7 +13,6 @@ export default {
       external: true,
       variant: 'primary',
     }],
-    cart: <CartSheet/>,
   },
   footer
 } satisfies SiteDef

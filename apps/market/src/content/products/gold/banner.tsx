@@ -1,13 +1,13 @@
-import { type CTABlock } from '@hanzo/ui/blocks/def'
+import { type CTABlock } from '@hanzo/ui/blocks'
 
 import video from './video'
-import AddToCartForm from '@hanzo/cart/components/add-to-cart-form'
 
 export default {
   blockType: 'banner',
   title: 'LUX GOLD',
   byline: <>Responsibly manufactured, <br className='sm:hidden'/>ethically sourced.</>,
   video: {...video, sizing: { vh: 50}},
+  /*
   contentAfter: <AddToCartForm product={{
     id: 'gold',
     title: 'Gold',
@@ -15,6 +15,7 @@ export default {
     description: 'Responsibly manufactured, ethically sourced.',
     image: '/assets/video/luxgold-poster.jpg'
   }}/>,
+  */
   cta: {
     blockType: 'cta',
     elements: [
@@ -25,9 +26,7 @@ export default {
       },
       {
         title: "Buy Now",
-        href: "https://lux.town",
-        external: true,
-        newTab: false,
+        href: "/store?c=AU",
         variant: 'primary'
       },
     ]

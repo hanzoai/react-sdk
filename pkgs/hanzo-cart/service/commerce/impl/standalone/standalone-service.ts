@@ -41,45 +41,29 @@ class StandaloneCommerceService
       _removeFromCart: action, 
       _specifiedCategories: observable.shallow,
     })
-  } 
+
+    makeObservable(this, {
+      cartContents: computed,
+      itemCount: computed,
+      cartTotal: computed, 
+      incrementQuantity: action,
+      decrementQuantity: action,
+      specifiedCategories: computed,
+      specifiedProducts: computed,
+    })
+  }
+  
 
   get entireStore(): Product[] {return (this._entireStore)}
   get allCategories(): Category[] {return (this._categories)}
 
-  @computed
   get cartContents(): LineItem[] {return (this._cartContents)}
-  
-  @computed
   get itemCount(): number { return (this._cartContents.length) }
   
-  @computed
   get cartTotal(): number {
     return this._cartContents.reduce((total, item) => total + item.product.price * item.quantity, 0)
   }
 
-  _addToCart(id: string) {
-    const prod = this._entireStore.find((el => (el.sku === id)))
-    if (prod) {
-      this._cartContents.push(new LineItemImpl(prod))
-    }
-    throw new Error('_addToCart: Trying to add an ID not in the store.')
-  }
-
-  _removeFromCart(id: string) {
-      //runInAction(() => {
-    const index = this._cartContents.findIndex((el => (el.product.sku !== id)))
-    if (index > -1) {
-      remove(this._cartContents, `${index}`)
-    }
-        //this._cartContents = this._cartContents.filter((el => (el.product.sku !== id)))
-      //})
-  }
-
-  _getLineItem(id: string): LineItem | undefined {
-    return this._cartContents.find((el => (el.product.sku === id)))
-  }
-  
-  @action
   incrementQuantity(productId: string) {
     const found = this._getLineItem(productId)
     if (found) {
@@ -90,7 +74,6 @@ class StandaloneCommerceService
     }
   }
 
-  @action
   decrementQuantity(productId: string) {
     const found = this._getLineItem(productId)
     if (found) {
@@ -128,12 +111,10 @@ class StandaloneCommerceService
     return this.specifiedProducts
   }
 
-  @computed
   get specifiedCategories(): Category[] {
     return this._specifiedCategories  
   }
 
-  @computed
   get specifiedProducts(): Product[] {
     let result: Product[] = []
     if (this._specifiedCategories.length > 0) {
@@ -150,6 +131,27 @@ class StandaloneCommerceService
     return lineItemsInCat.reduce((total, item) => total + item.product.price * item.quantity, 0)
   }
 
+  _addToCart(id: string) {
+    const prod = this._entireStore.find((el => (el.sku === id)))
+    if (prod) {
+      this._cartContents.push(new LineItemImpl(prod))
+    }
+    throw new Error('_addToCart: Trying to add an ID not in the store.')
+  }
+
+  _removeFromCart(id: string) {
+      //runInAction(() => {
+    const index = this._cartContents.findIndex((el => (el.product.sku !== id)))
+    if (index > -1) {
+      remove(this._cartContents, `${index}`)
+    }
+        //this._cartContents = this._cartContents.filter((el => (el.product.sku !== id)))
+      //})
+  }
+
+  _getLineItem(id: string): LineItem | undefined {
+    return this._cartContents.find((el => (el.product.sku === id)))
+  }
 }
 
 export default StandaloneCommerceService
