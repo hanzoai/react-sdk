@@ -1,15 +1,30 @@
-import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth'
+import { FacebookAuthProvider, GoogleAuthProvider, GithubAuthProvider, signInWithPopup } from 'firebase/auth'
 
 import { auth } from './firebase'
 
 export type APIResponse<T = object> = { success: true; data: T } | { success: false; error: string };
 
-export async function signInWithGoogle(): Promise<boolean> {
+export async function signInWithProvider(provider: string): Promise<{success: boolean, email?: string | null}> {
 
-  const provider = new GoogleAuthProvider()
+  const authProvider = (() => {
+    switch (provider) {
+      case 'google':
+        return new GoogleAuthProvider()
+      case 'facebook':
+        return new FacebookAuthProvider()
+      case 'github':
+        return new GithubAuthProvider()
+      default:
+        return null
+    }
+  })()
+
+  if (!authProvider) {
+    return {success: false}
+  }
 
   try {
-    const userCreds = await signInWithPopup(auth, provider)
+    const userCreds = await signInWithPopup(auth, authProvider)
     const idToken = await userCreds.user.getIdToken()
 
     const response = await fetch('/api/auth/sign-in', {
@@ -20,20 +35,21 @@ export async function signInWithGoogle(): Promise<boolean> {
       body: JSON.stringify({ idToken }),
     })
     const resBody = (await response.json()) as unknown as APIResponse<string>
+
     if (response.ok && resBody.success) {
-      return true
+      return {success: true, email: userCreds.user.email}
     } 
     else {
-      return false
+      return {success: false}
     }
   } 
   catch (error) {
     console.error('Error signing in with Google', error)
-    return false
+    return {success: false}
   }
 }
 
-export async function signOut(): Promise<boolean> {
+export async function signOut(): Promise<{success: boolean}> {
   try {
     await auth.signOut()
 
@@ -44,14 +60,14 @@ export async function signOut(): Promise<boolean> {
     })
     const resBody = (await response.json()) as unknown as APIResponse<string>
     if (response.ok && resBody.success) {
-      return true
+      return {success: true}
     } 
     else {
-      return false
+      return {success: false}
     }
   } 
   catch (error) {
     console.error('Error signing out with Google', error)
-    return false
+    return {success: false}
   }
 }

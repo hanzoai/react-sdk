@@ -1,31 +1,37 @@
 'use client'
+
 import React, {
-  useContext, 
-  useRef, 
+  useContext,
+  useState,
   type PropsWithChildren
 } from 'react'
- 
-import { type UserRecord } from '../lib/firebase/firebase-admin'
- 
-const AuthServiceContext = React.createContext<UserRecord | null>(null) 
- 
-export const useCurrentUser = (): UserRecord | null =>  (
-  useContext(AuthServiceContext) as UserRecord | null
-)
- 
+
+type AuthContextType = {
+  user: {email: string} | null,
+  setUser: React.Dispatch<React.SetStateAction<{email: string} | null>>
+}
+
+const AuthServiceContext = React.createContext<AuthContextType | undefined>(undefined)
+
+export const useCurrentUser = (): AuthContextType => {
+  const context = useContext(AuthServiceContext)
+  if (!context) {
+    throw new Error('useCurrentUser must be used within an AuthServiceProvider')
+  }
+  return context
+}
+
 export const AuthServiceProvider: React.FC<
-  PropsWithChildren & { user: UserRecord | null }
-> = ({ 
+  PropsWithChildren & { user: {email: string} | null }
+> = ({
   children,
-  user 
+  user
 }) => {
-   
-   const serviceRef = useRef<UserRecord | null>(user)
-   
-   return (
-     <AuthServiceContext.Provider value={serviceRef.current}>
-       {children}
-     </AuthServiceContext.Provider>
-   )
- }
- 
+  const [currentUser, setCurrentUser] = useState<{email: string} | null>(user)
+
+  return (
+    <AuthServiceContext.Provider value={{ user: currentUser, setUser: setCurrentUser }}>
+      {children}
+    </AuthServiceContext.Provider>
+  )
+}
