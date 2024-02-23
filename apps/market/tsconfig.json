@@ -7,7 +7,7 @@
     ".next/types/**/*.ts",
     "node_modules/@hanzo/ui",
     "node_modules/@hanzo/cart"
-  ],
+, "../../pkgs/hanzo-cart/components/cart-line-item.tsx"  ],
   "exclude": [
     "node_modules"
   ],

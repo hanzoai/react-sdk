@@ -4,9 +4,9 @@ import Image from 'next/image'
 
 import { cn } from '@hanzo/ui/util'
 
-import { QuantityWidget } from '@hanzo/cart/components'
-import type { LineItem } from '@hanzo/cart/types'
-import { formatPrice } from '@hanzo/cart/util'
+import type { LineItem } from '../types'
+import QuantityWidget from './quantity-widget'
+import { formatPrice } from '../util'
 
 const IMG_SIZE=40
 
@@ -22,7 +22,11 @@ const CartLineItem: React.FC<{
 
   return (
     <div className='flex flex-row justify-between items-center gap-4'>
-      {imgSrc ? <Image src={imgSrc} alt={item.product.title + ' image'} height={IMG_SIZE} width={IMG_SIZE} className='self-start'/> : <div style={{height: IMG_SIZE, width: IMG_SIZE}}/ >}
+    {!!imgSrc ? (
+      <Image src={imgSrc} alt={item.product.title + ' image'} height={IMG_SIZE} width={IMG_SIZE} className='self-start'/>
+    ) : (
+      <div style={{height: IMG_SIZE, width: IMG_SIZE}}/ >
+    )}
       <div className={cn('text-sm font-sans grow', className)} >
         <div className=''>{item.product.title}</div>
         <div className='flex flex-row items-center justify-between'>
