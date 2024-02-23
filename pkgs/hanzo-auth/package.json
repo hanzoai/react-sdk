@@ -1,6 +1,6 @@
 {
   "name": "@hanzo/auth",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Library with Firebase authentication.",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
@@ -33,7 +33,7 @@
     "clean": "rm -rf dist && rm -rf node_modules"
   },
   "dependencies": {
-    "@hanzo/ui": "workspace:*",
+    "@hanzo/ui": "^0.5.21",
     "firebase": "^10.8.0",
     "firebase-admin": "^12.0.0",
     "lucide-react": "^0.336.0"
