@@ -1,8 +1,4 @@
-import type { 
-  Product, 
-  LineItem, 
-  Category 
-} from '../../types'
+import type { LineItem, Category } from '../../types'
 
 interface CommerceService {
 
@@ -13,7 +9,6 @@ interface CommerceService {
   
   getCategorySubtotal: (categoryId: string) => number
 
-    // Specified set
     /** 
      * returns Product's that belong to all categories 
      * (and caches them until the next call) 
@@ -27,7 +22,7 @@ interface CommerceService {
     /** sorted by level */
   get allCategories(): Category[]
     /** for dev convenience */ 
-  get entireStore(): LineItem[] 
+  get allItems(): LineItem[] 
 }
 
 export {

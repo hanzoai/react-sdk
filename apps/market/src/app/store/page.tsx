@@ -24,7 +24,7 @@ const BullionStorePage = ({ searchParams }: Props) => {
   const agent = searchParams?.agent
 
   return (<>
-    <Main className='md:flex-row md:gap-4 '>
+    <Main className='md:flex-row md:gap-4 flex flex-row justify-center'>
         <Store searchParams={searchParams} className='' />
     </Main>
     <Footer siteDef={siteDef} className='max-w-screen-2xl w-full pt-16 lg:mx-auto ' />

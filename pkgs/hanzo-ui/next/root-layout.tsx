@@ -8,7 +8,7 @@ import getAppRouterBodyFontClasses from './get-app-router-font-classes'
 import { FacebookPixelHead, FacebookPixel } from './analytics/pixel-analytics'
 import { GoogleAnalytics } from '@next/third-parties/google'
 
-  // Next 14: https://nextjs.org/docs/app/building-your-application/upgrading/codemods#use-viewport-export
+// Next 14: https://nextjs.org/docs/app/building-your-application/upgrading/codemods#use-viewport-export
 const viewport = {
   themeColor: [
     { media: '(prefers-color-scheme: light)', color: 'white' },

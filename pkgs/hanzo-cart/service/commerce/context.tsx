@@ -1,5 +1,11 @@
 'use client'
 import { createContext, useContext, useRef, type PropsWithChildren } from 'react'
+
+// https://dev.to/ivandotv/mobx-server-side-rendering-with-next-js-4m18
+import { enableStaticRendering } from 'mobx-react-lite'
+enableStaticRendering(typeof window === "undefined")
+
+
 import type CommerceService from './service'
 
 import getServiceSingleton from './impl'
