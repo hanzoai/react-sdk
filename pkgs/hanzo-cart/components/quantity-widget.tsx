@@ -2,12 +2,10 @@
 import React from 'react'
 import { observer } from 'mobx-react-lite'
 
+import { Button } from '@hanzo/ui/primitives'
+
 import { Icons } from './Icons'
 import type { LineItem } from '../types'
-
-import { 
-  Button, 
-} from '@hanzo/ui/primitives'
 
 const QuantityWidget: React.FC<{ 
   item: LineItem
