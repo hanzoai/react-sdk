@@ -13,11 +13,11 @@ import {
 import type { ImageDef } from '@hanzo/ui/types'
 import { cn } from '@hanzo/ui/util'
 
-import { formatPrice } from '../../util'
-import type { LineItem } from '../../types'
-import { Icons } from '../../common/Icons'
+import { formatPrice } from '../util'
+import type { LineItem } from '../types'
+import { Icons } from './Icons'
 
-import QuantifyWidget from './quantify-widget'
+import QuantityWidget from './quantity-widget'
 
 interface ProductCardProps extends React.HTMLAttributes<HTMLDivElement> {
   item: LineItem
@@ -88,7 +88,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
           </CardDescription>
         </CardContent>
       <CardFooter className='p-4 flex flex-row justify-center'>
-        <QuantifyWidget item={item}/>
+        <QuantityWidget item={item}/>
       </CardFooter>
     </Card>
   )

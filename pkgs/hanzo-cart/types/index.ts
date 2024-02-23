@@ -19,6 +19,12 @@ interface Category {
   img?: string | ImageDef
 }
 
+  // in the system, client code always 
+  // goes through a list item, whether the product
+  // is in the cart or not. SOmething is in the cart
+  // when its quantity > 0.  That's the only difference
+  // The ui, and other Cart code, reacts to 
+  // changes in this quantity.
 interface LineItem {
   product: Product
 

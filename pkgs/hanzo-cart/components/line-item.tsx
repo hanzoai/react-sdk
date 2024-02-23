@@ -1,7 +1,7 @@
 import React from 'react'
 
-import type { LineItem } from '../../types'
-import { formatPrice } from '../../util'
+import type { LineItem } from '../types'
+import { formatPrice } from '../util'
 
 const LineItemComponent: React.FC<{
   item: LineItem

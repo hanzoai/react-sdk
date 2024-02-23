@@ -2,14 +2,14 @@
 import React from 'react'
 import { observer } from 'mobx-react-lite'
 
-import { Icons } from '../../common/Icons'
-import type { LineItem } from '../../types'
+import { Icons } from './Icons'
+import type { LineItem } from '../types'
 
 import { 
   Button, 
 } from '@hanzo/ui/primitives'
 
-const QuantifyWidget: React.FC<{ 
+const QuantityWidget: React.FC<{ 
   item: LineItem
 }> = observer(({
   item
@@ -59,4 +59,4 @@ const QuantifyWidget: React.FC<{
   )
 ))
 
-export default QuantifyWidget
+export default QuantityWidget
