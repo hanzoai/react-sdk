@@ -17,6 +17,9 @@ importers:
 
   apps/market:
     dependencies:
+      '@hanzo/auth':
+        specifier: workspace:*
+        version: link:../../pkgs/hanzo-auth
       '@hanzo/cart':
         specifier: workspace:*
         version: link:../../pkgs/hanzo-cart

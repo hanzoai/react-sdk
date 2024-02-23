@@ -11,6 +11,7 @@
     "tc": "tsc --noEmit"
   },
   "dependencies": {
+    "@hanzo/auth": "workspace:*",
     "@hanzo/cart": "workspace:*",
     "@hanzo/ui": "workspace:*",
     "@hookform/resolvers": "^3.3.4",

@@ -6,6 +6,8 @@ import '@hanzo/ui/style/globals.css'
 import siteDef from '../siteDef'
 import _metadata from '../metadata'
 import { CommerceServiceProvider } from '@hanzo/cart/service'
+import { AuthServiceProvider } from '@hanzo/auth'
+import { getCurrentUserServerSide } from '@hanzo/auth/server'
 
 export const metadata = {
   ..._metadata
@@ -15,14 +17,19 @@ export const viewport = {
   ..._viewport
 }
 
-const RootLayout: React.FC<PropsWithChildren> = ({
+const RootLayout: React.FC<PropsWithChildren> = async ({
   children
-}) => (
-  <CommerceServiceProvider>
-    <RootLayoutCommon siteDef={siteDef} >
-        {children}
-    </RootLayoutCommon>
-  </CommerceServiceProvider>
-)
+}) => {
+  const currentUser = await getCurrentUserServerSide()
 
+  return (
+    <AuthServiceProvider user={currentUser?.email ? {email: currentUser?.email} : null}>
+      <CommerceServiceProvider>
+        <RootLayoutCommon siteDef={siteDef} >
+            {children}
+        </RootLayoutCommon>
+      </CommerceServiceProvider>
+    </AuthServiceProvider>
+  )
+  }
 export default RootLayout
