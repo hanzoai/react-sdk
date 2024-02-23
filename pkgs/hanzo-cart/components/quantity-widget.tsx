@@ -18,7 +18,7 @@ const QuantityWidget: React.FC<{
   className=''
 }) => {
 
-  const iconClx = ghost ? 'h-3 w-3 text-muted-2 hover:text-foreground' : 'h-5 w-5 mr-1'
+  const iconClx = ghost ? 'h-3 w-3 text-muted-3 hover:text-foreground' : 'h-5 w-5 mr-1'
   const digitClx = ghost ? 'px-1' : 'px-2 font-bold '
   
   return ( item.isInCart ? (
