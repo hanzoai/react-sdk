@@ -3,7 +3,7 @@ import React from 'react'
 import { observer } from 'mobx-react-lite'
 
 
-import { ProductCard } from '@hanzo/cart/components'
+import { ProductCard, Cart } from '@hanzo/cart/components'
 import { useCommerce } from '@hanzo/cart/service'
 
 
