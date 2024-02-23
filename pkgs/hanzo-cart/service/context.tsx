@@ -6,7 +6,7 @@ import { enableStaticRendering } from 'mobx-react-lite'
 enableStaticRendering(typeof window === "undefined")
 
 
-import type CommerceService from './service'
+import type CommerceService from './commerce-service'
 
 import getServiceSingleton from './impl'
 

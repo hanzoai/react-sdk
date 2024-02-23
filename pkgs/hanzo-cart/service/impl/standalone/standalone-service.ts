@@ -7,8 +7,8 @@ import {
   makeAutoObservable
 } from 'mobx'
 
-import type { Product, Category, LineItem } from '../../../../types'
-import type CommerceService from '../../service'
+import type { Product, Category, LineItem } from '../../../types'
+import type CommerceService from '../../commerce-service'
 
 class LineItemImpl implements LineItem {
 

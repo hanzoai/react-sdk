@@ -6,7 +6,7 @@ export { default as User } from './User'
 
 export * from './utils'
 
-import { type IProduct } from '../commerceJs/types'
+import { type IProduct } from './types'
 
 export {
   type IProduct

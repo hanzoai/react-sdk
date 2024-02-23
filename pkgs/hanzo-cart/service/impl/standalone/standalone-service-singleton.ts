@@ -1,4 +1,4 @@
-import type CommerceService from '../../service'
+import type CommerceService from '../../commerce-service'
 
 import StandaloneCommerceService from './standalone-service'
 

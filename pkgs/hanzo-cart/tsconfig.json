@@ -6,6 +6,6 @@
   ],
   "exclude": [
     "node_modules",
-    "commerceJs/Commerce.test.ts"
+    "service/impl/hanzo-adapter/commerceJs/Commerce.test.ts"
   ]
 }

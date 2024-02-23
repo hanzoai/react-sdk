@@ -1,4 +1,4 @@
-import type { LineItem, Category } from '../../types'
+import type { LineItem, Category } from '../types'
 
 interface CommerceService {
 
