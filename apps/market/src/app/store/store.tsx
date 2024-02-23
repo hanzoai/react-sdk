@@ -1,24 +1,31 @@
 'use client'
 import React from 'react'
+import { useRouter } from 'next/navigation'
 import { observer } from 'mobx-react-lite'
 
 import { Button } from '@hanzo/ui/primitives'
 import { cn } from '@hanzo/ui/util'
 
 import { ProductCard } from '@hanzo/cart/components'
-import { useCommerce } from '@hanzo/cart/service'
+import { persistCart, useCommerce } from '@hanzo/cart/service'
 import { formatPrice } from '@hanzo/cart/util'
 
 import CartLineItem from './cart-line-item'
-
 
 const Cart: React.FC<{
   className?: string
 }> = observer(({
   className=''
 }) => {
-
+  const router = useRouter()
+  const [loadingCheckout, setLoadingCheckout] = React.useState(false)
   const c = useCommerce()
+
+  const checkout = async () => {
+    setLoadingCheckout(true)
+    await persistCart(c.cartItems)
+    router.push('/checkout')
+  }
   
   return (
     <div className={cn('border p-6 rounded-lg', className)}>
@@ -32,7 +39,7 @@ const Cart: React.FC<{
       </div>
       {c.cartItems.length > 0 && (
         <div>
-          <Button size='lg' variant='secondary' rounded='lg' className='mt-12 mx-auto'>Checkout</Button>
+          <Button size='lg' variant='secondary' rounded='lg' className='mt-12 mx-auto' onClick={checkout} disabled={loadingCheckout}>Checkout</Button>
         </div> 
       )}
     </div>

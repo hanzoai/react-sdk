@@ -34,8 +34,10 @@
   },
   "dependencies": {
     "@hanzo/ui": "workspace:*",
+    "@hanzo/auth": "workspace:*",
     "@hookform/resolvers": "^3.3.2",
     "akasha": "^0.1.13",
+    "firebase": "^10.8.0",
     "lucide-react": "^0.307.0",
     "midstream": "^2.0.2",
     "mobx": "^6.12.0",
