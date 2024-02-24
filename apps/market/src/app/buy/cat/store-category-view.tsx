@@ -54,8 +54,8 @@ const ProductViewStore: React.FC<{
     'flex flex-row justify-between md:justify-start sm:gap-x-6 items-start pl-3 lg:pr-8 md:pr-14 py-3 ' + 
     'w-[100vw] sm:w-full left-0 right-0 h-auto ' 
 
-  const facets1Clx = 'grid grid-cols-2 md:border-r ' + (mobile ? '' : 'pr-6 ')
-  const facets2Clx = 'grid grid-cols-4 '
+  const facets1Clx = 'grid grid-cols-2 md:border-r gap-0 ' + (mobile ? '' : 'pr-6 ')
+  const facets2Clx = 'grid grid-cols-4 gap-0 '
 
   return (
     <div className='flex flex-col justify-start items-start'>
@@ -73,9 +73,11 @@ const ProductViewStore: React.FC<{
     <div className={cn('flex flex-row justify-between gap-6 items-stretch w-[100vw] sm:w-auto overflow-y-scroll sm:overflow-y-hidden', className)}>
       <div className='flex flex-row px-4 sm:px-0 sm:grid sm:grid-cols-3 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:grow'>
         { true ? (
-          c.specifiedItems.map((item) => (<ProductCard item={item} key={item.product.sku} className='rounded-lg w-[40vw] sm:w-auto'/>
-          
-        ))) : (
+          c.specifiedItems.map((item) => (
+            // <ProductCard item={item} key={item.product.sku} className='rounded-lg w-[40vw] sm:w-auto'/>
+            <h6 key={item.product.sku} >{item.product.sku}:<br />{item.product.title}</h6>
+          ))
+        ) : (
           <h3>loading...</h3>
         )}
       </div> 

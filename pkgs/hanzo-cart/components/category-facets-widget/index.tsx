@@ -1,7 +1,7 @@
 'use client'
 import React, { useEffect, useState, useRef, type ReactNode, type PropsWithChildren } from 'react'
 
-import { ToggleGroup, ToggleGroupItem,} from "@hanzo/ui/primitives"
+import { ToggleGroup, ToggleGroupItem, toggleVariants,} from "@hanzo/ui/primitives"
 import { cn } from '@hanzo/ui/util'
 
 import { useCommerce } from '../../service'
@@ -61,32 +61,48 @@ const CategoryToggle: React.FC<{
     }
   }
 
+  const Items: React.FC<{single: boolean}> = ({
+    single
+  }) => (
+    modelRef.current?.map((spec, index, arr) => {
+      let variant: string | undefined = undefined
+      if (single && index === 0) {
+        variant = 'singleFirst'
+      }
+      else if (single && index === arr.length - 1) {
+        variant = 'singleLast'
+      } else if (single && index > 0 && index < arr.length - 1) {
+        variant = 'singleMiddle'
+      }
+      return (
+        <ToggleGroupItem 
+          value={spec.id} 
+          disabled={(disabledLast && disabledLast === spec.id) as boolean} 
+          aria-label={`Select ${spec.label}`}
+            // @ts-ignore
+          variant={variant}
+          key={spec.id}
+        >
+          <span className={cn('flex flex-row justify-center gap-1 h-4 items-center')} >
+            <FacetImage spec={spec} />
+            <span className='hidden lg:block whitespace-nowrap'>{spec.label}</span>
+          </span>
+        </ToggleGroupItem>
+      )
+    })
+  )
+
+
   if (mutator) {
     return (
       <ToggleGroup 
         type='single' 
-        variant='default'
         value={mutator.val as string}
-        rounded='xl' 
         size={isMobile ? 'sm' : 'default'}
         onValueChange={handleValueChangeSingle}
         className={className}
       >
-      {modelRef.current?.map((spec) => {
-        return (
-          <ToggleGroupItem 
-            value={spec.id} 
-            disabled={(disabledLast && disabledLast === spec.id) as boolean} 
-            aria-label={`Select ${spec.label}`}
-            key={spec.id}
-          >
-            <span className={cn('flex flex-row justify-center gap-1 h-4 items-center')} >
-              <FacetImage spec={spec} />
-              <span className='hidden lg:block whitespace-nowrap'>{spec.label}</span>
-            </span>
-          </ToggleGroupItem>
-        )
-      })}
+        <Items single={true} />
       </ToggleGroup>  
     )
   }
@@ -104,26 +120,10 @@ const CategoryToggle: React.FC<{
       onValueChange={handleValueChangeMultiple}
       className={className}
     >
-    {modelRef.current?.map((spec) => {
-      return (
-        <ToggleGroupItem 
-          value={spec.id} 
-          disabled={(disabledLast && disabledLast === spec.id) as boolean} 
-          aria-label={`Toggle ${spec.label}`}
-          key={spec.id}
-        >
-          <span className={cn('flex flex-row justify-center gap-1 h-4 items-center')} >
-            <FacetImage spec={spec} />
-            <span className='hidden lg:block whitespace-nowrap'>{spec.label}</span>
-          </span>
-        </ToggleGroupItem>
-      )
-    })}
+      <Items single={false} />
     </ToggleGroup>  
   )
 })
-
-
 
 const CategoryFacetsWidget: React.FC<PropsWithChildren & {
   facets: CategoryFacetSpec[][]

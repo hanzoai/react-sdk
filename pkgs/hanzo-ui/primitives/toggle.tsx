@@ -6,8 +6,15 @@ import { cva, type VariantProps } from 'class-variance-authority'
 
 import { cn } from '../util'
 
+const singleMiddle = 'bg-level-1 text-muted-1 border border-transparent ' + 
+  'data-[state=on]:text-foreground data-[state=on]:bg-level-2 data-[state=on]:border-muted-1 ' + 
+  'hover:text-accent'
+
+const singleLeft = singleMiddle + 'rounded-l-lg'
+const singleRight = singleMiddle + 'rounded-r-lg'
+
 const toggleVariants = cva(
-  'inline-flex items-center justify-center rounded-md text-sm font-medium ' + 
+  'inline-flex items-center justify-center text-sm font-medium ' + 
   'ring-offset-background ' + 
   'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ' + 
   'focus-visible:ring-offset-2 disabled:pointer-events-none ' +
@@ -18,6 +25,11 @@ const toggleVariants = cva(
         default: 'bg-transparent text-muted-1 border border-transparent ' + 
           'data-[state=on]:text-foreground data-[state=on]:bg-level-1 data-[state=on]:border-muted-1 ' + 
           'data-[state=on]:hover:bg-level-3 hover:text-accent',
+
+        singleLeft,
+        singleMiddle,
+        singleRight,
+
         outline: 'bg-transparent border border-muted-3 text-muted-1 ' +
           'data-[state=off]:bg-level-1 hover:data-[state=off]:text-foreground ' + 
           'data-[state=on]:bg-level-3 data-[state=on]:border-muted data-[state=on]:text-foreground',
