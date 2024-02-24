@@ -30,7 +30,7 @@ const FORM = [
   },
   {
     id: 'C',
-    label: 'Coin',
+    label: 'Minted Coin',
     img: <SVG_Coin />,
     ar: 64/80
   },

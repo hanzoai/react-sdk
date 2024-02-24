@@ -10,17 +10,17 @@ const toggleVariants = cva(
   'inline-flex items-center justify-center rounded-md text-sm font-medium ' + 
   'ring-offset-background ' + 
   'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ' + 
-  'focus-visible:ring-offset-2 ' + ' disabled:bg-[#22aa22] ' +
+  'focus-visible:ring-offset-2 disabled:pointer-events-none ' +
   'active:bg-level-3 active:text-accent ',
   {
     variants: {
       variant: {
-        default: 'bg-transparent text-foreground border border-transparent ' + 
-          'data-[state=on]:bg-level-2 data-[state=on]:border-muted-1 ' + 
-          'hover:bg-level-3 hover:text-accent',
-        outline: 'bg-transparent border border-muted-3 text-muted-2 ' +
-          'data-[state=off]:bg-[#ccaaaa] hover:data-[state=off]:border-muted-1 hover:data-[state=off]:text-foreground ' + 
-          'data-[state=on]:bg-secondary data-[state=on]:border-muted data-[state=on]:text-foreground',
+        default: 'bg-transparent text-muted-1 border border-transparent ' + 
+          'data-[state=on]:text-foreground data-[state=on]:bg-level-1 data-[state=on]:border-muted-1 ' + 
+          'data-[state=on]:hover:bg-level-3 hover:text-accent',
+        outline: 'bg-transparent border border-muted-3 text-muted-1 ' +
+          'data-[state=off]:bg-level-1 hover:data-[state=off]:text-foreground ' + 
+          'data-[state=on]:bg-level-3 data-[state=on]:border-muted data-[state=on]:text-foreground',
       },
       size: {
         default: 'h-10 px-3',
