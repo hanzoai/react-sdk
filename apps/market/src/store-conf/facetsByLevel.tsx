@@ -42,7 +42,7 @@ const FORM = [
   },
   {
     id: 'GD',
-    label: 'Good Del.',
+    label: 'Good Delivery',
     img: <SVG_GD />,
     ar: 24/30
   },

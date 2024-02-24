@@ -29,17 +29,20 @@ const ProductCard: React.FC<ProductCardProps> = ({
   ...props
 }) => {
 
-  const ProductImage: React.FC = () => {
+  const ProductImage: React.FC<{className?: string}> = ({className=''}) => {
     if (typeof item.product.img === 'string') {
       return (
         <Image
           src={item.product.img}
           alt={item.product.title}
-          className=''
+          className={className}
           loading='lazy'
+//          width={700}
+//          height={700}
           fill
-          //width={700}
-          //height={700}
+          style={{
+            objectFit: 'contain',
+          }}
         />
       )
     }
@@ -47,46 +50,45 @@ const ProductCard: React.FC<ProductCardProps> = ({
 
     return (
       <Image 
-        //width={dim.w}
-        //height={dim.h}
+  //      width={dim.w}
+  //      height={dim.h}
         src={src}
         fill
         alt={alt ?? item.product.title}
-        className=''
+        className={className}
         loading='lazy'
+        style={{
+          objectFit: 'contain',
+        }}
     />
     )
   }
 
   return (
     <Card
-      className={cn('h-full overflow-hidden rounded-sm', className)}
+      className={cn('max-h-[360px] lg:min-w-[200px] max-w-[260px] overflow-hidden', className)}
       {...props}
     >
-        <CardHeader className='border-b p-0'>
-          <AspectRatio ratio={4 / 3}>
-            {item.product.img ? (
-              <ProductImage />
-            ) : (
-              <div
-                aria-label='Placeholder'
-                role='img'
-                aria-roledescription='placeholder'
-                className='flex h-full items-center justify-center bg-secondary'
-              >
-                <Icons.barcode className='h-9 w-9 text-muted' aria-hidden='true' />
-              </div>
-            )}
-          </AspectRatio>
-        </CardHeader>
-        <CardContent className='grid gap-2.5 p-4'>
-          <CardTitle className='line-clamp-1 text-base'>
-            {item.product.title.split(', ').map((e, i) => (<p key={i}>{e}</p>))}
-          </CardTitle>
-          <CardDescription className='line-clamp-2'>
-            {formatPrice(item.product.price)}
-          </CardDescription>
-        </CardContent>
+      <CardHeader className='w-full border-b p-6 min-h-[180px] max-h-[240px] relative'>
+      {item.product.img ? (
+        <ProductImage className='p-6' />
+      ) : (
+          <div
+            aria-label='Placeholder'
+            role='img'
+            aria-roledescription='placeholder'
+            className='flex h-full items-center justify-center bg-secondary'
+          >
+            <Icons.barcode className='h-9 w-9 text-muted' aria-hidden='true' />
+          </div>
+      )}
+      </CardHeader>
+      <CardContent className='grid gap-2.5 p-4'>
+        <CardTitle className='text-base flex flex-col justify-start items-center'>
+          {item.product.title.split(', ').map((e, i) => (<p key={i}>{e}</p>))}
+          <p className='mt-1 font-semibold'>{formatPrice(item.product.price)}</p>
+        </CardTitle>
+      </CardContent>
       <CardFooter className='p-4 flex flex-row justify-center'>
         <QuantityWidget item={item}/>
       </CardFooter>

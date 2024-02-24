@@ -67,7 +67,7 @@ const CategoryToggle: React.FC<{
         >
           <span className={cn('flex flex-row justify-center gap-1 h-4 items-center')} >
             <FacetImage spec={spec} />
-            <span className='block whitespace-nowrap'>{spec.label}</span>
+            <span className='hidden lg:block whitespace-nowrap'>{spec.label}</span>
           </span>
         </ToggleGroupItem>
       )
@@ -83,23 +83,20 @@ const CategoryFacetsWidget: React.FC<{
 }> = ({
   facets,
   facetClassNames,
-  className=''
+  className='',
 }) => {
+  const horiz = className.includes('flex-row')
   return (
-    <div className={cn('border p-6 rounded-lg', className)}>
-    { /* throws a next / webpack warning about keys.  No idea why */
-     facets.map((f, i) => (<>
-       {(i !== 0) && (<div className='w-pr-80 bg-muted-2 h-[1px] mx-auto' key={`hr-${i}`}/>)}
+    <div className={className}>
+    {facets.map((f, i) => (
       <CategoryToggle 
         key={i} 
         categories={f} 
-        className={cn('mb-2', (i !== 0) ? 'mt-2' : '', (facetClassNames?.[i]) ?? '')} 
+        className={cn((horiz ? '' : 'mb-2'), (i !== 0 && !horiz) ? 'mt-2' : '', (facetClassNames?.[i]) ?? '')} 
       />
-    </>))}
+    ))}
     </div>
   )
 }
 
 export default CategoryFacetsWidget
-
-//       {(i !== 0) && (<hr className='w-pr-80 text-muted-2 mx-auto' key={`hr-${f[0].id}`}/>)}

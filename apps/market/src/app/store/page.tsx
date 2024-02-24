@@ -1,18 +1,14 @@
 import React  from 'react'
-import { notFound } from 'next/navigation'
 
 import { Footer } from '@hanzo/ui/common'
-import { Main } from '@hanzo/ui/primitives'
+import { Main, TailwindIndicator } from '@hanzo/ui/primitives'
 import Store from './store'
-import { products } from '@/content'
 
 import siteDef from '../../siteDef'
 
 type Props = {
-//  params: { slug: 'silver' | 'gold' | 'coin' | 'credit' | 'validator' | 'pass' | 'uranium' }
   searchParams?: { [key: string]: string | string[] | undefined }
 }
-
 
 export async function generateMetadata({ searchParams}: Props) {
   return { title: 'Lux Bullion Store' }
@@ -23,11 +19,17 @@ const BullionStorePage = ({ searchParams }: Props) => {
   // see src/middleware.ts
   const agent = searchParams?.agent
 
+  // must override: p-4 md:px-6 lg:px-8 
   return (<>
-    <Main className='md:flex-row md:gap-4 flex flex-row justify-center'>
-        <Store searchParams={searchParams} className='' />
+    <Main className={
+      'md:flex-row md:gap-4 min-h-[80vh] flex flex-row justify-center ' +
+      '2xl:mx-auto max-w-screen-2xl ' + 
+      'p-0 px-4 md:px-6 lg:px-8'
+    }>
+      <Store searchParams={searchParams} className='max-w-full' />
     </Main>
     <Footer siteDef={siteDef} className='max-w-screen-2xl w-full pt-16 lg:mx-auto ' />
+    <TailwindIndicator />
   </>)
 }
 
