@@ -42,10 +42,10 @@ const Store: React.FC<{
             className='md:hidden right-0 p-0 text-primary relative' // ui has 'text-inherit', so need this for close buttons to appear.
             trigger={(
               <Button
-              aria-label="Cart"
-              variant="outline"
-              size="icon"
-              className="relative"
+                aria-label="Cart"
+                variant="outline"
+                size="icon"
+                className="relative"
               >
               {c.cartItemCount > 0 && (
                 <Badge
