@@ -8,7 +8,7 @@ import { ProductCard, Cart, CategoryFacetsWidget } from '@hanzo/cart/components'
 import { useCommerce } from '@hanzo/cart/service'
 
 import siteDef from '@/siteDef'
-import CartDrawer from './cart-drawer'
+import CartDrawer from '@/components/cart-drawer'
 
 const Store: React.FC<{
   searchParams?: { [key: string]: string | string[] | undefined }
@@ -44,17 +44,16 @@ const Store: React.FC<{
           <Cart isMobile={mobile} className='p-0 border-none mt-12'/>
         </CartDrawer>
       </CategoryFacetsWidget>
-    <div className={cn('flex flex-row justify-between gap-6 items-stretch w-[100vw] sm:w-auto overflow-y-scroll sm:overflow-y-hidden', className)}>
-      <div className='flex flex-row px-4 sm:px-0 sm:grid sm:grid-cols-3 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:grow'>
-        {c.specifiedItems.map((item) => (<ProductCard item={item} key={item.product.sku} className='rounded-lg w-[40vw] sm:w-auto'/>))}
-      </div> 
-      <div className={'shrink hidden md:block ' + cartColumnClx}>
-        <div className={'fixed z-50 md:top-[94px] lg:top-auto ' + cartColumnClx}>
-          <Cart className=''/>
-        </div>
-      </div>   
-    </div>
-
+      <div className={cn('flex flex-row justify-between gap-6 items-stretch w-[100vw] sm:w-auto overflow-y-scroll sm:overflow-y-hidden', className)}>
+        <div className='flex flex-row px-4 sm:px-0 sm:grid sm:grid-cols-3 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:grow'>
+          {c.specifiedItems.map((item) => (<ProductCard item={item} key={item.product.sku} className='rounded-lg w-[40vw] sm:w-auto'/>))}
+        </div> 
+        <div className={'shrink hidden md:block ' + cartColumnClx}>
+          <div className={'fixed z-50 md:top-[94px] lg:top-auto ' + cartColumnClx}>
+            <Cart className=''/>
+          </div>
+        </div>   
+      </div>
     </div>
   )
 }) 

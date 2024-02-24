@@ -11,7 +11,7 @@ import { ProductCard, Cart, CategoryFacetsWidget } from '@hanzo/cart/components'
 import { useCommerce } from '@hanzo/cart/service'
 
 import siteDef from '@/siteDef'
-import CartDrawer from './cart-drawer'
+import CartDrawer from '@/components/cart-drawer'
 
 const ProductViewStore: React.FC<{
   className?: string

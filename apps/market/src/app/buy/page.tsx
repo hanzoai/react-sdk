@@ -2,8 +2,7 @@ import React  from 'react'
 
 import { Footer } from '@hanzo/ui/common'
 import { Main, TailwindIndicator } from '@hanzo/ui/primitives'
-import GeneralStore from './store'
-import ProductFocusedView from './store-product-view'
+import Store from './store'
 
 import siteDef from '../../siteDef'
 
@@ -20,13 +19,6 @@ const BullionStorePage = ({ searchParams }: Props) => {
   // see src/middleware.ts
   const agent = searchParams?.agent as string
 
-  const c1 = searchParams?.c1 as string
-  const c2 = searchParams?.c2 as string
-
-  if (c1 || c2 ) {
-    console.log("PARAMS RAW: ", c1, c2)
-  }
-
   // must override: p-4 md:px-6 lg:px-8 
   return (<>
     <Main className={
@@ -34,11 +26,7 @@ const BullionStorePage = ({ searchParams }: Props) => {
       '2xl:mx-auto max-w-screen-2xl ' + 
       'p-0 px-4 md:px-6 lg:px-8'
     }>
-      {(c1 || c2) ? (
-        <ProductFocusedView agent={agent} className='max-w-full' />
-      ) : (
-        <GeneralStore searchParams={searchParams} agent={agent} className='max-w-full' />
-      )}
+      <Store searchParams={searchParams} agent={agent} className='max-w-full' />
     </Main>
     <Footer siteDef={siteDef} className='max-w-screen-2xl w-full pt-16 lg:mx-auto ' />
     <TailwindIndicator />

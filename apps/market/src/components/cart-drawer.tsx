@@ -2,17 +2,11 @@
 import React, { type PropsWithChildren } from 'react'
 import { observer } from 'mobx-react-lite'
 
-import { cn } from '@hanzo/ui/util'
-
-import { ProductCard, Cart, CategoryFacetsWidget } from '@hanzo/cart/components'
 import { Icons } from '@hanzo/cart/components/Icons'
 import { useCommerce } from '@hanzo/cart/service'
 
-import siteDef from '@/siteDef'
 import { DrawerMenu } from '@hanzo/ui/common'
 import { Button, Badge } from '@hanzo/ui/primitives'
-
-
 
 const CartDrawer: React.FC<PropsWithChildren & {className?: string}> = ({
   children,
@@ -20,7 +14,6 @@ const CartDrawer: React.FC<PropsWithChildren & {className?: string}> = ({
 }) => {
 
   const c = useCommerce()
-
   const CartButton: React.FC<{className?: string}> = observer(({
     className=''
   }) => (
