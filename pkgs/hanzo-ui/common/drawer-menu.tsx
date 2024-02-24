@@ -9,12 +9,14 @@ import { Sheet, SheetContent, SheetTrigger } from '../primitives/sheet'
 const DrawerMenu: React.FC<PropsWithChildren & {
   trigger: ReactNode
   className?: string
-  showLogo?: boolean
+  showLogo?: boolean,
+  propogate?: boolean
 }> = ({
   trigger,
   children,
   className='',
-  showLogo=true
+  showLogo=true,
+  propogate=true
 }) => {
 
   const [open, setOpen] = React.useState(false)
@@ -37,7 +39,7 @@ const DrawerMenu: React.FC<PropsWithChildren & {
       <SheetContent 
         side="right" 
         closeButtonClass='text-inherit opacity-90' 
-        onClick={onAction}
+        onClick={propogate ? onAction : () => {}}
         closeElement={<LucideX className='h-6 w-6 text-inherit'/>}
         centerElement={showLogo ? <Logo size='xs' className='' /> : null}
       >

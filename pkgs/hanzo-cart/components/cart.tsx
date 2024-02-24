@@ -13,8 +13,10 @@ import CartLineItem from './cart-line-item'
 
 const Cart: React.FC<{
   className?: string
+  isMobile?: boolean
 }> = observer(({
-  className=''
+  className='',
+  isMobile=false
 }) => {
 
   const c = useCommerce()
@@ -25,7 +27,7 @@ const Cart: React.FC<{
       {c.cartItems.length === 0 ? (
         <p>No items in cart</p>
       ) : (<>
-        {c.cartItems.map((item, i) => (<CartLineItem item={item} key={item.product.sku} className='mb-2'/>))}
+        {c.cartItems.map((item, i) => (<CartLineItem isMobile={isMobile} item={item} key={item.product.sku} className='mb-4 sm:mb-2'/>))}
         <p className='mt-6 text-right border-t pt-1'>TOTAL: {c.cartTotalValue === 0 ? '0' : formatPrice(c.cartTotalValue)}</p>
       </>)}
       </div>

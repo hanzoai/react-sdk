@@ -12,14 +12,16 @@ const QuantityWidget: React.FC<{
   item: LineItem
   ghost?: boolean
   className?: string
+  isMobile?: boolean
 }> = observer(({
   item,
   ghost=false,
-  className=''
+  className='',
+  isMobile=false
 }) => {
 
-  const iconClx = ghost ? 'h-3 w-3 text-muted-3 hover:text-foreground' : 'h-5 w-5 mr-1'
-  const digitClx = ghost ? 'px-1' : 'px-2 font-bold '
+  const iconClx = ghost && !isMobile ? 'h-3 w-3 text-muted-3 hover:text-foreground' : 'h-5 w-5 mr-1'
+  const digitClx = ghost && !isMobile ? 'px-1' : 'px-2 font-bold '
   
   return ( item.isInCart ? (
     <div className={cn('flex flex-row items-stretch ' + (ghost ? 'bg-transparent  rounded-xl' : 'bg-secondary rounded-xl'), className)}>

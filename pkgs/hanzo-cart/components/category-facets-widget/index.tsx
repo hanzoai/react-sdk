@@ -13,9 +13,11 @@ import FacetImage from './facet-image'
 const CategoryToggle: React.FC<{
   categories: CategoryFacetSpec[]
   className?: string
+  isMobile?: boolean
 }> = observer(({
   categories,
-  className=''
+  className='',
+  isMobile=false
 }) => {
 
   const [disabledLast, setDisabledLast] = useState<string | undefined>(undefined)
@@ -54,6 +56,7 @@ const CategoryToggle: React.FC<{
       variant='default'
       value={groupValue}
       rounded='xl' 
+      size={isMobile ? 'sm' : 'default'}
       onValueChange={handleValueChange}
       className={className}
     >
@@ -79,11 +82,13 @@ const CategoryToggle: React.FC<{
 const CategoryFacetsWidget: React.FC<PropsWithChildren & {
   facets: CategoryFacetSpec[][]
   facetClassNames?: string[]
+  isMobile?: boolean
   className?: string
 }> = ({
   children,
   facets,
   facetClassNames,
+  isMobile=false,
   className='',
 }) => {
   const horiz = className.includes('flex-row')
@@ -92,6 +97,7 @@ const CategoryFacetsWidget: React.FC<PropsWithChildren & {
         {facets.map((f, i) => (
           <CategoryToggle 
             key={i} 
+            isMobile={isMobile}
             categories={f} 
             className={cn((horiz ? '' : 'mb-2'), (i !== 0 && !horiz) ? 'mt-2' : '', (facetClassNames?.[i]) ?? '')} 
           />
