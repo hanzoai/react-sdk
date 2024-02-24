@@ -1,13 +1,21 @@
 import { 
+  action,
+  computed, 
+  makeAutoObservable,
   makeObservable, 
   observable, 
-  action, 
-  computed, 
   runInAction, 
-  makeAutoObservable
 } from 'mobx'
 
-import type { Product, Category, LineItem } from '../../../types'
+import type { ImageDef } from '@hanzo/ui/types'
+
+import type { 
+  Product, 
+  Category, 
+  TogglableCategory, 
+  LineItem 
+} from '../../../types'
+
 import type CommerceService from '../../commerce-service'
 
 class LineItemImpl implements LineItem {
@@ -31,35 +39,72 @@ class LineItemImpl implements LineItem {
       this.qu--
     }
   }
+
+  inCategory(id: string): boolean {
+      // TODO: will break for level one (which is ok for lux, but not generally)
+    return this.product.sku.includes(`-${id}-`)
+  }
+
+}
+
+class TogglableCategoryImpl implements TogglableCategory {
+
+  private _on: boolean = true
+
+  readonly id: string
+  readonly title: string
+  readonly level: number | undefined 
+  readonly desc: string | undefined
+  readonly img: string | ImageDef | undefined
+
+  constructor(c: Category) {
+    this.id = c.id
+    this.title = c.title
+    this.level = c.level
+    this.desc = c.desc
+    this.img = c.img
+
+    makeObservable<TogglableCategoryImpl, '_on' >(this, {
+      _on: observable,
+    })
+
+    makeObservable(this, {
+      isOn: computed,
+      setOn: action
+    })
+  }
+
+  get isOn(): boolean {
+    return this._on
+  }
+
+  setOn(b: boolean): void {
+    this._on = b
+  }
 }
 
 class StandaloneCommerceService 
   implements CommerceService
 {
   private _items: LineItem[]
-  private _categories: Category[]
-  private _specifiedCategories: Category[] = []
+  private _categories: TogglableCategoryImpl[]
 
   constructor(
     products: Product[], 
     categories: Category[]=[]
   ) {
-    makeObservable<StandaloneCommerceService, 
-      '_specifiedCategories'
-    >(this, {
-      _specifiedCategories: observable.shallow,
-    })
-
     makeObservable(this, {
       cartItems: computed,
       cartItemCount: computed,
       cartTotalValue: computed, 
       specifiedCategories: computed,
       specifiedItems: computed,
+      setCategoryStates: action,
+      setSpecifiedCategories: action,
     })
 
     this._items = products.map((p) => (new LineItemImpl(p)))
-    this._categories = categories
+    this._categories = categories.map((c) => (new TogglableCategoryImpl(c)))
   }
 
   get cartItems(): LineItem[] {
@@ -79,47 +124,63 @@ class StandaloneCommerceService
     )
   }
 
-  setSpecifiedCategories(categoryIds: string[] | null): LineItem[] {
+  setSpecifiedCategories(idsToTurnOn: string[] | null): LineItem[] {
     runInAction(() => {
-      if (categoryIds == null || categoryIds.length === 0) {
-        this._specifiedCategories = []
-      } 
-      else {
-        this._specifiedCategories = this._categories.filter((cat) => (
-          categoryIds.includes(cat.id)
-        )) 
-      }
+      const allOff = (idsToTurnOn == null || idsToTurnOn.length === 0)
+      this._categories.forEach((c) => {
+        c.setOn(
+          !(allOff || !idsToTurnOn?.includes(c.id))  
+        )
+      })
     })
     return this.specifiedItems
   }
 
-  get specifiedCategories(): Category[] {
-    return this._specifiedCategories  
+  setCategoryStates(states: {[key: string]: boolean}): void {
+    runInAction(() => {
+      this._categories.forEach((c) => {
+        if (c.id in states) {
+          c.setOn(states[c.id])
+        }
+      })
+    })
+  }
+
+  get specifiedCategories(): TogglableCategory[] {
+    return this._categories.filter((c) => (c.isOn))  
   }
 
   get specifiedItems(): LineItem[] {
-    let result: LineItem[] = []
-    if (this._specifiedCategories.length > 0) {
-      result = this._items.filter((item) => (
-        this._specifiedCategories.some((cat) => (item.product.sku.includes(cat.id)))
-      ))
+    const specified = this.specifiedCategories
+    const levels: TogglableCategory[][] = []
+    const highestLevelPresent = specified.reduce(((result, cat) => ((cat.level! > result) ? cat.level! : result)), 0)
+      // TODO level 1 might be active
+    for (let i = 2; i <= highestLevelPresent; i++) {
+      levels.push(specified.filter((cat) => (cat.level! === i)))
     }
-    else {
-      result = [...this._items]
-    }
+
+    const result = this._items.filter((item) => (
+      levels.every((level) => (level.some((cat) => (item.inCategory(cat.id)))))
+    ))
+
     return result.sort((a, b) => (a.product.sku.localeCompare(b.product.sku)))
   }
 
   getCategorySubtotal(categoryId: string): number {
     return this._items.reduce((total, item) => (
-        (item.product.sku.includes(categoryId)) ? (total + item.product.price * item.quantity) : total 
+        (item.inCategory(categoryId)) ? (total + item.product.price * item.quantity) : total 
       ), 
       0
     )
   }
 
   get allItems(): LineItem[] {return (this._items)}
-  get allCategories(): Category[] {return (this._categories)}
+  get allCategories(): TogglableCategory[] {return (this._categories)}
+
+    // for initial set up ui if cat is known.  Returns the stateful object
+  getCategories(ids: string[]): TogglableCategory[] {
+    return this._categories.filter((c) => (ids.includes(c.id)))
+  }
 }
 
 export default StandaloneCommerceService

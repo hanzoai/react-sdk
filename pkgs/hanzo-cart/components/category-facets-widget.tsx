@@ -1,5 +1,5 @@
 'use client'
-import React from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import Image from 'next/image'
 
 import {
@@ -8,30 +8,37 @@ import {
 } from "@hanzo/ui/primitives"
 import { cn } from '@hanzo/ui/util'
 import { useCommerce } from '../service'
-
-interface CategoryDef {
-  id: string
-  label: string
-  img?: string
-}
+import type { CategoryFacetSpec } from '../types'
+import { observer } from 'mobx-react-lite'
 
 const SWATCH_SIZE = 16
 
+
 const CategoryToggle: React.FC<{
-  categories: CategoryDef[]
-  defaultId: string[]
-}> = ({
+  categories: CategoryFacetSpec[]
+}> = observer(({
   categories,
-  defaultId
 }) => {
 
-  const [disabledLast, setDisabledLast] = React.useState<string | undefined>(undefined)
-
+  const [disabledLast, setDisabledLast] = useState<string | undefined>(undefined)
+  const modelRef = useRef<CategoryFacetSpec[] | undefined>(undefined) 
   const c = useCommerce()
+
+  useEffect(() => {
+    const ids = categories.map((c) => (c.id))
+    const tcs = c.getCategories(ids)
+    categories.forEach((specCat, i) => {
+      specCat.tc = tcs.find((storeCat) => (storeCat.id === specCat.id))
+    })
+    modelRef.current = categories
+  }, [])
   
   const handleValueChange = (selected: string[]) => {
-    c.setSpecifiedCategories(selected)
-    console.log("TG: ", selected)
+    const states: {[key: string]: boolean} = {}
+    categories.forEach((c) => {
+      states[c.id] = selected.includes(c.id)
+    })
+    c.setCategoryStates(states)
     if (selected.length === 1) {
       setDisabledLast(selected[0])
     }
@@ -40,57 +47,53 @@ const CategoryToggle: React.FC<{
     }
   }
 
+  const value = categories.filter((cat) => (cat.tc?.isOn)).map((cat) => (cat.id))
+
   return (
-    <ToggleGroup 
-      type='multiple' 
-      variant='default'
-      rounded='xl' 
-      defaultValue={defaultId} 
-      onValueChange={handleValueChange}
-    >
-      {categories.map((cd) => (
+  <ToggleGroup 
+    type='multiple' 
+    variant='outline'
+    value={value}
+    rounded='xl' 
+    onValueChange={handleValueChange}
+  >
+      {modelRef.current?.map((spec) => (
         <ToggleGroupItem 
-          value={cd.id} 
-          disabled={(disabledLast && disabledLast === cd.id) as boolean} 
-          aria-label={`Toggle ${cd.label}`}
+          value={spec.id} 
+          disabled={(disabledLast && disabledLast === spec.id) as boolean} 
+          aria-label={`Toggle ${spec.label}`}
+          key={spec.id}
         >
           <span className='flex h-4 items-center' >
+          {spec.img && (
             <Image 
-              src={cd.img!} 
-              alt={`Toggle ${cd.label}`} 
+              src={spec.img} 
+              alt={`Toggle ${spec.label}`} 
               width={SWATCH_SIZE} 
               height={SWATCH_SIZE} 
               className='block mr-1 aspect-square rounded'
             />
-            {cd.label}
+          )}
+            {spec.label}
           </span>
         </ToggleGroupItem>
       ))}
     </ToggleGroup>  
   )
-}
-
-const CATS = [
-  {
-    id: 'AG',
-    label: 'Silver',
-    img: '/assets/img/cart/ui/silver-swatch-200x200.png'
-  },
-  {
-    id: 'AU',
-    label: 'Gold',
-    img: '/assets/img/cart/ui/gold-swatch-150x150.png'
-  },
-]
+})
 
 const CategoryFacetsWidget: React.FC<{
+  facets: CategoryFacetSpec[][]
   className?: string
 }> = ({
+  facets,
   className=''
 }) => {
   return (
     <div className={cn('border p-6 rounded-lg', className)}>
-      <CategoryToggle categories={CATS} defaultId={['AG','AU']}/>
+    {facets.map((f) => (
+      <CategoryToggle categories={f} key={f[0].id}/>  
+    ))}
     </div>
   )
 }

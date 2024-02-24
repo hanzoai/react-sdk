@@ -1,4 +1,4 @@
-import type { LineItem, Category } from '../types'
+import type { LineItem, Category, TogglableCategory } from '../types'
 
 interface CommerceService {
 
@@ -16,6 +16,7 @@ interface CommerceService {
      * null resets the specified set to all products in the store
      * */ 
   setSpecifiedCategories(categoryIds: string[] | null): LineItem[]
+  setCategoryStates(states: {[key: string]: boolean}): void 
   get specifiedCategories(): Category[] // or empty array
   get specifiedItems(): LineItem[]
 
@@ -23,6 +24,7 @@ interface CommerceService {
   get allCategories(): Category[]
     /** for dev convenience */ 
   get allItems(): LineItem[] 
+  getCategories(ids: string[]): TogglableCategory[]
 }
 
 export {

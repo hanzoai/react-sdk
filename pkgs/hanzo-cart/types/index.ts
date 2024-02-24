@@ -19,6 +19,11 @@ interface Category {
   img?: string | ImageDef
 }
 
+interface TogglableCategory extends Category {
+  get isOn(): boolean
+  setOn(b: boolean): void
+}
+
   // in the system, client code always 
   // goes through a list item, whether the product
   // is in the cart or not. SOmething is in the cart
@@ -35,12 +40,25 @@ interface LineItem {
 
   increment(): void
   decrement(): void
+
+  inCategory(id: string): boolean
 }
+
+interface CategoryFacetSpec {
+  id: string
+  label: string
+  img?: string
+  tc?: TogglableCategory // transient, for convenience
+}
+
+
 
 export {
   type Product,
   type Category,
   type LineItem,
+  type TogglableCategory,
+  type CategoryFacetSpec,
 }
 
 

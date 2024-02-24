@@ -2,6 +2,9 @@ import type { SiteDef } from '@hanzo/ui/types'
 import common from '@hanzo/ui/siteDef/main-nav'
 import footer from '@hanzo/ui/siteDef/footer'
 
+import type { CategoryFacetSpec } from '@hanzo/cart/types'
+import facets from '@/store-conf/facetsByLevel'
+
 export default {
   currentAs: 'https://lux.market',
   nav: {
@@ -14,5 +17,10 @@ export default {
       variant: 'primary',
     }],
   },
-  footer
+  footer,
+  ext: {
+    store: {
+      facets: facets satisfies CategoryFacetSpec[][]
+    }
+  }
 } satisfies SiteDef
