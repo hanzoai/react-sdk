@@ -47,6 +47,9 @@ importers:
       next-themes:
         specifier: ^0.2.1
         version: 0.2.1(next@14.1.0)(react-dom@18.2.0)(react@18.2.0)
+      next-usequerystate:
+        specifier: ^1.17.0
+        version: 1.17.0(next@14.1.0)
       postcss-selector-parser:
         specifier: ^6.0.13
         version: 6.0.15
@@ -10535,6 +10538,10 @@ packages:
     resolution: {integrity: sha512-jYofLM5Dam9279rdkWzqHozUo4ybjdZmCsDHePy5V/PbBcVMiSZR97gmAy45aqi8CK1lG2ECd356FU86avfwUQ==}
     engines: {node: '>=16 || 14 >=14.17'}
 
+  /mitt@3.0.1:
+    resolution: {integrity: sha512-vKivATfr97l2/QBCYAkXYDbrIWPM2IIKEl7YPhjCvKlG3kE2gm+uBo6nEXK3M5/Ffh/FLpKExzOQ3JJoJGFKBw==}
+    dev: false
+
   /mkdirp-classic@0.5.3:
     resolution: {integrity: sha512-gKLcREMhtuZRwRAfqP3RFW+TK4JqApVBtOIftVgjuABpAtpxhPGaDcfvbhNvD0B8iD1oUr/txX35NjcaY6Ns/A==}
     dev: false
@@ -10662,6 +10669,15 @@ packages:
       next: 14.1.0(@babel/core@7.22.6)(react-dom@18.2.0)(react@18.2.0)
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
+    dev: false
+
+  /next-usequerystate@1.17.0(next@14.1.0):
+    resolution: {integrity: sha512-DICs3oqABUi0nTQHBpvfhvb4bY8qc5u4IuFHXIv0+5cSPse5NuR/MtHGHAxQVVdzzkwg4FvYgSsypcoaJyFJ1g==}
+    peerDependencies:
+      next: '>=13.4 <14.0.2 || ^14.0.3'
+    dependencies:
+      mitt: 3.0.1
+      next: 14.1.0(@babel/core@7.22.6)(react-dom@18.2.0)(react@18.2.0)
     dev: false
 
   /next@13.4.8(@babel/core@7.22.6)(react-dom@18.2.0)(react@18.2.0):

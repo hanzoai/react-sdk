@@ -10,12 +10,19 @@ import { observer } from 'mobx-react-lite'
 
 import FacetImage from './facet-image'
 
+export interface CategoryGetterSetter {
+  val: string | null
+  set(v: string | null): void
+}
+
 const CategoryToggle: React.FC<{
   categories: CategoryFacetSpec[]
+  mutator?: CategoryGetterSetter
   className?: string
   isMobile?: boolean
 }> = observer(({
   categories,
+  mutator,
   className='',
   isMobile=false
 }) => {
@@ -33,7 +40,7 @@ const CategoryToggle: React.FC<{
     modelRef.current = categories
   }, [])
   
-  const handleValueChange = (selected: string[]) => {
+  const handleValueChangeMultiple = (selected: string[]) => {
     const states: {[key: string]: boolean} = {}
     categories.forEach((c) => {
       states[c.id] = selected.includes(c.id)
@@ -47,17 +54,54 @@ const CategoryToggle: React.FC<{
     }
   }
 
+  const handleValueChangeSingle = (selected: string) => {
+    mutator!.set(selected)
+    if (selected) {
+      setDisabledLast(selected)
+    }
+  }
+
+  if (mutator) {
+    return (
+      <ToggleGroup 
+        type='single' 
+        variant='default'
+        value={mutator.val as string}
+        rounded='xl' 
+        size={isMobile ? 'sm' : 'default'}
+        onValueChange={handleValueChangeSingle}
+        className={className}
+      >
+      {modelRef.current?.map((spec) => {
+        return (
+          <ToggleGroupItem 
+            value={spec.id} 
+            disabled={(disabledLast && disabledLast === spec.id) as boolean} 
+            aria-label={`Select ${spec.label}`}
+            key={spec.id}
+          >
+            <span className={cn('flex flex-row justify-center gap-1 h-4 items-center')} >
+              <FacetImage spec={spec} />
+              <span className='hidden lg:block whitespace-nowrap'>{spec.label}</span>
+            </span>
+          </ToggleGroupItem>
+        )
+      })}
+      </ToggleGroup>  
+    )
+  }
+
     // string[] of "on" values
   const groupValue = categories.filter((cat) => (cat.tc?.isOn)).map((cat) => (cat.id))
 
   return (
     <ToggleGroup 
-      type='multiple' 
+      type='multiple'
       variant='default'
       value={groupValue}
       rounded='xl' 
       size={isMobile ? 'sm' : 'default'}
-      onValueChange={handleValueChange}
+      onValueChange={handleValueChangeMultiple}
       className={className}
     >
     {modelRef.current?.map((spec) => {
@@ -79,14 +123,18 @@ const CategoryToggle: React.FC<{
   )
 })
 
+
+
 const CategoryFacetsWidget: React.FC<PropsWithChildren & {
   facets: CategoryFacetSpec[][]
   facetClassNames?: string[]
+  mutators?: CategoryGetterSetter[]
   isMobile?: boolean
   className?: string
 }> = ({
   children,
   facets,
+  mutators,
   facetClassNames,
   isMobile=false,
   className='',
@@ -96,7 +144,8 @@ const CategoryFacetsWidget: React.FC<PropsWithChildren & {
     <div className={className}>
         {facets.map((f, i) => (
           <CategoryToggle 
-            key={i} 
+            key={i}
+            mutator={mutators ? mutators![i] : undefined} 
             isMobile={isMobile}
             categories={f} 
             className={cn((horiz ? '' : 'mb-2'), (i !== 0 && !horiz) ? 'mt-2' : '', (facetClassNames?.[i]) ?? '')} 

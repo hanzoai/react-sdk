@@ -11,12 +11,14 @@ const DrawerMenu: React.FC<PropsWithChildren & {
   className?: string
   showLogo?: boolean,
   propogate?: boolean
+  asChild?: boolean
 }> = ({
   trigger,
   children,
   className='',
   showLogo=true,
-  propogate=true
+  propogate=true,
+  asChild=false
 }) => {
 
   const [open, setOpen] = React.useState(false)
@@ -33,7 +35,7 @@ const DrawerMenu: React.FC<PropsWithChildren & {
 
   return (
     <Sheet open={open} onOpenChange={setOpen} >
-      <SheetTrigger className={className} >
+      <SheetTrigger className={className} asChild={asChild}>
         {trigger}
       </SheetTrigger>
       <SheetContent 
