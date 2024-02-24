@@ -39,14 +39,12 @@ const Header: React.FC<{
             itemClx={navItemClx} 
             key='three'
           />
-          {siteDef.nav.cart}
         </div>
       </div>
       {/* smaller than md: mobile style drawer menu */}
       <div className="flex md:hidden h-[44px] items-center justify-between px-2">
         <Logo size='sm' />
         <div className='flex gap-2'>
-          {siteDef.nav.cart}
           <DrawerMenu 
             className='p-0 text-primary' // ui has 'text-inherit', so need this for close buttons to appear.
             trigger={<Icons.burger className='h-7 w-7'/>}

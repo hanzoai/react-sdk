@@ -134,6 +134,7 @@ export { Toaster } from './toaster'
 export { useToast, toast } from './use-toast'
 
 export { default as AspectRatio } from './aspect-ratio'
+export { default as Badge } from './badge'
 export { default as VideoPlayer } from './video-player'
 export { default as YouTubeEmbed } from './youtube-embed'
 export { default as Switch } from './switch' 

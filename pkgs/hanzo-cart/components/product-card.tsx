@@ -84,7 +84,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
       )}
       </CardHeader>
       <CardContent className='grid gap-2.5 p-4'>
-        <CardTitle className='text-base flex flex-col justify-start items-center'>
+        <CardTitle className='text-base flex flex-col justify-start items-center line-clap-3'>
           {item.product.title.split(', ').map((e, i) => (<p key={i}>{e}</p>))}
           <p className='mt-1 font-semibold'>{formatPrice(item.product.price)}</p>
         </CardTitle>

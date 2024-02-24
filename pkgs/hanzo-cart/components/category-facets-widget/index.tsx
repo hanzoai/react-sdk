@@ -1,5 +1,5 @@
 'use client'
-import React, { useEffect, useState, useRef, type ReactNode } from 'react'
+import React, { useEffect, useState, useRef, type ReactNode, type PropsWithChildren } from 'react'
 
 import { ToggleGroup, ToggleGroupItem,} from "@hanzo/ui/primitives"
 import { cn } from '@hanzo/ui/util'
@@ -76,11 +76,12 @@ const CategoryToggle: React.FC<{
   )
 })
 
-const CategoryFacetsWidget: React.FC<{
+const CategoryFacetsWidget: React.FC<PropsWithChildren & {
   facets: CategoryFacetSpec[][]
   facetClassNames?: string[]
   className?: string
 }> = ({
+  children,
   facets,
   facetClassNames,
   className='',
@@ -88,13 +89,14 @@ const CategoryFacetsWidget: React.FC<{
   const horiz = className.includes('flex-row')
   return (
     <div className={className}>
-    {facets.map((f, i) => (
-      <CategoryToggle 
-        key={i} 
-        categories={f} 
-        className={cn((horiz ? '' : 'mb-2'), (i !== 0 && !horiz) ? 'mt-2' : '', (facetClassNames?.[i]) ?? '')} 
-      />
-    ))}
+        {facets.map((f, i) => (
+          <CategoryToggle 
+            key={i} 
+            categories={f} 
+            className={cn((horiz ? '' : 'mb-2'), (i !== 0 && !horiz) ? 'mt-2' : '', (facetClassNames?.[i]) ?? '')} 
+          />
+        ))}
+    {children}
     </div>
   )
 }

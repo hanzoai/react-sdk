@@ -31,12 +31,11 @@ const DrawerMenu: React.FC<PropsWithChildren & {
 
   return (
     <Sheet open={open} onOpenChange={setOpen} >
-      <SheetTrigger>
+      <SheetTrigger className={className} >
         {trigger}
       </SheetTrigger>
       <SheetContent 
         side="right" 
-        className={className} 
         closeButtonClass='text-inherit opacity-90' 
         onClick={onAction}
         closeElement={<LucideX className='h-6 w-6 text-inherit'/>}

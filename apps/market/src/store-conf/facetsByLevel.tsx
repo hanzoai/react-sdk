@@ -20,7 +20,6 @@ const TYPE = [
   },
 ]
 
-
 const FORM = [
   {
     id: 'B',
