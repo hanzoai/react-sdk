@@ -23,7 +23,14 @@ const Store: React.FC<{
       </div> 
       <div className='w-pr-20 '>
         <div className='fixed top-[96px] w-[400px] z-50 '>
-          <CategoryFacetsWidget className='mb-6' facets={siteDef.ext.store.facets}/>
+          <CategoryFacetsWidget 
+            className='mb-6 flex flex-col items-start' 
+            facetClassNames={[
+              'grid grid-cols-2 gap-x-4  w-full', 
+              'grid grid-cols-2 gap-x-4 w-full'
+            ]} 
+            facets={siteDef.ext.store.facets}
+          />
           <Cart className=''/>
         </div>
       </div>   

@@ -1,3 +1,5 @@
+import type { ReactNode } from 'react'
+
 import type { ImageDef } from '@hanzo/ui/types'
 
 interface Product {
@@ -47,11 +49,10 @@ interface LineItem {
 interface CategoryFacetSpec {
   id: string
   label: string
-  img?: string
+  img?: string | ReactNode
+  ar?: number // aspect ratio for svgs 
   tc?: TogglableCategory // transient, for convenience
 }
-
-
 
 export {
   type Product,
