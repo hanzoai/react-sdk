@@ -6,6 +6,7 @@ import { observer } from 'mobx-react-lite'
 import { ProductCard, Cart, CategoryFacetsWidget } from '@hanzo/cart/components'
 import { useCommerce } from '@hanzo/cart/service'
 
+import siteDef from '@/siteDef'
 
 const Store: React.FC<{
   searchParams?: { [key: string]: string | string[] | undefined }
@@ -22,7 +23,7 @@ const Store: React.FC<{
       </div> 
       <div className='w-pr-20 '>
         <div className='fixed top-[96px] w-[400px] z-50 '>
-          <CategoryFacetsWidget className='mb-6'/>
+          <CategoryFacetsWidget className='mb-6' facets={siteDef.ext.store.facets}/>
           <Cart className=''/>
         </div>
       </div>   
