@@ -1,21 +1,21 @@
-interface ItemData {
-  t: string
+interface ItemImportData {
+  tok: string
   price: number
   img?: string
   desc?: string
 }
 
-interface CategoryData {
-  t: string
+interface LevelImportData {
+  tok: string
   titleToken?: string
   label: string
   level: number
   img?: string
   desc?: string
-  chn: CategoryData[] | ItemData[]
+  ch: LevelImportData[] | ItemImportData[]
 }
 
 export {
-  type ItemData,
-  type CategoryData
+  type ItemImportData,
+  type LevelImportData
 }

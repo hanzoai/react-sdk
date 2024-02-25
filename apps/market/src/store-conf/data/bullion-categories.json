@@ -2,11 +2,13 @@
   "LUX": {
     "id": "LUX",
     "title": "Lux Bullion",
+    "skuPath": "LUX",
     "level": 1
   },
   "AU": {
     "id": "AU",
     "title": "Lux Gold",
+    "skuPath": "LUX-AU",
     "level": 2,
     "desc": "Forge your connection to the real world with Lux Gold, crafted with excellence in Dubai.",
     "img": "/assets/img/cart/gold-bar-700x700.png"
@@ -14,6 +16,7 @@
   "B": {
     "id": "B",
     "title": "Minted Bar",
+    "skuPath": "LUX-AG-B",
     "level": 3,
     "desc": "Get unprecedented access to silver with 1:1 asset-backed Lux Silver NFTs, sovereign ownership of physical silver without management fees, and mine-direct discount pricing.",
     "img": "/assets/img/cart/silver-bar-700x700.png"
@@ -21,6 +24,7 @@
   "C": {
     "id": "C",
     "title": "Minted Coin",
+    "skuPath": "LUX-AG-C",
     "level": 3,
     "desc": "Get unprecedented access to silver with 1:1 asset-backed Lux Silver NFTs, sovereign ownership of physical silver without management fees, and mine-direct discount pricing.",
     "img": "/assets/img/cart/silver-bar-700x700.png"
@@ -28,6 +32,7 @@
   "MB": {
     "id": "MB",
     "title": "Multibar",
+    "skuPath": "LUX-AG-MB",
     "level": 3,
     "desc": "Get unprecedented access to silver with 1:1 asset-backed Lux Silver NFTs, sovereign ownership of physical silver without management fees, and mine-direct discount pricing.",
     "img": "/assets/img/cart/silver-multibar-700x700.png"
@@ -35,6 +40,7 @@
   "GD": {
     "id": "GD",
     "title": "Good Del. Bar",
+    "skuPath": "LUX-AG-GD",
     "level": 3,
     "desc": "Get unprecedented access to silver with 1:1 asset-backed Lux Silver NFTs, sovereign ownership of physical silver without management fees, and mine-direct discount pricing.",
     "img": "/assets/img/cart/silver-bar-700x700.png"
@@ -42,6 +48,7 @@
   "AG": {
     "id": "AG",
     "title": "Lux Silver",
+    "skuPath": "LUX-AG",
     "level": 2,
     "desc": "Get unprecedented access to silver with 1:1 asset-backed Lux Silver NFTs, sovereign ownership of physical silver without management fees, and mine-direct discount pricing.",
     "img": "/assets/img/cart/silver-bar-700x700.png"

@@ -1,4 +1,4 @@
-import type { LineItem, Category, TogglableCategory } from '../types'
+import type { LineItem, Category, Facet } from '../types'
 
 interface CommerceService {
 
@@ -10,21 +10,31 @@ interface CommerceService {
   getCategorySubtotal: (categoryId: string) => number
 
     /** 
-     * returns Product's that belong to all categories 
+     * Exclusively sets the current selected Facets.
+     * For convenience, returns all the items in 
+     *  all categories that are now specified by the 
+     *  facet selection state.
      * (and caches them until the next call) 
      * 
-     * null resets the specified set to all products in the store
+     * null resets the selected set to specifying all Category's 
+     * and Products in the store
      * */ 
-  setSpecifiedCategories(categoryIds: string[] | null): LineItem[]
-  setCategoryStates(states: {[key: string]: boolean}): void 
+  setSelectedFacets(tokens: string[] | null): LineItem[]
+
+    /** 
+     * non-exclusively sets the supplied Facets to the supplied states.
+     * Caches and returns the resultant Product set as above. 
+     * */ 
+  modifySelectedFacets(states: {[key: string]: boolean}): LineItem[]
+  get selectedFacets(): Facet[]         // or empty array
+
+  getFacets(ids: string[]): Facet[]
+
   get specifiedCategories(): Category[] // or empty array
   get specifiedItems(): LineItem[]
 
-    /** sorted by level */
-  get allCategories(): Category[]
     /** for dev convenience */ 
   get allItems(): LineItem[] 
-  getCategories(ids: string[]): TogglableCategory[]
 }
 
 export {

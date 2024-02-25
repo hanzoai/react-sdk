@@ -1,3 +1,8 @@
+export {default as ROOT} from './to-import/root'
+
+export const TS = '-'  // token separator
+export const DEC = '_' // decimal substitute
+
 export const ASSETS_PATH = '/assets/img/cart/'
 export const IMG = {
   AU_B: 'gold-bar-700x700.png',
@@ -14,6 +19,7 @@ export const IMG_LEVEL_3 = {
   MB: 'gold-multibar-700x700.png',
   GD: 'gold-silver-bars-700x700.png',
 }
+
 
   // must have last '/'
 export const OUT_DIR = '../../apps/market/src/store-conf/data/'

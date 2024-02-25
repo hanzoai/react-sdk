@@ -175,7 +175,6 @@ class StandaloneCommerceService
   }
 
   get allItems(): LineItem[] {return (this._items)}
-  get allCategories(): TogglableCategory[] {return (this._categories)}
 
     // for initial set up ui if cat is known.  Returns the stateful object
   getCategories(ids: string[]): TogglableCategory[] {

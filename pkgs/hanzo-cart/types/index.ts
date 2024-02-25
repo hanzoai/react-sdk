@@ -9,21 +9,28 @@ interface Product {
   desc?: string
   price: number
     /** empty string means use categories image */
-  img?: string | ImageDef
+  img?: string 
     /** eg, silver, vs individual products */  
 }
 
 interface Category {
-  id: string
-  title: string
-  level: number // for combining cat texts in meaningful ways
+  skuPath: string   // LXB-AU-B
+  title: string     // Lux Gold, Minted Bar
   desc?: string
-  img?: string | ImageDef
+  img?: string 
 }
 
-interface TogglableCategory extends Category {
-  get isOn(): boolean
-  setOn(b: boolean): void
+interface Facet {
+  token: string
+  label: string
+  level: number
+  img : string | ReactNode // must have a icon string
+  imgAR? : number // for easier svgs
+}
+
+interface SelectableFacet extends Facet {
+  get selected(): boolean
+  setSelected(b: boolean): void
 }
 
   // in the system, client code always 
@@ -46,20 +53,12 @@ interface LineItem {
   inCategory(id: string): boolean
 }
 
-interface CategoryFacetSpec {
-  id: string
-  label: string
-  img?: string | ReactNode
-  ar?: number // aspect ratio for svgs 
-  tc?: TogglableCategory // transient, for convenience
-}
-
 export {
   type Product,
   type Category,
   type LineItem,
-  type TogglableCategory,
-  type CategoryFacetSpec,
+  type Facet,
+  type SelectableFacet,
 }
 
 

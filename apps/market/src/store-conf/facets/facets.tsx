@@ -1,53 +1,57 @@
-import type { CategoryFacetSpec } from '@hanzo/cart/types'
+import type { Facet } from '@hanzo/cart/types'
 
 import SVG_Bar from './bar.svg'
 import SVG_Coin from './coin.svg'
 import SVG_Multibar from './multibar.svg'
 import SVG_GD from './good-delivery.svg'
 
-const ICON_SIZE = 16
-
 const TYPE = [
   {
-    id: 'AG',
+    token: 'AG',
+    level: 1,
     label: 'Silver',
     img: '/assets/img/cart/ui/facets/silver-swatch-200x200.png'
   },
   {
-    id: 'AU',
+    token: 'AU',
+    level: 1,
     label: 'Gold',
     img: '/assets/img/cart/ui/facets/gold-swatch-150x150.png'
   },
-]
+] satisfies Facet[]
 
 const FORM = [
   {
-    id: 'B',
+    token: 'B',
     label: 'Minted Bar',
+    level: 2,
     img: <SVG_Bar />,
-    ar: 1
+    imgAR: 1
   },
   {
-    id: 'C',
+    token: 'C',
     label: 'Minted Coin',
+    level: 2,
     img: <SVG_Coin />,
-    ar: 64/80
+    imgAR: 64/80
   },
   {
-    id: 'MB',
+    token: 'MB',
     label: 'Multibar',
+    level: 2,
     img: <SVG_Multibar />,
-    ar: 128/160
+    imgAR: 128/160
   },
   {
-    id: 'GD',
+    token: 'GD',
     label: 'Good Delivery',
+    level: 2,
     img: <SVG_GD />,
-    ar: 24/30
+    imgAR: 24/30
   },
-]
+] satisfies Facet[]
 
 export default [
   TYPE, 
   FORM
-] satisfies CategoryFacetSpec[][]
+] satisfies Facet[][]

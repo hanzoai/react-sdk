@@ -1,6 +1,6 @@
 [
   {
-    "id": "e3ef441d-28cd-465f-9c1b-5f6fa851d508",
+    "id": "43a11030-7b79-4973-bc99-a09e47a6b804",
     "sku": "LUX-AU-B-1-OZ",
     "title": "Lux Gold, 1oz Minted Bar",
     "desc": "Forge your connection to the real world with Lux Gold, crafted with excellence in Dubai.",
@@ -8,7 +8,7 @@
     "img": "/assets/img/cart/gold-bar-700x700.png"
   },
   {
-    "id": "b0b2e179-8337-4d95-98e6-56ed628caf53",
+    "id": "c982bcc7-7a78-4d3f-911b-564b43787427",
     "sku": "LUX-AU-B-5-OZ",
     "title": "Lux Gold, 5oz Minted Bar",
     "desc": "Forge your connection to the real world with Lux Gold, crafted with excellence in Dubai.",
@@ -16,7 +16,7 @@
     "img": "/assets/img/cart/gold-bar-700x700.png"
   },
   {
-    "id": "468a3ff1-ca85-47a9-a83c-aef93a719895",
+    "id": "b30b2300-bc34-498d-b2fa-9f0ced05b766",
     "sku": "LUX-AU-B-10-OZ",
     "title": "Lux Gold, 10oz Minted Bar",
     "desc": "Forge your connection to the real world with Lux Gold, crafted with excellence in Dubai.",
@@ -24,7 +24,7 @@
     "img": "/assets/img/cart/gold-bar-700x700.png"
   },
   {
-    "id": "f27f3695-fa88-4de5-b050-969a8211bda1",
+    "id": "a640d85c-a405-4a07-978b-3ae22245156e",
     "sku": "LUX-AU-B-100-OZ",
     "title": "Lux Gold, 100oz Minted Bar",
     "desc": "Forge your connection to the real world with Lux Gold, crafted with excellence in Dubai.",
@@ -32,7 +32,7 @@
     "img": "/assets/img/cart/gold-bar-700x700.png"
   },
   {
-    "id": "a6ceb6b3-a095-4cf0-aa4d-da1865cb3140",
+    "id": "3907a8a6-3533-47ff-9987-b1554c693020",
     "sku": "LUX-AU-B-1-G",
     "title": "Lux Gold, 1g Minted Bar",
     "desc": "Forge your connection to the real world with Lux Gold, crafted with excellence in Dubai.",
@@ -40,7 +40,7 @@
     "img": "/assets/img/cart/gold-bar-700x700.png"
   },
   {
-    "id": "001ebf3f-7cac-405c-b5c5-9db725354ef4",
+    "id": "f61b454f-21a5-438d-859f-012f7f42ff85",
     "sku": "LUX-AU-B-2_5-G",
     "title": "Lux Gold, 2.5g Minted Bar",
     "desc": "Forge your connection to the real world with Lux Gold, crafted with excellence in Dubai.",
@@ -48,7 +48,7 @@
     "img": "/assets/img/cart/gold-bar-700x700.png"
   },
   {
-    "id": "9d121503-4b0a-41a1-9422-cc4b0667fedf",
+    "id": "18e14f4c-5242-41dc-8d5f-9a08ff16d7f7",
     "sku": "LUX-AU-B-5-G",
     "title": "Lux Gold, 5g Minted Bar",
     "desc": "Forge your connection to the real world with Lux Gold, crafted with excellence in Dubai.",
@@ -56,7 +56,7 @@
     "img": "/assets/img/cart/gold-bar-700x700.png"
   },
   {
-    "id": "d7e53cb4-9408-4982-a674-1daec94e83d5",
+    "id": "ee102af6-3b1f-44c4-8bf3-aa49cb2e2e31",
     "sku": "LUX-AU-B-10-G",
     "title": "Lux Gold, 10g Minted Bar",
     "desc": "Forge your connection to the real world with Lux Gold, crafted with excellence in Dubai.",
@@ -64,7 +64,7 @@
     "img": "/assets/img/cart/gold-bar-700x700.png"
   },
   {
-    "id": "f9a1815e-becb-4278-936f-c391c724f183",
+    "id": "03071ac9-df6d-4303-be02-5932a67c2214",
     "sku": "LUX-AU-B-20-G",
     "title": "Lux Gold, 20g Minted Bar",
     "desc": "Forge your connection to the real world with Lux Gold, crafted with excellence in Dubai.",
@@ -72,7 +72,7 @@
     "img": "/assets/img/cart/gold-bar-700x700.png"
   },
   {
-    "id": "ad29213b-edf3-4b61-8741-2ef392265b32",
+    "id": "76f11a10-a203-4839-a0cc-31872a1db729",
     "sku": "LUX-AU-B-50-G",
     "title": "Lux Gold, 50g Minted Bar",
     "desc": "Forge your connection to the real world with Lux Gold, crafted with excellence in Dubai.",
@@ -80,7 +80,7 @@
     "img": "/assets/img/cart/gold-bar-700x700.png"
   },
   {
-    "id": "a225fe66-2805-4f50-bd4b-eae061b532c4",
+    "id": "5541885d-e2ad-490e-97d0-5c09bad6f195",
     "sku": "LUX-AU-B-100-G",
     "title": "Lux Gold, 100g Minted Bar",
     "desc": "Forge your connection to the real world with Lux Gold, crafted with excellence in Dubai.",
@@ -88,7 +88,7 @@
     "img": "/assets/img/cart/gold-bar-700x700.png"
   },
   {
-    "id": "e0e6c64c-06d2-47c3-85b7-65fb800345dc",
+    "id": "a0ed5ed5-434e-4205-8414-4a04547d5b2b",
     "sku": "LUX-AU-B-250-G",
     "title": "Lux Gold, 250g Minted Bar",
     "desc": "Forge your connection to the real world with Lux Gold, crafted with excellence in Dubai.",
@@ -96,7 +96,7 @@
     "img": "/assets/img/cart/gold-bar-700x700.png"
   },
   {
-    "id": "f413bd50-cae1-4d78-8a22-6f147f02092e",
+    "id": "2ed4f98a-b87f-4797-b819-bd9cc8dd94b3",
     "sku": "LUX-AU-B-500-G",
     "title": "Lux Gold, 500g Minted Bar",
     "desc": "Forge your connection to the real world with Lux Gold, crafted with excellence in Dubai.",
@@ -104,7 +104,7 @@
     "img": "/assets/img/cart/gold-bar-700x700.png"
   },
   {
-    "id": "7bdd803b-120b-4c5a-9701-44d475e97b39",
+    "id": "92611741-04fb-48f6-9ac9-603d2d0e1b5d",
     "sku": "LUX-AU-B-1-KG",
     "title": "Lux Gold, 1kg Minted Bar",
     "desc": "Forge your connection to the real world with Lux Gold, crafted with excellence in Dubai.",
@@ -112,7 +112,7 @@
     "img": "/assets/img/cart/gold-bar-700x700.png"
   },
   {
-    "id": "17d45103-bf42-43c7-9f62-c2117e10ae64",
+    "id": "e3cb5db2-2dbf-469d-9e37-97a344cf9003",
     "sku": "LUX-AU-C-1-OZ",
     "title": "Lux Gold, 1oz Minted Coin",
     "desc": "Forge your connection to the real world with Lux Gold, crafted with excellence in Dubai.",
@@ -120,7 +120,7 @@
     "img": "/assets/img/cart/gold-coin-700x700.png"
   },
   {
-    "id": "e3484b09-b549-400d-a0d3-4e22339041c1",
+    "id": "aaa4144c-169b-48cf-9b5b-5a59f20eaac2",
     "sku": "LUX-AU-MB-100x1-G",
     "title": "Lux Gold, 100x1g Multibar",
     "desc": "Forge your connection to the real world with Lux Gold, crafted with excellence in Dubai.",
@@ -128,7 +128,7 @@
     "img": "/assets/img/cart/gold-multibar-700x700.png"
   },
   {
-    "id": "115f99b7-ba59-4383-91eb-9489af11bce3",
+    "id": "302043bc-58c2-4a9f-8477-1125dd01a20e",
     "sku": "LUX-AU-GD-400-OZ",
     "title": "Lux Gold, 400oz Good Del. Bar",
     "desc": "Forge your connection to the real world with Lux Gold, crafted with excellence in Dubai.",
@@ -136,7 +136,7 @@
     "img": "/assets/img/cart/gold-bar-700x700.png"
   },
   {
-    "id": "c50e6299-e2f7-4c70-bd97-8f7744625b37",
+    "id": "c09d31b4-239c-453c-8ae2-a79feba49047",
     "sku": "LUX-AG-B-1-OZ",
     "title": "Lux Silver, 1oz Minted Bar",
     "desc": "Get unprecedented access to silver with 1:1 asset-backed Lux Silver NFTs, sovereign ownership of physical silver without management fees, and mine-direct discount pricing.",
@@ -144,7 +144,7 @@
     "img": "/assets/img/cart/silver-bar-700x700.png"
   },
   {
-    "id": "4970c1bd-5aca-4160-ae86-c3771aa56821",
+    "id": "6a7ee1af-194c-4d1d-8090-2abf34302c4f",
     "sku": "LUX-AG-B-5-OZ",
     "title": "Lux Silver, 5oz Minted Bar",
     "desc": "Get unprecedented access to silver with 1:1 asset-backed Lux Silver NFTs, sovereign ownership of physical silver without management fees, and mine-direct discount pricing.",
@@ -152,7 +152,7 @@
     "img": "/assets/img/cart/silver-bar-700x700.png"
   },
   {
-    "id": "f8add4b1-216e-4a90-9901-1e4333e318a1",
+    "id": "82e94c59-1357-4fd7-acd3-06081c387fd5",
     "sku": "LUX-AG-B-10-OZ",
     "title": "Lux Silver, 10oz Minted Bar",
     "desc": "Get unprecedented access to silver with 1:1 asset-backed Lux Silver NFTs, sovereign ownership of physical silver without management fees, and mine-direct discount pricing.",
@@ -160,7 +160,7 @@
     "img": "/assets/img/cart/silver-bar-700x700.png"
   },
   {
-    "id": "fbeaf8cd-529c-4038-a9ca-75168f37bcbd",
+    "id": "41346ec8-1bc8-4bd9-8ef2-2280acd57d54",
     "sku": "LUX-AG-B-100-OZ",
     "title": "Lux Silver, 100oz Minted Bar",
     "desc": "Get unprecedented access to silver with 1:1 asset-backed Lux Silver NFTs, sovereign ownership of physical silver without management fees, and mine-direct discount pricing.",
@@ -168,7 +168,7 @@
     "img": "/assets/img/cart/silver-bar-700x700.png"
   },
   {
-    "id": "3aa4ff18-118f-4699-bd70-91d77c127ed4",
+    "id": "59e626b2-57f4-4451-af97-21775a2100a1",
     "sku": "LUX-AG-B-1-KG",
     "title": "Lux Silver, 1kg Minted Bar",
     "desc": "Get unprecedented access to silver with 1:1 asset-backed Lux Silver NFTs, sovereign ownership of physical silver without management fees, and mine-direct discount pricing.",
@@ -176,7 +176,7 @@
     "img": "/assets/img/cart/silver-bar-700x700.png"
   },
   {
-    "id": "fa178e0f-4107-4acb-9b06-2614e2a3013e",
+    "id": "373ac44c-a8eb-48d4-80b1-8e3093e5bb8d",
     "sku": "LUX-AG-C-1-OZ",
     "title": "Lux Silver, 1oz Minted Coin",
     "desc": "Get unprecedented access to silver with 1:1 asset-backed Lux Silver NFTs, sovereign ownership of physical silver without management fees, and mine-direct discount pricing.",
@@ -184,7 +184,7 @@
     "img": "/assets/img/cart/silver-coin-700x700.png"
   },
   {
-    "id": "f6e14034-d75c-4245-87b0-b78e48db1dd6",
+    "id": "5a0109f7-6616-4661-8df2-d55f55980ad3",
     "sku": "LUX-AG-MB-100x1-G",
     "title": "Lux Silver, 100x1g Multibar",
     "desc": "Get unprecedented access to silver with 1:1 asset-backed Lux Silver NFTs, sovereign ownership of physical silver without management fees, and mine-direct discount pricing.",
@@ -192,7 +192,7 @@
     "img": "/assets/img/cart/silver-multibar-700x700.png"
   },
   {
-    "id": "37abdfde-cac4-4fe0-a3d5-4785570b7d5d",
+    "id": "71646675-a697-4641-9998-dce22a0af934",
     "sku": "LUX-AG-GD-1000-OZ",
     "title": "Lux Silver, 1000oz Good Del. Bar",
     "desc": "Get unprecedented access to silver with 1:1 asset-backed Lux Silver NFTs, sovereign ownership of physical silver without management fees, and mine-direct discount pricing.",

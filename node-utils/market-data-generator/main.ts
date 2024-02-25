@@ -1,7 +1,7 @@
 import { v4 as unique} from 'uuid'
 import type { Product, Category } from '@hanzo/cart/types'
 
-import { type ItemData, type CategoryData } from './types'
+import { type ItemImportData, type CategoryData } from './types'
 
 import { 
   IMG, 
@@ -9,13 +9,11 @@ import {
   ASSETS_PATH, 
   OUT_DIR, 
   CAT_FN,
-  PROD_FN
+  PROD_FN,
+  TS,
+  DEC,
+  ROOT
 } from './config'
-
-import d from './data/root'
-
-const TS = '-'  // token separator
-const DEC = '_' // decimal substitute
 
 const allCategories: any = {}
 const allProducts: Product[] = []
@@ -38,25 +36,28 @@ const visitCategoryData = (
   if (tToken?.length > 0) {
     titleTokens.push(tToken)   
   }
+
   skuTokens.push(category.t)
 
     // from CategoryData to hanzo Category
   allCategories[category.t] = {
     id: category.t,
     title: category.label,
+    skuPath: skuTokens.join(TS),
     level: category.level ?? 1,
     desc: category.desc,
     img: category.img,
   } satisfies Category
 
-  if (category.chn.length > 0 && 'price' in category.chn[0]) {
+
+  if (category.ch.length > 0 && 'price' in category.ch[0]) {
 
       // Since we are at the leaf level,
       // these are valid for the entire array.
     const bullionForm = titleTokens.pop()
     const previousTitle = titleTokens.join(', ')
 
-    const products = category.chn as ItemData[]
+    const products = category.ch as ItemImportData[]
 
     products.forEach((prod) => {
         // from ProductData to hanzo Product
@@ -73,21 +74,21 @@ const visitCategoryData = (
       } satisfies Product)
     })
   }
-  else if (category.chn.length > 0 && 'chn' in category.chn[0]) {
+  else if (category.ch.length > 0 && 'ch' in category.ch[0]) {
 
     const {level: parentLevel, img: parentImg, desc: parentDesc} = category
-    const subCategories = category.chn as CategoryData[]
+    const subCategories = category.ch as CategoryData[]
     
-    subCategories.forEach(({t, label, img, desc, chn}) => {
+    subCategories.forEach(({t, label, img, desc, ch}) => {
       visitCategoryData({
           t,
           label,
           level: (parentLevel ?? 1) + 1,
           img: img ?? parentImg, 
           desc: desc ?? parentDesc,
-          chn,
+          ch,
         } satisfies CategoryData,
-          // Each branch (chn category) must have it's own fresh copies to reduce
+          // Each branch (ch category) must have it's own fresh copies to reduce
         [...titleTokens], 
         [...skuTokens]
       )
@@ -95,7 +96,7 @@ const visitCategoryData = (
   }
 }
 
-visitCategoryData(d as unknown as CategoryData)
+visitCategoryData(ROOT as unknown as CategoryData)
 
 const keys = Object.keys(allCategories)
 keys.forEach((key) => {
