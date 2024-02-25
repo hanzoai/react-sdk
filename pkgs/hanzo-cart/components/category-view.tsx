@@ -110,7 +110,7 @@ const CategoryView: React.FC<React.HTMLAttributes<HTMLDivElement> & {
     return c.specifiedItems.length > 1 ? (
       <div id='CV_AVAIL_AMOUNTS' className={cn('w-full md:w-auto flex flex-col justify-start items-center gap-8', className)}>
         <div className='w-full flex flex-col justify-start items-center'>
-          <h6 className='text-center font-semibold'>Available amounts</h6>
+          <h6 className='text-center font-semibold'>Available sizes</h6>
           <div className='h-[1px] w-pr-70 bg-muted-3' />
         </div>
         <RadioGroup className='block columns-3 gap-2 lg:columns-2 lg:gap-6 w-full lg:auto' onValueChange={onSelection} value={sizeItem?.product.sku ?? undefined}>
@@ -132,8 +132,8 @@ const CategoryView: React.FC<React.HTMLAttributes<HTMLDivElement> & {
     return (
       <div className={className}>
         <div className='flex flex-col justify-start items-center mb-6'>
-          <h3 className='tx-lg lg:text-xl font-heading text-center'>
-            <span className='xs:hidden md:inline lg:hidden'>
+          <h3 className='text-lg lg:text-xl font-heading text-center'>
+            <span className='hidden md:inline lg:hidden'>
             {c.specifiedCategories.map((cat, i) => (<p>{cat.title}</p>))}
             </span>
             <span  className='inline md:hidden lg:inline'>
@@ -158,7 +158,7 @@ const CategoryView: React.FC<React.HTMLAttributes<HTMLDivElement> & {
           <CategoryImage className='' />
         </div>
         <div /* id='CV_CONTENT_COL' */ className='w-pr-66' >
-          <div /* id='CV_CONTENT' */ className='grid gap-2.5'>
+          <div /* id='CV_CONTENT' */ className='flex flex-col gap-2.5 '>
             <InfoArea className=''/>
           </div>
           <div /* id='CV_CTA_AREA_BIG' */  className='hidden lg:flex p-4 flex-col justify-start items-center gap-6'>

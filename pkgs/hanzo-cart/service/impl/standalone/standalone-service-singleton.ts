@@ -2,19 +2,15 @@ import type CommerceService from '../../commerce-service'
 
 import StandaloneCommerceService from './standalone-service'
 
-import products from './data/bullion-products.json' 
-import categoriesObj from './data/bullion-categories.json'
+import type { Category, Product } from '../../../types'
 
 // https://dev.to/ivandotv/mobx-server-side-rendering-with-next-js-4m18
 
 let instance: CommerceService | undefined =  undefined
 
-export default (): CommerceService => {
+export default (products: Product[], categories?: Category[]): CommerceService => {
 
-  const _instance = instance ?? new StandaloneCommerceService(
-    products, 
-    Object.values(categoriesObj) 
-  )
+  const _instance = instance ?? new StandaloneCommerceService(products, categories)
       // For server side rendering always create a new store
   if (typeof window === "undefined") return _instance
 

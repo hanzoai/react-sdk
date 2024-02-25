@@ -106,7 +106,7 @@ const ProductViewStore: React.FC<{
           </CartDrawer>
         </Facets>   
       </div>
-      <div id='SCV_COL_CONTAINER' className={cn('flex flex-row justify-start gap-6 items-stretch relative h-full')}>
+      <div id='SCV_COL_CONTAINER' className={cn('flex flex-row justify-start gap-6 items-stretch relative h-full pt-3')}>
         <div id='SCV_STAGE_COL' className='grow flex flex-col h-full relative'>
           <div id='SCV_FACET_CONTAINER_BIG' className='sticky top-[80px] z-30 bg-background pb-2 hidden xl:flex flex-col justify-start mb-6'>
             <Facets className='' />   

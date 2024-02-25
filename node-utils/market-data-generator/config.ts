@@ -15,6 +15,7 @@ export const IMG_LEVEL_3 = {
   GD: 'gold-silver-bars-700x700.png',
 }
 
-export const OUT_DIR = './out/'
+  // must have last '/'
+export const OUT_DIR = '../../apps/market/src/store-conf/data/'
 export const CAT_FN = 'bullion-categories.json'
 export const PROD_FN = 'bullion-products.json'

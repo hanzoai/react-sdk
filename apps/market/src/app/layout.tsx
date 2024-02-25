@@ -18,7 +18,10 @@ export const viewport = {
 const RootLayout: React.FC<PropsWithChildren> = ({
   children
 }) => (
-  <CommerceServiceProvider>
+  <CommerceServiceProvider 
+    products={siteDef.ext.store.products} 
+    categories={siteDef.ext.store.categories}
+  >
     <RootLayoutCommon siteDef={siteDef} >
         {children}
     </RootLayoutCommon>

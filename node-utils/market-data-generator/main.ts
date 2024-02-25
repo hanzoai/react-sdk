@@ -100,17 +100,21 @@ visitCategoryData(d as unknown as CategoryData)
 const keys = Object.keys(allCategories)
 keys.forEach((key) => {
   if (allCategories[key].img) {
+    allCategories[key].img = ASSETS_PATH + IMG[allCategories[key].img] 
+/*
     if (allCategories[key].level === 3) {
       allCategories[key].img = ASSETS_PATH + IMG_LEVEL_3[allCategories[key].id] 
     }
     else {
       allCategories[key].img = ASSETS_PATH + IMG[allCategories[key].img] 
     }
+*/
   }
+
 })
 
 console.log(`Writing products to ${OUT_DIR + PROD_FN}...`)
 Bun.write(OUT_DIR + PROD_FN, JSON.stringify(allProducts, null, 2))
-console.log(`Writing product categories to ${OUT_DIR + CAT_FN}...`)
+console.log(`Writing categories as objects to ${OUT_DIR + CAT_FN}...`)
 Bun.write(OUT_DIR + CAT_FN, JSON.stringify(allCategories, null, 2))
 console.log('done')
