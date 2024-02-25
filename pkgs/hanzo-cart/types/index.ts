@@ -16,7 +16,7 @@ interface Product {
 interface Category {
   id: string
   title: string
-  level?: number // for combining cat texts in meaningful ways
+  level: number // for combining cat texts in meaningful ways
   desc?: string
   img?: string | ImageDef
 }

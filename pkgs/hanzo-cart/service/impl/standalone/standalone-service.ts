@@ -147,7 +147,7 @@ class StandaloneCommerceService
   }
 
   get specifiedCategories(): TogglableCategory[] {
-    return this._categories.filter((c) => (c.isOn))  
+    return this._categories.filter((c) => (c.isOn)).sort( (c1, c2) => (c1.level - c2.level) )  
   }
 
   get specifiedItems(): LineItem[] {

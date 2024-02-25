@@ -12,6 +12,7 @@ const ToggleGroupContext = React.createContext<
 >({
   size: 'default',
   variant: 'default',
+  rounded: 'md'
 })
 
 const ToggleGroup = React.forwardRef<

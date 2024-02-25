@@ -7,32 +7,32 @@ import {
 } from 'next-usequerystate'
 
 import { cn } from '@hanzo/ui/util'
-import { ProductCard, Cart, CategoryFacetsWidget } from '@hanzo/cart/components'
+import { ProductCard, Cart, CategoryFacetsWidget, CategoryCard } from '@hanzo/cart/components'
 import { useCommerce } from '@hanzo/cart/service'
 
 import siteDef from '@/siteDef'
 import CartDrawer from '@/components/cart-drawer'
+import type { LineItem } from '@hanzo/cart/types'
 
 const ProductViewStore: React.FC<{
   className?: string
   agent?: string
-  //searchParams?: { [key: string]: string | string[] | undefined }
 }> = observer(({
   className='',
   agent,
-  //searchParams
 }) => {
   const c = useCommerce() 
 
   const mobile = (agent === 'phone')
 
-  //const [loading, setLoading] = useState<boolean>(true)
-  const [c1, setC1] = useQueryState('c1') // actually level 2 in our data
-  const [c2, setC2] = useQueryState('c2') // actually level 3 in our data
+  const [loading, setLoading] = useState<boolean>(true)
+  const [c1, setC1] = useQueryState('c1') // actually level 2 in our data (AG / AU)
+  const [c2, setC2] = useQueryState('c2') // actually level 3 in our data (B / C / MB / GD)
+  
   //const [size, setSize] = useQueryState('size') // eg, '1-OZ'
+  const [items, setItems] = useState<LineItem[] | undefined>(undefined)
 
-
-  const sync = () => {
+  useEffect(() => {
     const catsToSpecify: string[] = []
     if (c1) {
       catsToSpecify.push(c1)
@@ -40,13 +40,10 @@ const ProductViewStore: React.FC<{
     if (c2) {
       catsToSpecify.push(c2)
     }
-    c.setSpecifiedCategories(catsToSpecify)
-  }
-
-  useEffect(() => {
-    sync()
-  
-  }, [c1, c2])
+    const items_ = c.setSpecifiedCategories(catsToSpecify)
+    setItems(items_)
+    setLoading(false)
+  }, [c1 , c2])
 
   const cartColumnClx = 'min-w-[300px] md:min-w-[320px] lg:min-w-[320px] lg:max-w-[360px] xl:min-w-[360px]'
 
@@ -58,7 +55,8 @@ const ProductViewStore: React.FC<{
   const facets2Clx = 'grid grid-cols-4 gap-0 '
 
   return (
-    <div className='flex flex-col justify-start items-start'>
+    <div className='flex flex-col justify-start items-start w-full'>
+    {!loading ? (
       <CategoryFacetsWidget
         className={widgetClx} 
         isMobile={mobile}
@@ -70,25 +68,36 @@ const ProductViewStore: React.FC<{
           <Cart isMobile={mobile} className='p-0 border-none mt-12'/>
         </CartDrawer>
       </CategoryFacetsWidget>
-    <div className={cn('flex flex-row justify-between gap-6 items-stretch w-[100vw] sm:w-auto overflow-y-scroll sm:overflow-y-hidden', className)}>
+    ) : (
+      <div className='h-[50px] w-pr-60 bg-level-1'/>
+    )}
+      <div className={cn('flex flex-column justify-start gap-6 items-start', className)}>
+        {!loading ? (<CategoryCard className=''/>) : null }
+      </div> 
+      <div className={'shrink hidden md:block ' + cartColumnClx}>
+      {!loading ? (
+        <div className={'fixed z-50 md:top-[94px] lg:top-auto xl:top-[94px] ' + cartColumnClx}>
+          <Cart className=''/>
+        </div>
+      ) : ( 
+        <div />
+      )}
+      </div>   
+    </div>
+  )
+}) 
+
+/*
       <div className='flex flex-row px-4 sm:px-0 sm:grid sm:grid-cols-3 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:grow'>
-        { true ? (
-          c.specifiedItems.map((item) => (
+     
+          <CategoryCard className=''/>
+          items?.map((item) => (
             // <ProductCard item={item} key={item.product.sku} className='rounded-lg w-[40vw] sm:w-auto'/>
             <h6 key={item.product.sku} >{item.product.sku}:<br />{item.product.title}</h6>
           ))
         ) : (
           <h3>loading...</h3>
-        )}
-      </div> 
-      <div className={'shrink hidden md:block ' + cartColumnClx}>
-        <div className={'fixed z-50 md:top-[94px] lg:top-auto ' + cartColumnClx}>
-          <Cart className=''/>
-        </div>
-      </div>   
-    </div>
-    </div>
-  )
-}) 
+       
+*/
 
 export default ProductViewStore

@@ -55,6 +55,7 @@ const CategoryToggle: React.FC<{
   }
 
   const handleValueChangeSingle = (selected: string) => {
+    console.log('SINGLE SELECTED: ', selected)
     mutator!.set(selected)
     if (selected) {
       setDisabledLast(selected)
@@ -65,22 +66,12 @@ const CategoryToggle: React.FC<{
     single
   }) => (
     modelRef.current?.map((spec, index, arr) => {
-      let variant: string | undefined = undefined
-      if (single && index === 0) {
-        variant = 'singleFirst'
-      }
-      else if (single && index === arr.length - 1) {
-        variant = 'singleLast'
-      } else if (single && index > 0 && index < arr.length - 1) {
-        variant = 'singleMiddle'
-      }
       return (
         <ToggleGroupItem 
           value={spec.id} 
           disabled={(disabledLast && disabledLast === spec.id) as boolean} 
           aria-label={`Select ${spec.label}`}
             // @ts-ignore
-          variant={variant}
           key={spec.id}
         >
           <span className={cn('flex flex-row justify-center gap-1 h-4 items-center')} >
@@ -94,15 +85,46 @@ const CategoryToggle: React.FC<{
 
 
   if (mutator) {
+
+    console.log("MUTATOR VALUE: ", mutator.val)
     return (
       <ToggleGroup 
         type='single' 
         value={mutator.val as string}
+        variant='default'
         size={isMobile ? 'sm' : 'default'}
         onValueChange={handleValueChangeSingle}
         className={className}
       >
-        <Items single={true} />
+    {modelRef.current?.map((spec, index, arr) => {
+      let rounded = 'none'  // pick up from parent (multiple only)
+      if (index === 0) {
+        rounded = 'llg'
+      }
+      else if (index === arr.length - 1) {
+        rounded = 'rlg'
+      } 
+      //else if (index > 0 && index < arr.length - 1) {
+        //variant = 'singleMiddle'
+      //}
+      return (
+        <ToggleGroupItem 
+          id={`${rounded}-${index}`}
+          value={spec.id} 
+          disabled={(disabledLast && disabledLast === spec.id || spec.id === mutator.val) as boolean} 
+          aria-label={`Select ${spec.label}`}
+            // @ts-ignore
+          rounded={rounded}
+          //variant={variant}
+          key={spec.id}
+        >
+          <span className={cn('flex flex-row justify-center gap-1 h-4 items-center')} >
+            <FacetImage spec={spec} />
+            <span className='hidden lg:block whitespace-nowrap'>{spec.label}</span>
+          </span>
+        </ToggleGroupItem>
+      )
+    })}
       </ToggleGroup>  
     )
   }
@@ -142,16 +164,16 @@ const CategoryFacetsWidget: React.FC<PropsWithChildren & {
   const horiz = className.includes('flex-row')
   return (
     <div className={className}>
-        {facets.map((f, i) => (
-          <CategoryToggle 
-            key={i}
-            mutator={mutators ? mutators![i] : undefined} 
-            isMobile={isMobile}
-            categories={f} 
-            className={cn((horiz ? '' : 'mb-2'), (i !== 0 && !horiz) ? 'mt-2' : '', (facetClassNames?.[i]) ?? '')} 
-          />
-        ))}
-    {children}
+    {facets.map((f, i) => (
+      <CategoryToggle 
+        key={i}
+        mutator={mutators ? mutators![i] : undefined} 
+        isMobile={isMobile}
+        categories={f} 
+        className={cn((horiz ? '' : 'mb-2'), (i !== 0 && !horiz) ? 'mt-2' : '', (facetClassNames?.[i]) ?? '')} 
+      />
+    ))}
+      {children}
     </div>
   )
 }

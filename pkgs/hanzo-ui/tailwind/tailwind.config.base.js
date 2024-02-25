@@ -769,7 +769,10 @@ export default {
       2: '2',
     },
     supports: {},
-    data: {},
+    data: {
+      on: 'state~="on"',
+      off: 'state~="off"',
+    },
     textColor: ({ theme }) => theme('colors'),
     textDecorationColor: ({ theme }) => theme('colors'),
     textDecorationThickness: {
