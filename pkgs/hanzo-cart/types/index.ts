@@ -1,34 +1,32 @@
 import type { ReactNode } from 'react'
 
-import type { ImageDef } from '@hanzo/ui/types'
-
 interface Product {
-  id: string    // DB index
+  id: string    // DB index // not a logical aspect of our domain.  may not be necessary at all
   sku: string   // human visible on orders etc.
   title: string
+  categoryId: string  // skuPath, eg LXB-AU-B
   desc?: string
   price: number
-    /** empty string means use categories image */
-  img?: string 
-    /** eg, silver, vs individual products */  
+  img?: string  // if undefined: (category's img exists) ? (use it) : (use generic placeholder)
 }
 
 interface Category {
-  skuPath: string   // LXB-AU-B
-  title: string     // Lux Gold, Minted Bar
+  id: string      // LXB-AU-B
+  title: string   // Lux Gold, Minted Bar
   desc?: string
   img?: string 
+  products: Product[]
 }
 
-interface Facet {
-  token: string
+interface FacetValue {
+  token: string             // a token in the sku
   label: string
-  level: number
-  img : string | ReactNode // must have a icon string
-  imgAR? : number // for easier svgs
+  specificity: number       // LXB: 0, AU: 1, B: 2
+  img : string | ReactNode  // icon is required 
+  imgAR? : number           // helps with svgs
 }
 
-interface SelectableFacet extends Facet {
+interface SelectableFacetValue extends FacetValue {
   get selected(): boolean
   setSelected(b: boolean): void
 }
@@ -39,8 +37,7 @@ interface SelectableFacet extends Facet {
   // when its quantity > 0.  That's the only difference
   // The ui, and other Cart code, reacts to 
   // changes in this quantity.
-interface LineItem {
-  product: Product
+interface LineItem extends Product {
 
   /** all observable */
   get quantity(): number
@@ -57,8 +54,8 @@ export {
   type Product,
   type Category,
   type LineItem,
-  type Facet,
-  type SelectableFacet,
+  type FacetValue,
+  type SelectableFacetValue,
 }
 
 

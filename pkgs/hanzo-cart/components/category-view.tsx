@@ -1,8 +1,7 @@
 'use client'
-import React, { useEffect, useState, type ReactNode } from 'react'
+import React, { useEffect, useState } from 'react'
 import Image from 'next/image'
 
-import type { ImageDef } from '@hanzo/ui/types'
 import { cn } from '@hanzo/ui/util'
 import { Label, RadioGroup, RadioGroupItem } from '@hanzo/ui/primitives'
 
@@ -20,13 +19,13 @@ const DEC = '_' // decimal substitute
 const amountLabelFromSKU = (sku: string): string => {
   const mainTokens = sku.split(TS)
   const tCount = mainTokens.length
-  const amount = mainTokens[tCount - 2].includes(DEC) ? 
+  const amount = (mainTokens[tCount - 2].includes(DEC) ? 
     mainTokens[tCount - 2].split(DEC).join('.') 
     : 
-    mainTokens[tCount - 2]
+    mainTokens[tCount - 2]).toLowerCase()
   
   const unit = mainTokens[tCount - 1].toLowerCase()
-  return amount.toLowerCase() + unit
+  return amount + unit
 }
 
 
@@ -36,7 +35,7 @@ const CategoryView: React.FC<React.HTMLAttributes<HTMLDivElement> & {
   ...props
 }) => {
 
-  const [sizeItem, setSizeItem] = useState<LineItem | undefined>(undefined)
+  const [selectedItem, setSelectedItem] = useState<LineItem | undefined>(undefined)
 
   const c = useCommerce()
   const cat = (): Category => (c.specifiedCategories[c.specifiedCategories.length - 1])
@@ -44,7 +43,7 @@ const CategoryView: React.FC<React.HTMLAttributes<HTMLDivElement> & {
   useEffect(() => {
     return autorun(() => {
       const item = c.specifiedItems.length > 0 ? c.specifiedItems[0] : undefined
-      setSizeItem(item)
+      setSelectedItem(item)
     })
   }, [])
 
@@ -65,27 +64,15 @@ const CategoryView: React.FC<React.HTMLAttributes<HTMLDivElement> & {
       )
     } 
 
-    let src: string 
-    let alt: string
-    if (typeof cat().img === 'string') {
-      src = cat().img as string
-      alt = cat().title
-    }
-    else {
-      const {dim: _dim, src: _src, alt: _alt} = (cat().img as ImageDef)
-      alt = _alt ?? cat().title
-      src = _src
-    }
-
     return (
       <div className={cn('flex flex-col justify-start', className)}>
         <div className={cn('w-full border rounded-xl p-6 ')}>
           <div className={cn('w-full aspect-square  relative')}>
             <Image 
-              src={src}
+              src={cat().img!}
               fill
               sizes="(max-width: 480px) 100vw, (max-width: 768px) 50vw, (max-width: 1200px) 50vw, 20vw"
-              alt={alt}
+              alt={cat().title}
               className=''
               loading='lazy'
               style={{ objectFit: 'contain'}}
@@ -101,9 +88,9 @@ const CategoryView: React.FC<React.HTMLAttributes<HTMLDivElement> & {
     className=''
   }) => { 
     const onSelection = (sku: string) => {
-      const selectedItem = c.specifiedItems.find((item) => (item.product.sku === sku))
+      const selectedItem = c.specifiedItems.find((item) => (item.sku === sku))
       if (selectedItem) {
-        setSizeItem(selectedItem)
+        setSelectedItem(selectedItem)
       }
     }
 
@@ -113,11 +100,11 @@ const CategoryView: React.FC<React.HTMLAttributes<HTMLDivElement> & {
           <h6 className='text-center font-semibold'>Available sizes</h6>
           <div className='h-[1px] w-pr-70 bg-muted-3' />
         </div>
-        <RadioGroup className='block columns-3 gap-2 lg:columns-2 lg:gap-6 w-full lg:auto' onValueChange={onSelection} value={sizeItem?.product.sku ?? undefined}>
+        <RadioGroup className='block columns-3 gap-2 lg:columns-2 lg:gap-6 w-full lg:auto' onValueChange={onSelection} value={selectedItem?.sku ?? undefined}>
         {c.specifiedItems.map((item) => (
           <div className="flex flex-row gap-2 items-center mb-3">
-            <RadioGroupItem value={item.product.sku} id={item.product.sku} />
-            <Label htmlFor={item.product.sku}>{amountLabelFromSKU(item.product.sku) + ', ' + formatPrice(item.product.price)}</Label>
+            <RadioGroupItem value={item.sku} id={item.sku} />
+            <Label htmlFor={item.sku}>{amountLabelFromSKU(item.sku) + ', ' + formatPrice(item.price)}</Label>
           </div>
         ))}
         </RadioGroup>
@@ -140,9 +127,9 @@ const CategoryView: React.FC<React.HTMLAttributes<HTMLDivElement> & {
               {c.specifiedCategories.map((cat, i) => (cat.title)).join(', ')}
             </span>
           </h3>
-          {sizeItem ? (
+          {selectedItem ? (
             <h6 className='text-center font-semibold'>
-              {amountLabelFromSKU(sizeItem.product.sku) + ': ' + formatPrice(sizeItem.product.price)}
+              {amountLabelFromSKU(selectedItem.sku) + ': ' + formatPrice(selectedItem.price)}
             </h6>
           ) : ''}
         </div>
@@ -152,7 +139,7 @@ const CategoryView: React.FC<React.HTMLAttributes<HTMLDivElement> & {
   }
 
   return (
-    <div id='CV_OUTERMOST' >
+    <div /* id='CV_OUTERMOST' */ >
       <div /* id='CV_OUTER' */ className={cn('w-full flex flex-row justify-between items-stretch gap-6', className)} {...props}>
         <div /* id='CV_IMAGE_COL' */ className='w-pr-33 relative'>
           <CategoryImage className='' />
@@ -163,13 +150,13 @@ const CategoryView: React.FC<React.HTMLAttributes<HTMLDivElement> & {
           </div>
           <div /* id='CV_CTA_AREA_BIG' */  className='hidden lg:flex p-4 flex-col justify-start items-center gap-6'>
             <AvailableAmounts />
-            {sizeItem ? (<QuantityWidget size='default' item={sizeItem}/>) : null }
+            {selectedItem ? (<QuantityWidget size='default' item={selectedItem}/>) : null }
           </div>
         </div>
       </div>
       <div /* id='CV_CTA_AREA_COMPACT' */ className='lg:hidden flex p-4 flex-col justify-start items-center gap-6'>
         <AvailableAmounts />
-        {sizeItem ? (<QuantityWidget size='default' item={sizeItem}/>) : null }
+        {selectedItem ? (<QuantityWidget size='default' item={selectedItem}/>) : null }
       </div>
     </div>
   )

@@ -1,25 +1,25 @@
 import React from 'react'
 import Image from 'next/image'
 
-import type { CategoryFacetSpec } from '../../types'
+import type { FacetValue } from '../../types'
 
 const ICON_SIZE = 16
 const SVG_MULT = 1.5
 
 const FacetImage: React.FC<{
-  spec: CategoryFacetSpec
+  facetValue: FacetValue
 }> = ({
-  spec
+  facetValue
 }) => {
-  if (!spec.img) {
+  if (!facetValue.img) {
     return null
   }
-  const isURL = typeof spec.img === 'string'
+  const isURL = typeof facetValue.img === 'string'
   if (isURL) {
     return (
       <Image 
-        src={spec.img as string} 
-        alt={`Toggle ${spec.label}`} 
+        src={facetValue.img as string} 
+        alt={`Toggle ${facetValue.label}`} 
         className={'block mr-1 aspect-square rounded border border-muted-2'}
         width={ICON_SIZE}
         height={ICON_SIZE}
@@ -27,13 +27,13 @@ const FacetImage: React.FC<{
     )
   }
   const svgStyle: any = { position: 'relative' }
-  if (spec.ar && spec.ar < 1) {
+  if (facetValue.imgAR && facetValue.imgAR < 1) {
     const w = ICON_SIZE * SVG_MULT
-    svgStyle.top = (( 1 / spec.ar - 1) * w) / 2
+    svgStyle.top = (( 1 / facetValue.imgAR - 1) * w) / 2
   }
-  else if (spec.ar && spec.ar > 1) {
+  else if (facetValue.imgAR && facetValue.imgAR > 1) {
     const h = ICON_SIZE * SVG_MULT
-    svgStyle.left = (((1 - spec.ar) * h) / 2)
+    svgStyle.left = (((1 - facetValue.imgAR) * h) / 2)
   }
 
   return (
@@ -45,8 +45,8 @@ const FacetImage: React.FC<{
         height: ICON_SIZE * SVG_MULT,
       }} 
     >
-      {React.cloneElement(spec.img as React.ReactElement<any>, {
-        width: (spec.ar ?? 1) * ICON_SIZE * SVG_MULT, 
+      {React.cloneElement(facetValue.img as React.ReactElement<any>, {
+        width: (facetValue.imgAR ?? 1) * ICON_SIZE * SVG_MULT, 
         height: SVG_MULT * ICON_SIZE,
         style: svgStyle
       })}

@@ -1,7 +1,7 @@
 import { v4 as unique} from 'uuid'
 import type { Product, Category } from '@hanzo/cart/types'
 
-import { type ItemImportData, type CategoryData } from './types'
+import { type ItemImportData, type LevelImportData } from './types'
 
 import { 
   IMG, 
@@ -18,15 +18,16 @@ import {
 const allCategories: any = {}
 const allProducts: Product[] = []
 
-const getAmount = (t: string): string => {
+const amountStrFromItemToken = (t: string): string => {
   const tokens = t.split(TS)
-  const amount = tokens[0].includes(DEC) ? tokens[0].split(DEC).join('.') : tokens[0]
-  const unit = tokens[1].toLowerCase()
+    // Must lower-case it becuase multibar tokens have an 'X' in them
+  const amount = (tokens[0].includes(DEC) ? tokens[0].split(DEC).join('.') : tokens[0]).toLowerCase()
+  const unit = tokens[1].toLowerCase() // OZ -> oz
   return amount + unit
 }
 
-const visitCategoryData = (
-  category: CategoryData, 
+const visitNode = (
+  category: LevelImportData, 
   titleTokens: string[] = [],
   skuTokens: string[] = [], 
 ): void => {
@@ -39,7 +40,7 @@ const visitCategoryData = (
 
   skuTokens.push(category.t)
 
-    // from CategoryData to hanzo Category
+    // from LevelImportData to hanzo Category
   allCategories[category.t] = {
     id: category.t,
     title: category.label,
@@ -67,7 +68,7 @@ const visitCategoryData = (
         sku: [...skuTokens, prod.t].join('-'), 
           // Desired result: "Lux Bullion, Gold, 1oz Minted Bar", ie,
           //  `<previous title tokens joined>, <amount> <form>`
-        title: `${previousTitle}, ${getAmount(prod.t)} ${bullionForm}`,
+        title: `${previousTitle}, ${amountStrFromItemToken(prod.t)} ${bullionForm}`,
         desc: prod.desc ? prod.desc : category.desc,
         price: prod.price,
         img: ASSETS_PATH + IMG[prod.img ?? category.img!]   
@@ -77,17 +78,17 @@ const visitCategoryData = (
   else if (category.ch.length > 0 && 'ch' in category.ch[0]) {
 
     const {level: parentLevel, img: parentImg, desc: parentDesc} = category
-    const subCategories = category.ch as CategoryData[]
+    const subCategories = category.ch as LevelImportData[]
     
     subCategories.forEach(({t, label, img, desc, ch}) => {
-      visitCategoryData({
+      visitNode({
           t,
           label,
           level: (parentLevel ?? 1) + 1,
           img: img ?? parentImg, 
           desc: desc ?? parentDesc,
           ch,
-        } satisfies CategoryData,
+        } satisfies LevelImportData,
           // Each branch (ch category) must have it's own fresh copies to reduce
         [...titleTokens], 
         [...skuTokens]
@@ -96,7 +97,7 @@ const visitCategoryData = (
   }
 }
 
-visitCategoryData(ROOT as unknown as CategoryData)
+visitNode(ROOT as unknown as LevelImportData)
 
 const keys = Object.keys(allCategories)
 keys.forEach((key) => {

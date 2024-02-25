@@ -29,41 +29,21 @@ const ProductCard: React.FC<ProductCardProps> = ({
   ...props
 }) => {
 
-  const ProductImage: React.FC<{className?: string}> = ({className=''}) => {
-    if (typeof item.product.img === 'string') {
-      return (
-        <Image
-          src={item.product.img}
-          alt={item.product.title}
-          className={className}
-          loading='lazy'
+  const ProductImage: React.FC<{className?: string}> = ({className=''}) => (
+    <Image
+      src={item.product.img!}
+      alt={item.product.title}
+      className={className}
+      loading='lazy'
 //          width={700}
 //          height={700}
-          fill
-          style={{
-            objectFit: 'contain',
-          }}
-        />
-      )
-    }
-    const {dim, src, alt} = (item.product.img as ImageDef)
-
-    return (
-      <Image 
-  //      width={dim.w}
-  //      height={dim.h}
-        src={src}
-        fill
-        alt={alt ?? item.product.title}
-        className={className}
-        loading='lazy'
-        style={{
-          objectFit: 'contain',
-        }}
+      fill
+      style={{
+        objectFit: 'contain',
+      }}
     />
-    )
-  }
-
+  )
+    
   return (
     <Card
       className={cn('max-h-[360px] lg:min-w-[200px] max-w-[260px] overflow-hidden', className)}

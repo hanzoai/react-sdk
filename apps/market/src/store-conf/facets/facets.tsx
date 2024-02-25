@@ -1,4 +1,4 @@
-import type { Facet } from '@hanzo/cart/types'
+import type { FacetValue } from '@hanzo/cart/types'
 
 import SVG_Bar from './bar.svg'
 import SVG_Coin from './coin.svg'
@@ -18,7 +18,7 @@ const TYPE = [
     label: 'Gold',
     img: '/assets/img/cart/ui/facets/gold-swatch-150x150.png'
   },
-] satisfies Facet[]
+] satisfies FacetValue[]
 
 const FORM = [
   {
@@ -49,9 +49,9 @@ const FORM = [
     img: <SVG_GD />,
     imgAR: 24/30
   },
-] satisfies Facet[]
+] satisfies FacetValue[]
 
 export default [
   TYPE, 
   FORM
-] satisfies Facet[][]
+] satisfies FacetValue[][]
