@@ -2,7 +2,7 @@
 import React from 'react'
 import { observer } from 'mobx-react-lite'
 
-import { Button } from '@hanzo/ui/primitives'
+import { Button, type ButtonSizes } from '@hanzo/ui/primitives'
 import { cn } from '@hanzo/ui/util'
 
 import { Icons } from './Icons'
@@ -13,11 +13,13 @@ const QuantityWidget: React.FC<{
   ghost?: boolean
   className?: string
   isMobile?: boolean
+  size?: ButtonSizes
 }> = observer(({
   item,
   ghost=false,
   className='',
-  isMobile=false
+  isMobile=false,
+  size='xs'
 }) => {
 
   const iconClx = ghost && !isMobile ? 'h-3 w-3 text-muted-3 hover:text-foreground' : 'h-5 w-5 mr-1'
@@ -27,10 +29,10 @@ const QuantityWidget: React.FC<{
     <div className={cn('flex flex-row items-stretch ' + (ghost ? 'bg-transparent  rounded-xl' : 'bg-secondary rounded-xl'), className)}>
       <Button
         aria-label={'Remove a ' + item.product.title + ' from the cart'}
-        size='xs'
+        size={size}
         variant={ghost ? 'ghost' : 'secondary'}
         rounded={ghost ? 'full' : 'xl'}
-        className='px-1'
+        className='px-1 lg:min-w-0 lg:px-2'
         key='left'
         onClick={item.decrement.bind(item)}
       >
@@ -43,10 +45,10 @@ const QuantityWidget: React.FC<{
         <div className={'text-sm flex items-center cursor-default ' + digitClx} >{item.quantity}</div>
       <Button
         aria-label={'Add another ' + item.product.title + ' to the cart'}
-        size='xs'
+        size={size}
         variant={ghost ? 'ghost' : 'secondary'}
         rounded={ghost ? 'full' : 'xl'}
-        className='px-1'
+        className='px-1 lg:min-w-0 lg:px-2'
         onClick={item.increment.bind(item)}
         key='right'
       >
@@ -56,7 +58,7 @@ const QuantityWidget: React.FC<{
   ) : (
     <Button
       aria-label={'Add a ' + item.product.title + ' to cart'}
-      size='xs'
+      size={size}
       variant='secondary'
       rounded='xl'
       className={className}

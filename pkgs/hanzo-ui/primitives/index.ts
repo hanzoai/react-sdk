@@ -132,6 +132,7 @@ export { ScrollArea, ScrollBar } from './scroll-area'
 
 export { Toaster } from './toaster'
 export { useToast, toast } from './use-toast'
+export { RadioGroup, RadioGroupItem } from './radio-group'
 
 export { default as AspectRatio } from './aspect-ratio'
 export { default as Badge } from './badge'

@@ -2,9 +2,7 @@
 import React, { useEffect, useState, type PropsWithChildren } from 'react'
 import { observer } from 'mobx-react-lite'
 
-import { 
-  useQueryState, 
-} from 'next-usequerystate'
+import { useQueryState } from 'next-usequerystate'
 
 import { cn } from '@hanzo/ui/util'
 import { Cart, CategoryFacetsWidget, CategoryView } from '@hanzo/cart/components'
@@ -66,9 +64,10 @@ const ProductViewStore: React.FC<{
         {children}
       </CategoryFacetsWidget>
     ) : (
-      <div id='TEST_' className={cn('h-16 bg-level-1 rounded-xl', className)} />
+      <div className={cn('h-16 bg-level-1 rounded-xl', className)} />
     )
   }
+  
   const StoreCart: React.FC<{className?: string}> = ({
     className=''
   }) => {
@@ -100,7 +99,7 @@ const ProductViewStore: React.FC<{
 
   return (
     <div id='SCV_OUTERMOST' className={cn('flex flex-col justify-start items-stretch relative', className)} >
-      <div id='SCV_FACET_CONTAINER_COMPACT' className='pb-6 xl:hidden bg-background w-full sticky top-[80px]'>
+      <div id='SCV_FACET_CONTAINER_COMPACT' className='xl:hidden py-2 bg-background w-full sticky top-0'>
         <Facets className='w-full' >
           <CartDrawer className='md:hidden pr-3 text-primary relative' >
             <Cart isMobile={mobile} className='p-0 border-none mt-12'/>

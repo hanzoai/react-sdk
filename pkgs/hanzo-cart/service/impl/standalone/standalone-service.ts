@@ -53,7 +53,7 @@ class TogglableCategoryImpl implements TogglableCategory {
 
   readonly id: string
   readonly title: string
-  readonly level: number | undefined 
+  readonly level: number  
   readonly desc: string | undefined
   readonly img: string | ImageDef | undefined
 
@@ -163,7 +163,7 @@ class StandaloneCommerceService
       levels.every((level) => (level.some((cat) => (item.inCategory(cat.id)))))
     ))
 
-    return result.sort((a, b) => (a.product.sku.localeCompare(b.product.sku)))
+    return result// .sort((a, b) => (a.product.sku.localeCompare(b.product.sku)))
   }
 
   getCategorySubtotal(categoryId: string): number {
