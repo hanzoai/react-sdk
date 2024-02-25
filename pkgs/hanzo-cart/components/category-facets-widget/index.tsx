@@ -55,7 +55,6 @@ const CategoryToggle: React.FC<{
   }
 
   const handleValueChangeSingle = (selected: string) => {
-    console.log('SINGLE SELECTED: ', selected)
     mutator!.set(selected)
     if (selected) {
       setDisabledLast(selected)
@@ -76,7 +75,7 @@ const CategoryToggle: React.FC<{
         >
           <span className={cn('flex flex-row justify-center gap-1 h-4 items-center')} >
             <FacetImage spec={spec} />
-            <span className='hidden lg:block whitespace-nowrap'>{spec.label}</span>
+            <span className='hidden md:block whitespace-nowrap'>{spec.label}</span>
           </span>
         </ToggleGroupItem>
       )
@@ -86,7 +85,6 @@ const CategoryToggle: React.FC<{
 
   if (mutator) {
 
-    console.log("MUTATOR VALUE: ", mutator.val)
     return (
       <ToggleGroup 
         type='single' 
@@ -120,7 +118,7 @@ const CategoryToggle: React.FC<{
         >
           <span className={cn('flex flex-row justify-center gap-1 h-4 items-center')} >
             <FacetImage spec={spec} />
-            <span className='hidden lg:block whitespace-nowrap'>{spec.label}</span>
+            <span className='hidden md:block whitespace-nowrap'>{spec.label}</span>
           </span>
         </ToggleGroupItem>
       )
@@ -152,6 +150,7 @@ const CategoryFacetsWidget: React.FC<PropsWithChildren & {
   facetClassNames?: string[]
   mutators?: CategoryGetterSetter[]
   isMobile?: boolean
+  id?: string
   className?: string
 }> = ({
   children,
@@ -160,10 +159,11 @@ const CategoryFacetsWidget: React.FC<PropsWithChildren & {
   facetClassNames,
   isMobile=false,
   className='',
+  id='CategoryFacetsWidget'
 }) => {
   const horiz = className.includes('flex-row')
   return (
-    <div className={className}>
+    <div id={id} className={className} >
     {facets.map((f, i) => (
       <CategoryToggle 
         key={i}

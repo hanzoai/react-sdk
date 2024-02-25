@@ -21,12 +21,14 @@ const BullionStorePage = ({ searchParams }: Props) => {
 
   // must override: p-4 md:px-6 lg:px-8 
   return (<>
-    <Main className={
-      'md:flex-row md:gap-4 min-h-[100vh] sm:min-h-[80vh] flex flex-row justify-center ' +
-      '2xl:mx-auto max-w-screen-2xl ' + 
-      'p-0 px-4 md:px-6 lg:px-8'
+    <Main id='BUY_CAT_MAIN' className={ 
+      'flex flex-row justify-center ' + 
+      'min-h-[100vh] sm:min-h-[80vh] ' +
+      'lg:min-w-screen-lg ' + 
+      'max-w-screen-2xl 2xl:mx-auto ' + 
+      'p-0 px-4'
     }>
-      <ProductFocusedView agent={agent} className='max-w-full' />
+      <ProductFocusedView agent={agent} className='w-full' />
     </Main>
     <Footer siteDef={siteDef} className='max-w-screen-2xl w-full pt-16 lg:mx-auto ' />
     <TailwindIndicator />
