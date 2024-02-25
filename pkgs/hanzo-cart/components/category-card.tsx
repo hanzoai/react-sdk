@@ -37,11 +37,11 @@ const CategoryCard: React.FC<React.HTMLAttributes<HTMLDivElement> & {
   c.specifiedCategories
 
   const CategoryImage: React.FC<{className?: string}> = ({className=''}) => {
-    if (typeof c.specifiedCategories[0].img === 'string') {
+    if (typeof c.specifiedCategories[1].img === 'string') {
       return (
         <Image
-          src={c.specifiedCategories[0].img}
-          alt={c.specifiedCategories[0].title}
+          src={c.specifiedCategories[1].img}
+          alt={c.specifiedCategories[1].title}
           className={className}
           loading='lazy'
 //          width={700}
@@ -53,7 +53,7 @@ const CategoryCard: React.FC<React.HTMLAttributes<HTMLDivElement> & {
         />
       )
     }
-    const {dim, src, alt} = (c.specifiedCategories[0].img as ImageDef)
+    const {dim, src, alt} = (c.specifiedCategories[1].img as ImageDef)
 
     return (
       <Image 
@@ -61,7 +61,7 @@ const CategoryCard: React.FC<React.HTMLAttributes<HTMLDivElement> & {
   //      height={dim.h}
         src={src}
         fill
-        alt={alt ?? c.specifiedCategories[0].title}
+        alt={alt ?? c.specifiedCategories[1].title}
         className={className}
         loading='lazy'
         style={{
@@ -77,7 +77,7 @@ const CategoryCard: React.FC<React.HTMLAttributes<HTMLDivElement> & {
       {...props}
     >
       <CardHeader className='w-full border-b p-6 min-h-[180px] max-h-[240px] relative'>
-      {c.specifiedCategories[0].img ? (
+      {c.specifiedCategories[1].img ? (
         <CategoryImage className='p-6' />
       ) : (
           <div

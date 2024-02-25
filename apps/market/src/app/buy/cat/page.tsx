@@ -23,7 +23,7 @@ const BullionStorePage = ({ searchParams }: Props) => {
   return (<>
     <Main id='BUY_CAT_MAIN' className={ 
       'flex flex-row justify-center ' + 
-      'min-h-[100vh] sm:min-h-[80vh] ' +
+      'min-h-[100vh] sm:min-h-[90vh] ' +
       'lg:min-w-screen-lg ' + 
       'max-w-screen-2xl 2xl:mx-auto ' + 
       'p-0 px-4'

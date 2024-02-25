@@ -50,7 +50,7 @@ const ProductViewStore: React.FC<{
     children,
     className=''
   }) => {
-          /*'top-[44px] md:top-[80px] mb-6 ' + */
+
     const widgetClx = 'flex flex-row justify-between sm:gap-x-6 items-start'  
     const facets1Clx = 'grid grid-cols-2 gap-0 ' + (mobile ? '' : 'pr-6 ')
     const facets2Clx = 'grid grid-cols-4 gap-0 '
@@ -86,57 +86,31 @@ const ProductViewStore: React.FC<{
     )
   }
 
-//  {!loading ? (<Facets />) : ( <div className='h-[50px] w-pr-60 bg-level-1'/>)}
+  const cartColumnClx = 'hidden md:block min-w-[300px] md:min-w-[320px] ' +
+    'lg:min-w-[320px] lg:max-w-[360px] xl:min-w-[360px]'
 
-const cartColumnClx = 'hidden md:block min-w-[300px] md:min-w-[320px] lg:min-w-[320px] lg:max-w-[360px] xl:min-w-[360px]'
-
-//sticky z-30
   return (
     <div id='SCV_OUTERMOST' className={cn('flex flex-col justify-start items-stretch relative', className)} >
-      <div id='SCV_FACET_CONTAINER_COMPACT' className='pb-6 xl:hidden bg-background w-full '>
+      <div id='SCV_FACET_CONTAINER_COMPACT' className='pb-6 xl:hidden bg-background w-full sticky top-[80px]'>
         <Facets className=' bg-background w-full' >
           <CartDrawer className='md:hidden pr-3 text-primary relative' >
             <Cart isMobile={mobile} className='p-0 border-none mt-12'/>
           </CartDrawer>
         </Facets>   
       </div>
-      <div id='SCV_COL_CONTAINER' className={cn('flex flex-row justify-start gap-6 items-start relative')}>
+      <div id='SCV_COL_CONTAINER' className={cn('flex flex-row justify-start gap-6 items-stretch relative h-full')}>
         <div id='SCV_STAGE_COL' className='grow flex flex-col h-full relative'>
-          <div id='SCV_FACET_CONTAINER_BIG' className=' bg-background pb-2 sticky top-[80px] z-30 hidden xl:flex flex-col justify-start mb-6'>
+          <div id='SCV_FACET_CONTAINER_BIG' className='sticky top-[80px] z-30 bg-background pb-2 hidden xl:flex flex-col justify-start mb-6'>
             <Facets className=' bg-background ' />   
           </div>
           <Stage />
         </div>
         <div id='SCV_CART_COLUMN' className={cartColumnClx}>
-          <StoreCart className='sticky z-30 top-[80px]' />
+          <StoreCart className='sticky z-30 top-[146px] xl:top-[80px]' />
         </div>
       </div> 
     </div>
   )
 }) 
-
-/*
-        <div className={'fixed z-50 md:top-[94px] lg:top-auto xl:top-[94px] ' + cartColumnClx}>
-          <Cart className=''/>
-        </div>
-
-
-        <CartDrawer className='md:hidden right-0 pr-3 text-primary relative' >
-          <Cart isMobile={mobile} className='p-0 border-none mt-12'/>
-        </CartDrawer>
-
-
-
-      <div className='flex flex-row px-4 sm:px-0 sm:grid sm:grid-cols-3 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:grow'>
-     
-          <CategoryCard className=''/>
-          items?.map((item) => (
-            // <ProductCard item={item} key={item.product.sku} className='rounded-lg w-[40vw] sm:w-auto'/>
-            <h6 key={item.product.sku} >{item.product.sku}:<br />{item.product.title}</h6>
-          ))
-        ) : (
-          <h3>loading...</h3>
-       
-*/
 
 export default ProductViewStore
