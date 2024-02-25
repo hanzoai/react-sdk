@@ -27,9 +27,6 @@ const CategoryCard: React.FC<React.HTMLAttributes<HTMLDivElement> & {
   ...props
 }) => {
 
-  
-
-
   const [sizeItem, setSizeItem] = useState<LineItem | undefined>(undefined)
 
   const c = useCommerce()

@@ -7,7 +7,7 @@ import {
 } from 'next-usequerystate'
 
 import { cn } from '@hanzo/ui/util'
-import { ProductCard, Cart, CategoryFacetsWidget, CategoryCard } from '@hanzo/cart/components'
+import { Cart, CategoryFacetsWidget, CategoryView } from '@hanzo/cart/components'
 import { useCommerce } from '@hanzo/cart/service'
 
 import siteDef from '@/siteDef'
@@ -54,7 +54,8 @@ const ProductViewStore: React.FC<{
     const widgetClx = 'flex flex-row justify-between sm:gap-x-6 items-start'  
     const facets1Clx = 'grid grid-cols-2 gap-0 ' + (mobile ? '' : 'pr-6 ')
     const facets2Clx = 'grid grid-cols-4 gap-0 '
-    return (
+
+    return !loading ? (
       <CategoryFacetsWidget
         className={cn(widgetClx, className)} 
         isMobile={mobile}
@@ -64,15 +65,19 @@ const ProductViewStore: React.FC<{
       >
         {children}
       </CategoryFacetsWidget>
+    ) : (
+      <div id='TEST_' className={cn('h-16 bg-level-1 rounded-xl', className)} />
     )
   }
   const StoreCart: React.FC<{className?: string}> = ({
     className=''
   }) => {
-    return (
+    return !loading ? (
       <Cart isMobile={mobile} className={className}>
         <h4 className='text-center font-heading text-xl'>Lux Market Cart</h4>
       </Cart>
+    ) : (
+      <div className={cn('h-40 bg-level-1 rounded-xl' , className)}/>
     )
   }
 
@@ -81,7 +86,11 @@ const ProductViewStore: React.FC<{
   }) => {
     return (
       <div id='SCV_STAGE' className={className}>
-        {!loading ? (<CategoryCard className=''/>) : <h6>Loading item...</h6> } 
+      {!loading ? (<CategoryView className=''/>) : (
+        <div className={cn('lg:min-w-[400px] lg:max-w-[600px] overflow-hidden bg-level-1 h-[50vh] rounded-xl p-6', className)} >
+          <h6 className='text-muted'>Loading item...</h6>
+        </div>
+      ) } 
       </div>
     )
   }
@@ -92,7 +101,7 @@ const ProductViewStore: React.FC<{
   return (
     <div id='SCV_OUTERMOST' className={cn('flex flex-col justify-start items-stretch relative', className)} >
       <div id='SCV_FACET_CONTAINER_COMPACT' className='pb-6 xl:hidden bg-background w-full sticky top-[80px]'>
-        <Facets className=' bg-background w-full' >
+        <Facets className='w-full' >
           <CartDrawer className='md:hidden pr-3 text-primary relative' >
             <Cart isMobile={mobile} className='p-0 border-none mt-12'/>
           </CartDrawer>
@@ -101,7 +110,7 @@ const ProductViewStore: React.FC<{
       <div id='SCV_COL_CONTAINER' className={cn('flex flex-row justify-start gap-6 items-stretch relative h-full')}>
         <div id='SCV_STAGE_COL' className='grow flex flex-col h-full relative'>
           <div id='SCV_FACET_CONTAINER_BIG' className='sticky top-[80px] z-30 bg-background pb-2 hidden xl:flex flex-col justify-start mb-6'>
-            <Facets className=' bg-background ' />   
+            <Facets className='' />   
           </div>
           <Stage />
         </div>
