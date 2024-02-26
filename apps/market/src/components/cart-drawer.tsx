@@ -6,12 +6,16 @@ import { Icons } from '@hanzo/cart/components/Icons'
 import { useCommerce } from '@hanzo/cart/service'
 
 import { DrawerMenu } from '@hanzo/ui/common'
-import { Button, buttonVariants, Badge } from '@hanzo/ui/primitives'
+import { buttonVariants, Badge } from '@hanzo/ui/primitives'
 import { cn } from '@hanzo/ui/util'
 
-const CartDrawer: React.FC<PropsWithChildren & {className?: string}> = ({
+const CartDrawer: React.FC<PropsWithChildren & {
+  className?: string, 
+  buttonClassName?: string
+}> = ({
   children,
-  className=''
+  className='',
+  buttonClassName=''
 }) => {
 
   const c = useCommerce()
@@ -40,7 +44,7 @@ const CartDrawer: React.FC<PropsWithChildren & {className?: string}> = ({
     <DrawerMenu 
       className={className}  
       propogate={false}
-      trigger={<CartButton className='relative' />}
+      trigger={<CartButton className={'relative ' + buttonClassName} />}
     >
       {children}
     </DrawerMenu>

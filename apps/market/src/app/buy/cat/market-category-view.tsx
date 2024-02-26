@@ -10,7 +10,7 @@ import { useCommerce } from '@hanzo/cart/service'
 
 import siteDef from '@/siteDef'
 import CartDrawer from '@/components/cart-drawer'
-import type { Category, LineItem, FacetsSelection } from '@hanzo/cart/types'
+import type { Category, FacetsSelection } from '@hanzo/cart/types'
 import Link from 'next/link'
 
 const MarketCategoryView: React.FC<{
@@ -63,13 +63,14 @@ const MarketCategoryView: React.FC<{
     className=''
   }) => {
 
-    const widgetClx = 'flex flex-row justify-between sm:gap-x-6 items-start'  
+    const widgetClx = 'flex flex-row justify-between sm:gap-x-6 xs:gap-x-2 items-start'  
     const facets1Clx = 'grid grid-cols-2 gap-0 ' + (mobile ? '' : 'pr-6 ')
     const facets2Clx = 'grid grid-cols-4 gap-0 '
 
     return !loading ? (
       <FacetsWidget
-        className={cn(widgetClx, className)} 
+          // using neg margin to compensate for fw putting extra rt padding on shopping cart button
+        className={cn(widgetClx, (mobile ? 'relative left-0 -mr-3':''), className)} 
         exclusive
         isMobile={mobile}
         facetClassNames={[facets1Clx, facets2Clx]}
@@ -99,16 +100,15 @@ const MarketCategoryView: React.FC<{
     className=''
   }) => {
     return (
-      <div id='SCV_STAGE' className={className}>
+      <div /* id='SCV_STAGE' */ className={className}>
       {!loading ? ( 
         message ? (
           <div className={cn('typography lg:min-w-[400px] lg:max-w-[600px] overflow-hidden bg-level-1 h-[50vh] rounded-xl p-6', className)} >
             <h5 className='text-accent text-center'>{message}</h5>
             <h6 className='text-accent text-center'>Or, would you like to try a<br/><Link className='text-xl font-semibold ' href='/store'>general search</Link>?</h6>
-
           </div>
         ) : (
-          <CategoryView className='' category={categoryRef.current!}/>
+          <CategoryView className='' agent={agent} category={categoryRef.current!}/>
         )
       ) : (
         <div className={cn('lg:min-w-[400px] lg:max-w-[600px] overflow-hidden bg-level-1 h-[50vh] rounded-xl p-6', className)} >
@@ -122,23 +122,34 @@ const MarketCategoryView: React.FC<{
   const cartColumnClx = 'hidden md:block min-w-[300px] md:min-w-[320px] ' +
     'lg:min-w-[320px] lg:max-w-[360px] xl:min-w-[360px]'
 
-  return (
-    <div id='SCV_OUTERMOST' className={cn('flex flex-col justify-start items-stretch relative', className)} >
-      <div id='SCV_FACET_CONTAINER_COMPACT' className='xl:hidden py-2 bg-background w-full sticky top-0'>
-        <Facets className='w-full' >
-          <CartDrawer className='md:hidden pr-3 text-primary relative' >
+  return mobile ? (
+    <div /* id='SCV_OUTERMOST' */ className={cn('flex flex-col justify-start items-stretch relative', className)} >
+      <div /* id='SCV_FACET_CONTAINER_COMPACT' */ className='py-2 bg-background w-full sticky top-[44px]'>
+        <Facets className='sm:w-full' >
+          <CartDrawer className='md:hidden pr-1 text-primary relative' buttonClassName='h-9' >
             <Cart isMobile={mobile} className='p-0 border-none mt-12'/>
           </CartDrawer>
         </Facets>   
       </div>
-      <div id='SCV_COL_CONTAINER' className={cn('flex flex-row justify-start gap-6 items-stretch relative h-full pt-3')}>
-        <div id='SCV_STAGE_COL' className='grow flex flex-col h-full relative'>
-          <div id='SCV_FACET_CONTAINER_BIG' className='sticky top-[80px] z-30 bg-background pb-2 hidden xl:flex flex-col justify-start mb-6'>
+      <Stage />
+    </div>
+  ) : (
+    <div /* id='SCV_OUTERMOST' */ className={cn('flex flex-col justify-start items-stretch relative', className)} >
+      <div /* id='SCV_FACET_CONTAINER_COMPACT' */ className='xl:hidden py-2 bg-background w-full sticky top-[80px] z-40 '>
+        <Facets className='sm:w-full' >
+          <CartDrawer className='md:hidden pr-1 text-primary relative' buttonClassName='h-9' >
+            <Cart isMobile={mobile} className='p-0 border-none mt-12'/>
+          </CartDrawer>
+        </Facets>   
+      </div>
+      <div /* id='SCV_COL_CONTAINER' */ className='flex flex-row justify-start gap-6 items-stretch relative h-full pt-3'>
+        <div /* id='SCV_STAGE_COL' */ className='grow flex flex-col h-full relative'>
+          <div /* id='SCV_FACET_CONTAINER_BIG' */ className='sticky top-[80px] z-30 bg-background pb-2 hidden xl:flex flex-col justify-start mb-6'>
             <Facets className='' />   
           </div>
           <Stage />
         </div>
-        <div id='SCV_CART_COLUMN' className={cartColumnClx}>
+        <div /* id='SCV_CART_COLUMN' */ className={cn('z-30',  cartColumnClx)}>
           <StoreCart className='sticky z-30 top-[146px] xl:top-[80px]' />
         </div>
       </div> 

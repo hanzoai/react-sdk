@@ -13,6 +13,7 @@ const QuantityWidget: React.FC<{
   ghost?: boolean
   className?: string
   isMobile?: boolean
+  wide?: boolean
   size?: ButtonSizes
 }> = observer(({
   item,
@@ -26,13 +27,13 @@ const QuantityWidget: React.FC<{
   const digitClx = ghost && !isMobile ? 'px-1' : 'px-2 font-bold '
   
   return ( item.isInCart ? (
-    <div className={cn('flex flex-row items-stretch ' + (ghost ? 'bg-transparent  rounded-xl' : 'bg-secondary rounded-xl'), className)}>
+    <div className={cn('flex flex-row items-stretch justify-center ' + (ghost ? 'bg-transparent  rounded-xl' : 'bg-secondary rounded-xl'), className)}>
       <Button
         aria-label={'Remove a ' + item.title + ' from the cart'}
         size={size}
         variant={ghost ? 'ghost' : 'secondary'}
         rounded={ghost ? 'full' : 'xl'}
-        className='px-1 lg:min-w-0 lg:px-2'
+        className='px-1 lg:min-w-0 lg:px-2 grow justify-end'
         key='left'
         onClick={item.decrement.bind(item)}
       >
@@ -48,7 +49,7 @@ const QuantityWidget: React.FC<{
         size={size}
         variant={ghost ? 'ghost' : 'secondary'}
         rounded={ghost ? 'full' : 'xl'}
-        className='px-1 lg:min-w-0 lg:px-2'
+        className='px-1 lg:min-w-0 lg:px-2 grow justify-start'
         onClick={item.increment.bind(item)}
         key='right'
       >
