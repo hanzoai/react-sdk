@@ -17,16 +17,22 @@ const CategoryView: React.FC<React.HTMLAttributes<HTMLDivElement> & {
   isLoading?: boolean
   agent?: string
 }> = ({
-  category, className, isLoading = false, agent, ...props
+  category, 
+  className, 
+  isLoading = false, 
+  agent, 
+  ...props
 }) => {
 
-    const [selectedItem, setSelectedItem] = useState<LineItem>(category.products[0] as LineItem)
+    const [selectedItem, setSelectedItem] = useState<LineItem | undefined>(category?.products[0] as LineItem)
+
+    const waiting = (): boolean => (isLoading || !category)
 
     const CategoryImage: React.FC<{ className?: string }> = ({
       className = ''
     }) => {
 
-      if (isLoading) {
+      if (waiting()) {
         // deliberately not Skeleton to have a better overall pulse effect.
         return <div className={cn(
           'bg-level-1 rounded-xl aspect-square ' +
@@ -77,12 +83,11 @@ const CategoryView: React.FC<React.HTMLAttributes<HTMLDivElement> & {
         }
       }
 
-      const soleOption = category.products.length === 1
+      const soleOption = !waiting() && category.products.length === 1
+      const mobilePicker = !waiting() && (agent === 'phone' && category.products.length > 8) 
 
-      const mobilePicker = (agent === 'phone' && category.products.length > 8) 
-
-      return isLoading ? (
-        <Skeleton className={'min-h-[120px] w-pr-60 ' + className} />
+      return waiting() ? (
+        <Skeleton className={'min-h-[120px] w-pr-60 mx-auto ' + className} />
       ) : (
         <div /* id='CV_AVAIL_AMOUNTS' */ className={cn(
           'w-full md:w-auto flex flex-col justify-start items-center',
@@ -121,7 +126,7 @@ const CategoryView: React.FC<React.HTMLAttributes<HTMLDivElement> & {
     const TitleArea: React.FC<{ className?: string }> = ({
       className = ''
     }) => (
-      isLoading ? (<Skeleton className={'h-12 w-pr-80 mx-auto ' + className} />) : (
+      waiting() ? (<Skeleton className={'h-12 w-pr-80 mx-auto ' + className} />) : (
 
         <div className={cn('flex flex-col justify-start items-center mb-6', className)}>
           <h3 className='text-lg lg:text-xl font-heading text-center'>
@@ -143,18 +148,22 @@ const CategoryView: React.FC<React.HTMLAttributes<HTMLDivElement> & {
     const Desc: React.FC<{ className?: string }> = ({
       className = ''
     }) => (
-      isLoading ? (<Skeleton className={'min-h-20 w-full grow mx-auto ' + className} />) : (
+      waiting() ? (<Skeleton className={'min-h-20 w-full grow mx-auto ' + className} />) : (
         <p className={cn('text-base lg:text-lg mb-6 xs:mb-0', className)}>{category.desc}</p>
       ))
 
     return agent === 'phone' ? (
-      <div /* id='CV_OUTER' */ className={cn('w-full flex flex-col justify-start items-stretch gap-4 mt-2', className)} {...props}>
+      <div /* id='CV_OUTER' */ className={cn('w-full h-[calc(100svh-96px)] max-h-[700px] flex flex-col justify-between ' + 
+      'items-stretch gap-[4vh] mt-[2vh] pb-[6vh]', className)} {...props}>
+        
         <div /* id='CV_TITLE_AND_IMAGE_ROW' */ className='flex flex-row justify-between items-start w-full'>
+        { waiting() ? ( <Skeleton className={'min-h-30 w-full '} /> ) : (<>
           <CategoryImage className='w-pr-33' />
           <TitleArea className='grow pt-3 mb-0' />
-        </div>
+        </>)}
+        </div> 
         <Desc className='' />
-        <AvailableAmounts className='mb-2' />
+        <AvailableAmounts className='mb-[3vh]' />
         {selectedItem ? (
           <AddToCartWidget size='default' wide item={selectedItem} className='w-pr-70 mx-auto' />
         ) : null}

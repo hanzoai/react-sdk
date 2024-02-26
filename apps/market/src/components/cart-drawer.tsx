@@ -12,10 +12,12 @@ import { cn } from '@hanzo/ui/util'
 const CartDrawer: React.FC<PropsWithChildren & {
   className?: string, 
   buttonClassName?: string
+  isMobile?: boolean
 }> = ({
   children,
   className='',
-  buttonClassName=''
+  buttonClassName='',
+  isMobile=false
 }) => {
 
   const c = useCommerce()
@@ -29,12 +31,22 @@ const CartDrawer: React.FC<PropsWithChildren & {
         className={cn(buttonVariants({ variant: 'outline', size: 'icon', rounded: 'lg' }), className)}
       >
       {c.cartItems.length > 0 && (
-        <Badge
-          variant="secondary"
-          className="absolute -right-2 -top-2 g-6 w-6 h-6 font-sans text-xs rounded-full p-2"
+        <div className={
+          'flex flex-col justify-center items-center ' +
+          'bg-secondary absolute g-6 ' + 
+          'font-sans rounded-full p-2'
+        }
+        style={{
+          fontSize: isMobile ? '12px' : '15px',
+          lineHeight: 1,
+          right: isMobile ? '-6px' : '-8px',
+          top: isMobile ? '-6px' : '-8px',
+          width: isMobile ? '16px' : '24px',
+          height: isMobile ? '16px' : '24px',
+        }}
         >
           {c.cartItems.length}
-        </Badge>
+        </div>
       )}
         <Icons.shoppingCart className="h-4 w-4" aria-hidden="true" />
       </div>            

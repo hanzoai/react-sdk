@@ -102,20 +102,14 @@ const MarketCategoryView: React.FC<{
   }) => {
     return (
       <div /* id='SCV_STAGE' */ className={className}>
-      {!loading ? ( 
-        message ? (
-          <div className={cn('typography lg:min-w-[400px] lg:max-w-[600px] overflow-hidden bg-level-1 h-[50vh] rounded-xl p-6', className)} >
-            <h5 className='text-accent text-center'>{message}</h5>
-            <h6 className='text-accent text-center'>Or, would you like to try a<br/><Link className='text-xl font-semibold ' href='/store'>general search</Link>?</h6>
-          </div>
-        ) : (
-          <CategoryView className='' agent={agent} category={categoryRef.current!}/>
-        )
-      ) : (
-        <div className={cn('lg:min-w-[400px] lg:max-w-[600px] overflow-hidden bg-level-1 h-[50vh] rounded-xl p-6', className)} >
-          <h6 className='text-muted'>Loading item...</h6>
+      {message ? (
+        <div className={cn('typography lg:min-w-[400px] lg:max-w-[600px] overflow-hidden bg-level-1 h-[50vh] rounded-xl p-6', className)} >
+          <h5 className='text-accent text-center'>{message}</h5>
+          <h6 className='text-accent text-center'>Or, would you like to try a<br/><Link className='text-xl font-semibold ' href='/store'>more general search</Link>?</h6>
         </div>
-      ) } 
+      ) : (
+        <CategoryView className='' agent={agent} category={categoryRef.current!}/>
+      )} 
       </div>
     )
   }
@@ -127,8 +121,8 @@ const MarketCategoryView: React.FC<{
     <div /* id='SCV_OUTERMOST' */ className={cn('flex flex-col justify-start items-stretch relative', className)} >
       <div /* id='SCV_FACET_CONTAINER_COMPACT' */ className='py-2 bg-background w-full sticky top-[44px]'>
         <Facets className='sm:w-full ' >
-          <CartDrawer className='md:hidden pr-1 text-primary relative' buttonClassName='h-9' >
-            <Cart isMobile={mobile} className='p-0 border-none mt-12'/>
+          <CartDrawer isMobile={true} className='md:hidden pr-1 text-primary relative' buttonClassName='h-9' >
+            <Cart isMobile={true} className='p-0 border-none mt-12'/>
           </CartDrawer>
         </Facets>   
       </div>
