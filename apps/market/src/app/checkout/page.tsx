@@ -57,9 +57,9 @@ const CheckoutPage = () => {
           <div className='flex flex-col gap-6 w-full'>
             <EnhHeadingBlockComponent block={{blockType: 'enh-heading',
               specifiers: 'preheading-heading-font',
-              preheading: { text: 'Complete your order', level: 3, mb: 6 },
-              heading: { text: `Deposit ${formatPrice(c.cartTotalValue)} in Lux Coin (LUX on Lux Mainnet only) to:`, level: 6, mb: 0 },
-              byline: { text: 'Scan QR code to login to your wallet and complete the secure transaction. Confirm your transaction hash:', level: 6 },
+              preheading: { text: 'Scan QR code to login to your wallet and complete the secure transaction.', level: 5, mb: 8 },
+              heading: { text: `Deposit ${formatPrice(c.cartTotalValue)} in Lux Coin (LUX on Lux Mainnet only) to:`, level: 6, mb: 4 },
+              byline: { text: '0xAdf62DADB9E527fb06509842a4266919Fd85d214', level: 6 },
             } as EnhHeadingBlock}/>
             <div className='flex gap-2 w-full'>
               <Input placeholder='0x...' />
@@ -75,7 +75,6 @@ const CheckoutPage = () => {
       ) : paymentMethod === 'bank' ? (
         <div className='flex flex-col gap-4 w-full max-w-[40rem] mx-auto'>
           <EnhHeadingBlockComponent block={{blockType: 'enh-heading',
-            specifiers: 'preheading-heading-font',
             heading: { text: `WIRE INFO`, level: 2 },
           } as EnhHeadingBlock}/>
           <div className='flex flex-col gap-4 w-full'>

@@ -12,11 +12,10 @@ import type { LinkDef } from '@hanzo/ui/types'
 import { cn } from '@hanzo/ui/util'
 
 import { useCurrentUser } from '../service/AuthContext'
-import { signInWithProvider, signOut } from '../lib/firebase/auth'
+import { signInWithEmailPassword, signInWithEthereum, signInWithProvider, signOut } from '../lib/firebase/auth'
 import { Facebook, Google, GitHub } from '../icons'
 import EmailPasswordForm from './email-password-form'
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth'
-import { auth } from '../lib/firebase/firebase'
+import Ethereum from '../icons/ethereum'
 
 const Login: React.FC<{
   redirectUrl?: string,
@@ -42,36 +41,40 @@ const Login: React.FC<{
   const loginWithEmailPassword = async (email: string, password: string) => {
     setIsLoading(true)
     try {
-      const res = await signInWithEmailAndPassword(auth, email, password)
-      if (res.user && res.user.email) {
-        setUser({email: res.user.email})
+      const res = await signInWithEmailPassword(email, password)
+      if (res.success && res.user) {
+        setUser({email: res.user?.email, displayName: res.user?.displayName})
         if (redirectUrl) {
           router.push(redirectUrl)
         }
       }
     } catch (e) {
-      console.error(e)
-      try {
-        const res = await createUserWithEmailAndPassword(auth, email, password)
-        if (res.user && res.user.email) {
-          setUser({email: res.user.email})
-          if (redirectUrl) {
-            router.push(redirectUrl)
-          }
+      toast({title: "User with this email already signed up using a different provider"})
+    }
+    setIsLoading(false)
+  }
+
+  const loginWithEthereum = async () => {
+    setIsLoading(true)
+    try {
+      const res = await signInWithEthereum()
+      if (res.success && res.user) {
+        setUser({email: res.user?.email, displayName: res.user?.displayName})
+        if (redirectUrl) {
+          router.push(redirectUrl)
         }
-      } catch (e) {
-        toast({title: "User with this email already signed up using a different provider"})
-        console.error(e)
       }
-      }
+    } catch (e) {
+      toast({title: "No Ethereum provider found"})
+    }
     setIsLoading(false)
   }
 
   const login = async (provider: string) => {
     setIsLoading(true)
     const res = await signInWithProvider(provider)
-    if (res.success && res.email) {
-      setUser({email: res.email})
+    if (res.success && res.user) {
+      setUser({email: res.user?.email, displayName: res.user?.displayName})
       if (redirectUrl) {
         router.push(redirectUrl)
       }
@@ -91,13 +94,14 @@ const Login: React.FC<{
     setIsLoading(false)
   }
 
+  console.log(user)
   return (
     <ApplyTypography className={cn('w-full', className)}>
-      <div className='w-full max-w-[20rem] mx-auto'>
+      <div className='w-full mx-auto'>
       {user ? (
         <div className='flex flex-col text-center gap-4'>
           <h3>Welcome!</h3>
-          <p>You are signed in as {user.email}</p>
+          <p>You are signed in as {user.displayName ?? user.email}</p>
           <div className='flex gap-4 items-center justify-center'>
             <Button onClick={() => logout()} variant='outline' disabled={isLoading}>Sign Out</Button>
             {getStartedUrl && <Button variant='primary' onClick={() => router.push(getStartedUrl)}>GET STARTED</Button>}
@@ -114,7 +118,10 @@ const Login: React.FC<{
             <h2 className='mx-auto'>Login</h2>
           </div>
           {redirectUrl === 'checkout' && <p>You will be redirected to checkout after successful login.</p>}
-          {/* <EmailPasswordForm onSubmit={loginWithEmailPassword} isLoading={isLoading}/> */}
+          <EmailPasswordForm onSubmit={loginWithEmailPassword} isLoading={isLoading}/>
+          <Button onClick={loginWithEthereum} className='w-full mx-auto flex items-center gap-2' disabled={isLoading}>
+            <Ethereum height={20}/>Sign in with your wallet
+          </Button>
           <Button onClick={() => login('google')} className='w-full mx-auto flex items-center gap-2' disabled={isLoading}>
             <Google height={20}/>Sign in with Google
           </Button>

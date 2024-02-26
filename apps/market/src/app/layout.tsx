@@ -24,11 +24,11 @@ const RootLayout: React.FC<PropsWithChildren> = async ({
   const currentUser = await getCurrentUserServerSide()
 
   return (
-    <AuthServiceProvider user={currentUser?.email ? {email: currentUser?.email} : null}>
+    <AuthServiceProvider user={currentUser?.email ? {email: currentUser.email, displayName: currentUser.displayName} : null}>
       <CommerceServiceProvider>
         <RootLayoutCommon siteDef={siteDef} >
-            {children}
-            <Toaster />
+          {children}
+          <Toaster />
         </RootLayoutCommon>
       </CommerceServiceProvider>
     </AuthServiceProvider>
