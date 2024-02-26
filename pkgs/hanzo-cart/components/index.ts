@@ -1,8 +1,9 @@
 export { default as ProductCard } from './product-card'
-export { default as QuantityWidget } from './quantity-widget'
+export { default as AddToCartWidget } from './add-to-cart-widget'
 export { default as Cart } from './cart'
 export { default as CartLineItem } from './cart-line-item'
 export { default as CategoryView } from './category-view'
 export { default as FacetsWidget } from './facets-widget'
-
+export { default as ProductSelectionMobilePicker } from './product-selection-mobile-picker'
+export { default as ProductSelectionRadioGroup } from './product-selection-radio-group'
 export * as Icons from './Icons'

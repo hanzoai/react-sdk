@@ -8,7 +8,7 @@ import { cn } from '@hanzo/ui/util'
 import { Icons } from './Icons'
 import type { LineItem } from '../types'
 
-const QuantityWidget: React.FC<{ 
+const AddToCartWidget: React.FC<{ 
   item: LineItem
   ghost?: boolean
   className?: string
@@ -71,4 +71,4 @@ const QuantityWidget: React.FC<{
   ))
 })
 
-export default QuantityWidget
+export default AddToCartWidget

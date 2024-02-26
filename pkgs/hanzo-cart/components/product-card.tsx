@@ -17,7 +17,7 @@ import { formatPrice } from '../util'
 import type { LineItem } from '../types'
 import { Icons } from './Icons'
 
-import QuantityWidget from './quantity-widget'
+import AddToCartWidget from './add-to-cart-widget'
 
 interface ProductCardProps extends React.HTMLAttributes<HTMLDivElement> {
   item: LineItem
@@ -70,7 +70,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
         </CardTitle>
       </CardContent>
       <CardFooter className='p-4 flex flex-row justify-center'>
-        <QuantityWidget item={item}/>
+        <AddToCartWidget item={item}/>
       </CardFooter>
     </Card>
   )
