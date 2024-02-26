@@ -9,13 +9,12 @@ import { formatPrice } from '../util'
 import { Icons } from './Icons'
 
 import QuantityWidget from './quantity-widget'
-import { useCommerce } from '../service'
 import type { Category, LineItem } from '../types'
-import { autorun } from 'mobx'
 
 const TS = '-'  // token separator
 const DEC = '_' // decimal substitute
 
+  // TODO: makes this part of the conf!
 const amountLabelFromSKU = (sku: string): string => {
   const mainTokens = sku.split(TS)
   const tCount = mainTokens.length
@@ -30,28 +29,20 @@ const amountLabelFromSKU = (sku: string): string => {
 
 
 const CategoryView: React.FC<React.HTMLAttributes<HTMLDivElement> & {
+  category: Category
 }> = ({
+  category,
   className,
   ...props
 }) => {
 
-  const [selectedItem, setSelectedItem] = useState<LineItem | undefined>(undefined)
-
-  const c = useCommerce()
-  const cat = (): Category => (c.specifiedCategories[c.specifiedCategories.length - 1])
-
-  useEffect(() => {
-    return autorun(() => {
-      const item = c.specifiedItems.length > 0 ? c.specifiedItems[0] : undefined
-      setSelectedItem(item)
-    })
-  }, [])
+  const [selectedItem, setSelectedItem] = useState<LineItem >(category.products[0] as LineItem)
 
   const CategoryImage: React.FC<{className?: string}> = ({
     className=''
   }) => {
 
-    if (!cat().img) {
+    if (!category.img) {
       return (
         <div
           aria-label='Placeholder'
@@ -69,10 +60,10 @@ const CategoryView: React.FC<React.HTMLAttributes<HTMLDivElement> & {
         <div className={cn('w-full border rounded-xl p-6 ')}>
           <div className={cn('w-full aspect-square  relative')}>
             <Image 
-              src={cat().img!}
+              src={category.img!}
               fill
               sizes="(max-width: 480px) 100vw, (max-width: 768px) 50vw, (max-width: 1200px) 50vw, 20vw"
-              alt={cat().title}
+              alt={category.title}
               className=''
               loading='lazy'
               style={{ objectFit: 'contain'}}
@@ -83,25 +74,26 @@ const CategoryView: React.FC<React.HTMLAttributes<HTMLDivElement> & {
     )
   }
 
-
   const AvailableAmounts: React.FC<{className?: string}> = ({
     className=''
   }) => { 
+
     const onSelection = (sku: string) => {
-      const selectedItem = c.specifiedItems.find((item) => (item.sku === sku))
+
+      const selectedItem = category.products.find((item) => (item.sku === sku))
       if (selectedItem) {
-        setSelectedItem(selectedItem)
+        setSelectedItem(selectedItem as LineItem)
       }
     }
 
     return c.specifiedItems.length > 1 ? (
-      <div id='CV_AVAIL_AMOUNTS' className={cn('w-full md:w-auto flex flex-col justify-start items-center gap-8', className)}>
+      <div /* id='CV_AVAIL_AMOUNTS' */ className={cn('w-full md:w-auto flex flex-col justify-start items-center gap-8', className)}>
         <div className='w-full flex flex-col justify-start items-center'>
           <h6 className='text-center font-semibold'>Available sizes</h6>
           <div className='h-[1px] w-pr-70 bg-muted-3' />
         </div>
         <RadioGroup className='block columns-3 gap-2 lg:columns-2 lg:gap-6 w-full lg:auto' onValueChange={onSelection} value={selectedItem?.sku ?? undefined}>
-        {c.specifiedItems.map((item) => (
+        {category.products.map((item) => (
           <div className="flex flex-row gap-2 items-center mb-3">
             <RadioGroupItem value={item.sku} id={item.sku} />
             <Label htmlFor={item.sku}>{amountLabelFromSKU(item.sku) + ', ' + formatPrice(item.price)}</Label>
@@ -121,10 +113,10 @@ const CategoryView: React.FC<React.HTMLAttributes<HTMLDivElement> & {
         <div className='flex flex-col justify-start items-center mb-6'>
           <h3 className='text-lg lg:text-xl font-heading text-center'>
             <span className='hidden md:inline lg:hidden'>
-            {c.specifiedCategories.map((cat, i) => (<p>{cat.title}</p>))}
+              {category.title.split(', ').map((s) => (<p>{s}</p>)) }
             </span>
             <span  className='inline md:hidden lg:inline'>
-              {c.specifiedCategories.map((cat, i) => (cat.title)).join(', ')}
+              {category.title}
             </span>
           </h3>
           {selectedItem ? (
@@ -133,7 +125,7 @@ const CategoryView: React.FC<React.HTMLAttributes<HTMLDivElement> & {
             </h6>
           ) : ''}
         </div>
-        <p className='text-base lg:text-lg mb-6'>{cat().desc}</p>
+        <p className='text-base lg:text-lg mb-6'>{category.desc}</p>
       </div>
     )
   }
@@ -156,7 +148,7 @@ const CategoryView: React.FC<React.HTMLAttributes<HTMLDivElement> & {
       </div>
       <div /* id='CV_CTA_AREA_COMPACT' */ className='lg:hidden flex p-4 flex-col justify-start items-center gap-6'>
         <AvailableAmounts />
-        {selectedItem ? (<QuantityWidget size='default' item={selectedItem}/>) : null }
+        {selectedItem ? (<QuantityWidget size='default' item={selectedItem}/>) : null /* TO DO.. maybe the add widget disabled*/}
       </div>
     </div>
   )

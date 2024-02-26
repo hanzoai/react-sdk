@@ -4,10 +4,8 @@ interface CommerceService {
 
     /** alpha by SKU */
   get cartItems(): LineItem[]
-  get cartTotalValue(): number
-  get cartItemCount(): number
-  
-  getCategorySubtotal: (categoryId: string) => number
+  get cartTotal(): number
+  getCartCategorySubtotal(categoryId: string): number
 
     /** 
      * Sets the current selected Facets, exclusively.
@@ -19,23 +17,21 @@ interface CommerceService {
      * null resets the selected set to specifying all Category's 
      * and items in the store
      * */ 
-  setSelectedFacets(tokens: string[] | null): LineItem[]
+  setSelectedFacetValues(tokens: string[] | null): Category[]
 
     /** 
      * non-exclusively sets the supplied Facets to the supplied states.
      * Caches and returns the resultant item set as above. 
      * */ 
-  modifySelectedFacets(states: {[key: string]: boolean}): LineItem[]
-  get selectedFacets(): FacetValue[]         // or empty array
+  modifySelectedFacetValues(states: {[key: string]: boolean}): LineItem[]
+  get selectedFacetValues(): FacetValue[]         // or empty array
 
     // TODO: NEEDED?
-  getFacets(ids: string[]): FacetValue[]
+  getFacets(ids: string[]): FacetValue[] //"facets from id's"
 
   get specifiedCategories(): Category[] // or empty array
   get specifiedItems(): LineItem[]
 
-    /** for dev convenience */ 
-  get allItems(): LineItem[] 
 }
 
 export {

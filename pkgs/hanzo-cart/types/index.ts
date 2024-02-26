@@ -15,7 +15,7 @@ interface Category {
   title: string   // Lux Gold, Minted Bar
   desc?: string
   img?: string 
-  products: Product[]
+  products: Product[] | LineItem[]
 }
 
 interface FacetValue {
@@ -46,8 +46,6 @@ interface LineItem extends Product {
 
   increment(): void
   decrement(): void
-
-  inCategory(id: string): boolean
 }
 
 export {

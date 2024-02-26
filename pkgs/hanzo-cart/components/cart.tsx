@@ -31,7 +31,7 @@ const Cart: React.FC<PropsWithChildren & {
         <p className='text-center mt-4'>No items in cart</p>
       ) : (<>
         {c.cartItems.map((item, i) => (<CartLineItem isMobile={isMobile} item={item} key={item.sku} className='mb-4 sm:mb-2'/>))}
-        <p className='mt-6 text-right border-t pt-1'>TOTAL: {c.cartTotalValue === 0 ? '0' : formatPrice(c.cartTotalValue)}</p>
+        <p className='mt-6 text-right border-t pt-1'>TOTAL: {c.cartTotal === 0 ? '0' : formatPrice(c.cartTotal)}</p>
       </>)}
       </div>
       {c.cartItems.length > 0 && (

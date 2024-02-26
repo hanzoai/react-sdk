@@ -2,7 +2,7 @@ import React  from 'react'
 
 import { Footer } from '@hanzo/ui/common'
 import { Main, TailwindIndicator } from '@hanzo/ui/primitives'
-import ProductFocusedView from './store-category-view'
+import CategoryView from './market-category-view'
 
 import siteDef from '@/siteDef'
 
@@ -28,7 +28,7 @@ const BullionStorePage = ({ searchParams }: Props) => {
       'max-w-screen-2xl 2xl:mx-auto ' + 
       'p-0 px-4'
     }>
-      <ProductFocusedView agent={agent} className='w-full' />
+      <CategoryView agent={agent} className='w-full' />
     </Main>
     <Footer siteDef={siteDef} className='max-w-screen-2xl w-full pt-16 lg:mx-auto ' />
     <TailwindIndicator />

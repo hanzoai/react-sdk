@@ -4,7 +4,7 @@ import { observer } from 'mobx-react-lite'
 
 import { cn } from '@hanzo/ui/util'
 
-import { ProductCard, Cart, CategoryFacetsWidget } from '@hanzo/cart/components'
+import { ProductCard, Cart, FacetsWidget } from '@hanzo/cart/components'
 import { useCommerce } from '@hanzo/cart/service'
 
 import siteDef from '@/siteDef'
@@ -34,7 +34,7 @@ const Store: React.FC<{
 
   return (
     <div className='flex flex-col justify-start items-start'>
-      <CategoryFacetsWidget
+      <FacetsWidget
         className={widgetClx} 
         isMobile={mobile}
         facetClassNames={[facets1Clx, facets2Clx]}
@@ -43,7 +43,7 @@ const Store: React.FC<{
         <CartDrawer className='md:hidden right-0 pr-3 text-primary relative' >
           <Cart isMobile={mobile} className='p-0 border-none mt-12'/>
         </CartDrawer>
-      </CategoryFacetsWidget>
+      </FacetsWidget>
       <div className={cn('flex flex-row justify-between gap-6 items-stretch w-[100vw] sm:w-auto overflow-y-scroll sm:overflow-y-hidden', className)}>
         <div className='flex flex-row px-4 sm:px-0 sm:grid sm:grid-cols-3 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:grow'>
           {c.specifiedItems.map((item) => (<ProductCard item={item} key={item.product.sku} className='rounded-lg w-[40vw] sm:w-auto'/>))}

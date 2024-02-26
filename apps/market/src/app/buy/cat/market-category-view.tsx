@@ -1,18 +1,18 @@
 'use client'
-import React, { useEffect, useState, type PropsWithChildren } from 'react'
+import React, { useEffect, useState, type PropsWithChildren, useRef } from 'react'
 import { observer } from 'mobx-react-lite'
 
 import { useQueryState } from 'next-usequerystate'
 
 import { cn } from '@hanzo/ui/util'
-import { Cart, CategoryFacetsWidget, CategoryView } from '@hanzo/cart/components'
+import { Cart, FacetsWidget, CategoryView } from '@hanzo/cart/components'
 import { useCommerce } from '@hanzo/cart/service'
 
 import siteDef from '@/siteDef'
 import CartDrawer from '@/components/cart-drawer'
-import type { LineItem } from '@hanzo/cart/types'
+import type { Category, LineItem } from '@hanzo/cart/types'
 
-const ProductViewStore: React.FC<{
+const MarketCategoryView: React.FC<{
   className?: string
   agent?: string
 }> = observer(({
@@ -24,24 +24,27 @@ const ProductViewStore: React.FC<{
   const mobile = (agent === 'phone')
 
   const [loading, setLoading] = useState<boolean>(true)
-  const [c1, setC1] = useQueryState('c1') // actually level 2 in our data (AG / AU)
-  const [c2, setC2] = useQueryState('c2') // actually level 3 in our data (B / C / MB / GD)
-  
-  //const [size, setSize] = useQueryState('size') // eg, '1-OZ'
-  const [items, setItems] = useState<LineItem[] | undefined>(undefined)
+  const [level1, setLevel1] = useQueryState('level1') // level 1 facet value (AG / AU)
+  const [level2, setLevel2] = useQueryState('level2') // level 2 facet value (B / C / MB / GD)
+
+  const categoryRef = useRef<Category | undefined>(undefined)
 
   useEffect(() => {
-    const catsToSpecify: string[] = []
-    if (c1) {
-      catsToSpecify.push(c1)
+    const fvs: string[] = []
+    if (level1) {
+      fvs.push(level1)
     }
-    if (c2) {
-      catsToSpecify.push(c2)
+    if (level2) {
+      fvs.push(level2)
     }
-    const items_ = c.setSpecifiedCategories(catsToSpecify)
-    setItems(items_)
+    const categories = c.setSelectedFacetValues(fvs)
+    if (categories.length > 1) {
+      throw new Error ("MarketCategoryView: More than one specified Category should never be possible with this UI!")
+    }
+    categoryRef.current = categories[0] 
+
     setLoading(false)
-  }, [c1 , c2])
+  }, [level1 , level2])
 
 
   const Facets: React.FC<PropsWithChildren & {className?: string}> = ({
@@ -54,15 +57,16 @@ const ProductViewStore: React.FC<{
     const facets2Clx = 'grid grid-cols-4 gap-0 '
 
     return !loading ? (
-      <CategoryFacetsWidget
+      <FacetsWidget
         className={cn(widgetClx, className)} 
+        exclusive
         isMobile={mobile}
         facetClassNames={[facets1Clx, facets2Clx]}
-        mutators={[{val: c1, set: setC1} , {val: c2, set: setC2}]}
+        mutators={[{val: level1, set: setLevel1} , {val: level2, set: setLevel2}]}
         facets={siteDef.ext.store.facets}
       >
         {children}
-      </CategoryFacetsWidget>
+      </FacetsWidget>
     ) : (
       <div className={cn('h-16 bg-level-1 rounded-xl', className)} />
     )
@@ -85,7 +89,7 @@ const ProductViewStore: React.FC<{
   }) => {
     return (
       <div id='SCV_STAGE' className={className}>
-      {!loading ? (<CategoryView className=''/>) : (
+      {!loading ? (<CategoryView className='' category={categoryRef.current!}/>) : (
         <div className={cn('lg:min-w-[400px] lg:max-w-[600px] overflow-hidden bg-level-1 h-[50vh] rounded-xl p-6', className)} >
           <h6 className='text-muted'>Loading item...</h6>
         </div>
@@ -121,4 +125,4 @@ const ProductViewStore: React.FC<{
   )
 }) 
 
-export default ProductViewStore
+export default MarketCategoryView
