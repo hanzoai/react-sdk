@@ -6,12 +6,17 @@ import { useRouter } from 'next/navigation'
 import { ArrowLeft } from 'lucide-react'
 
 import { ApplyTypography, Button } from '@hanzo/ui/primitives'
+import { useToast } from '@hanzo/ui/primitives/use-toast'
+
 import type { LinkDef } from '@hanzo/ui/types'
 import { cn } from '@hanzo/ui/util'
 
 import { useCurrentUser } from '../service/AuthContext'
 import { signInWithProvider, signOut } from '../lib/firebase/auth'
 import { Facebook, Google, GitHub } from '../icons'
+import EmailPasswordForm from './email-password-form'
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth'
+import { auth } from '../lib/firebase/firebase'
 
 const Login: React.FC<{
   redirectUrl?: string,
@@ -27,10 +32,39 @@ const Login: React.FC<{
   const router = useRouter()
   const {user, setUser} = useCurrentUser()
   const [isLoading, setIsLoading] = useState(false)
+  const { toast } = useToast()
 
   const elements: LinkDef[] = [{title: 'Sign Out', variant: 'outline', href: '/'}];
   if (getStartedUrl) {
     elements.push({title: 'GET STARTED', variant: 'primary', href: getStartedUrl});
+  }
+
+  const loginWithEmailPassword = async (email: string, password: string) => {
+    setIsLoading(true)
+    try {
+      const res = await signInWithEmailAndPassword(auth, email, password)
+      if (res.user && res.user.email) {
+        setUser({email: res.user.email})
+        if (redirectUrl) {
+          router.push(redirectUrl)
+        }
+      }
+    } catch (e) {
+      console.error(e)
+      try {
+        const res = await createUserWithEmailAndPassword(auth, email, password)
+        if (res.user && res.user.email) {
+          setUser({email: res.user.email})
+          if (redirectUrl) {
+            router.push(redirectUrl)
+          }
+        }
+      } catch (e) {
+        toast({title: "User with this email already signed up using a different provider"})
+        console.error(e)
+      }
+      }
+    setIsLoading(false)
   }
 
   const login = async (provider: string) => {
@@ -79,6 +113,7 @@ const Login: React.FC<{
             )}
             <h2 className='mx-auto'>Login</h2>
           </div>
+          {/* <EmailPasswordForm onSubmit={loginWithEmailPassword} isLoading={isLoading}/> */}
           <Button onClick={() => login('google')} className='w-full mx-auto flex items-center gap-2' disabled={isLoading}>
             <Google height={20}/>Sign in with Google
           </Button>

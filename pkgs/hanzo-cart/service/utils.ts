@@ -4,7 +4,7 @@ import { getFirestore, collection, addDoc } from "firebase/firestore"
   
 const db = getFirestore(firebase_app, 'lux-commerce-db')  
   
-export default async function persistCart(cart: LineItem[]) {  
+export default async function persistCart(cart: LineItem[], userEmail: string) {  
     let result = null  
     let error = null
 
@@ -17,8 +17,8 @@ export default async function persistCart(cart: LineItem[]) {
     }, {} as Record<string, {}>)
   
     try {  
-        try {  
-            result = await addDoc(collection(db, 'orders'), cartAsObject)
+        try {
+            result = await addDoc(collection(db, userEmail), {cartAsObject, timestamp: Date.now()})
         } catch (e) {  
             console.error('Error writing item document: ', e)
             error = e  
@@ -29,4 +29,4 @@ export default async function persistCart(cart: LineItem[]) {
     }  
   
     return { result, error }  
-}  
+}

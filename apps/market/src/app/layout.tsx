@@ -8,6 +8,7 @@ import _metadata from '../metadata'
 import { CommerceServiceProvider } from '@hanzo/cart/service'
 import { AuthServiceProvider } from '@hanzo/auth'
 import { getCurrentUserServerSide } from '@hanzo/auth/server'
+import { Toaster } from '@hanzo/ui/primitives'
 
 export const metadata = {
   ..._metadata
@@ -27,6 +28,7 @@ const RootLayout: React.FC<PropsWithChildren> = async ({
       <CommerceServiceProvider>
         <RootLayoutCommon siteDef={siteDef} >
             {children}
+            <Toaster />
         </RootLayoutCommon>
       </CommerceServiceProvider>
     </AuthServiceProvider>

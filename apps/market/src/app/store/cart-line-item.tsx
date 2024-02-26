@@ -27,7 +27,7 @@ const CartLineItem: React.FC<{
         <div className=''>{item.product.title}</div>
         <div className='flex flex-row items-center justify-between'>
           <div className='flex flex-row items-center'>
-            <QuantityWidget className='mr-2' item={item} ghost/>{item.quantity > 1 && '@' + formatPrice(item.product.price)}
+            <QuantityWidget className='mr-2' item={item} ghost disabled/>{item.quantity > 1 && '@' + formatPrice(item.product.price)}
           </div>
           <div className='flex flex-row items-center justify-end'>
             {formatPrice(item.product.price * item.quantity)}

@@ -7,10 +7,10 @@ export default {
   nav: {
     common,
     featured: [{
-      title: "Enter App",
-      href: "https://app.lux.market",
+      title: "Login",
+      href: "/login",
       newTab: false,
-      external: true,
+      external: false,
       variant: 'primary',
     }],
   },
