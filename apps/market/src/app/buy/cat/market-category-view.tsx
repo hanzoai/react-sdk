@@ -53,8 +53,6 @@ const MarketCategoryView: React.FC<{
     }
     else {
       setMessage('Please select an option from each group above.')
-      // TODO: redirect to /store
-      console.log('MCV: ', "both facet levels not set")
     }
     setLoading(false)
 

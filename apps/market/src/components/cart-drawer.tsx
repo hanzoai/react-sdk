@@ -6,7 +6,8 @@ import { Icons } from '@hanzo/cart/components/Icons'
 import { useCommerce } from '@hanzo/cart/service'
 
 import { DrawerMenu } from '@hanzo/ui/common'
-import { Button, Badge } from '@hanzo/ui/primitives'
+import { Button, buttonVariants, Badge } from '@hanzo/ui/primitives'
+import { cn } from '@hanzo/ui/util'
 
 const CartDrawer: React.FC<PropsWithChildren & {className?: string}> = ({
   children,
@@ -17,11 +18,11 @@ const CartDrawer: React.FC<PropsWithChildren & {className?: string}> = ({
   const CartButton: React.FC<{className?: string}> = observer(({
     className=''
   }) => (
-      <Button
+    // has to be a div masquerading as a button (asChild doesn't seem to work in shadcn)
+      <div
         aria-label="Cart"
-        variant="outline"
-        size="icon"
-        className={className}
+        role='button'
+        className={cn(buttonVariants({ variant: 'outline', size: 'icon', rounded: 'lg' }), className)}
       >
       {c.cartItems.length > 0 && (
         <Badge
@@ -32,14 +33,13 @@ const CartDrawer: React.FC<PropsWithChildren & {className?: string}> = ({
         </Badge>
       )}
         <Icons.shoppingCart className="h-4 w-4" aria-hidden="true" />
-      </Button>            
+      </div>            
   ))
 
   return (
     <DrawerMenu 
       className={className}  
       propogate={false}
-      asChild
       trigger={<CartButton className='relative' />}
     >
       {children}
