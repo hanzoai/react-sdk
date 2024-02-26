@@ -40,7 +40,9 @@ const MarketCategoryView: React.FC<{
     const categories = c.setFacetsSelection(facets)
 
     if (categories.length > 1) {
+      console.log("CAT", categories.map((c) => (c.title)))
       throw new Error (
+
         "MarketCategoryView: More than one specified Category should never be possible with this UI!"
       )
     }
