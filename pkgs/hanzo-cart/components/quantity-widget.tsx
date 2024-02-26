@@ -28,7 +28,7 @@ const QuantityWidget: React.FC<{
   return ( item.isInCart ? (
     <div className={cn('flex flex-row items-stretch ' + (ghost ? 'bg-transparent  rounded-xl' : 'bg-secondary rounded-xl'), className)}>
       <Button
-        aria-label={'Remove a ' + item.product.title + ' from the cart'}
+        aria-label={'Remove a ' + item.title + ' from the cart'}
         size={size}
         variant={ghost ? 'ghost' : 'secondary'}
         rounded={ghost ? 'full' : 'xl'}
@@ -44,7 +44,7 @@ const QuantityWidget: React.FC<{
       </Button>
         <div className={'text-sm flex items-center cursor-default ' + digitClx} >{item.quantity}</div>
       <Button
-        aria-label={'Add another ' + item.product.title + ' to the cart'}
+        aria-label={'Add another ' + item.title + ' to the cart'}
         size={size}
         variant={ghost ? 'ghost' : 'secondary'}
         rounded={ghost ? 'full' : 'xl'}
@@ -57,7 +57,7 @@ const QuantityWidget: React.FC<{
     </div>
   ) : (
     <Button
-      aria-label={'Add a ' + item.product.title + ' to cart'}
+      aria-label={'Add a ' + item.title + ' to cart'}
       size={size}
       variant='secondary'
       rounded='xl'

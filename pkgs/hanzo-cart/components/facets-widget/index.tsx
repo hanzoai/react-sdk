@@ -4,7 +4,7 @@ import React, { useState, type PropsWithChildren } from 'react'
 import { ToggleGroup, ToggleGroupItem,} from "@hanzo/ui/primitives"
 import { cn } from '@hanzo/ui/util'
 
-import type { FacetValue } from '../../types'
+import type { FacetValue, Facets } from '../../types'
 import FacetImage from './facet-image'
 
 export interface FacetMutatorExclusive {
@@ -114,7 +114,7 @@ const FacetToggleGroup: React.FC<{
 }
 
 const FacetsWidget: React.FC<PropsWithChildren & {
-  facets: FacetValue[][]
+  facets: Facets
   exclusive: boolean
   facetClassNames?: string[]
   mutators:  FacetMutatorExclusive[] | FacetMutatorMultiple[]
@@ -134,13 +134,13 @@ const FacetsWidget: React.FC<PropsWithChildren & {
   const horiz = className.includes('flex-row')
   return (
     <div id={id} className={className} >
-    {facets.map((fvs, i) => (
+    {Object.keys(facets).map((key, i) => (
       <FacetToggleGroup 
         key={i}
         exclusive={exclusive}
         mutator={mutators[i]} 
         isMobile={isMobile}
-        facetValues={fvs} 
+        facetValues={facets[parseInt(key)]} 
         className={cn((horiz ? '' : 'mb-2'), (i !== 0 && !horiz) ? 'mt-2' : '', (facetClassNames?.[i]) ?? '')} 
       />
     ))}

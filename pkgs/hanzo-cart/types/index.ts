@@ -15,28 +15,50 @@ interface Category {
   title: string   // Lux Gold, Minted Bar
   desc?: string
   img?: string 
+    // inbound they're Products and then interally they become LineItems
   products: Product[] | LineItem[]
 }
+
 
 interface FacetValue {
   token: string             // a token in the sku
   label: string
-  specificity: number       // LXB: 0, AU: 1, B: 2
   img : string | ReactNode  // icon is required 
   imgAR? : number           // helps with svgs
 }
 
-interface SelectableFacetValue extends FacetValue {
-  get selected(): boolean
-  setSelected(b: boolean): void
+/* *** FOR EXAMPLE **
+{
+  1: [ {
+      token: 'AG',
+      label: 'Silver',
+      img: '/assets/img/cart/ui/facets/silver-swatch-200x200.png'
+    },
+    ... more FaceValues describing the "type" level (Silver, Gold)
+  ],
+  2 [
+    {
+      token: 'B'
+      label: 'Minted Bar
+    },
+    ... more FaceValues describing the "form" level (Bar, Coin, )
+  ]
 }
+*/
+type Facets = Record<number, FacetValue[]>
 
-  // in the system, client code always 
-  // goes through a list item, whether the product
-  // is in the cart or not. SOmething is in the cart
-  // when its quantity > 0.  That's the only difference
-  // The ui, and other Cart code, reacts to 
+  // Which facets tokens are on at each level
+type FacetsSelection = Record<number, string[]>
+
+  // Client code always 
+  // has a LineItem, whether the Product
+  // is in the cart or not. Something is in the cart
+  // when its quantity > 0.  That's the only difference.
+  // The ui, and as well as some Cart state, reacts to 
   // changes in this quantity.
+
+  // It could have more accurately been named
+  // 'QuantifiedProduct' but that sucked.
 interface LineItem extends Product {
 
   /** all observable */
@@ -52,8 +74,9 @@ export {
   type Product,
   type Category,
   type LineItem,
+  type Facets,
+  type FacetsSelection,
   type FacetValue,
-  type SelectableFacetValue,
 }
 
 

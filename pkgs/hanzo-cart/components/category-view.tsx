@@ -86,7 +86,7 @@ const CategoryView: React.FC<React.HTMLAttributes<HTMLDivElement> & {
       }
     }
 
-    return c.specifiedItems.length > 1 ? (
+    return (
       <div /* id='CV_AVAIL_AMOUNTS' */ className={cn('w-full md:w-auto flex flex-col justify-start items-center gap-8', className)}>
         <div className='w-full flex flex-col justify-start items-center'>
           <h6 className='text-center font-semibold'>Available sizes</h6>
@@ -101,7 +101,7 @@ const CategoryView: React.FC<React.HTMLAttributes<HTMLDivElement> & {
         ))}
         </RadioGroup>
       </div>
-    ) : null
+    )
   }
 
   const InfoArea: React.FC<{className?: string}> = ({

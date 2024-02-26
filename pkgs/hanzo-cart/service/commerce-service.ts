@@ -1,8 +1,12 @@
-import type { LineItem, Category, FacetValue } from '../types'
+import type {  
+  Category, 
+  FacetsSelection,
+  FacetValue,
+  LineItem 
+} from '../types'
 
 interface CommerceService {
 
-    /** alpha by SKU */
   get cartItems(): LineItem[]
   get cartTotal(): number
   getCartCategorySubtotal(categoryId: string): number
@@ -17,19 +21,19 @@ interface CommerceService {
      * null resets the selected set to specifying all Category's 
      * and items in the store
      * */ 
-  setSelectedFacetValues(tokens: string[] | null): Category[]
+  setFacetsSelection(sel: FacetsSelection): Category[]
 
     /** 
-     * non-exclusively sets the supplied Facets to the supplied states.
-     * Caches and returns the resultant item set as above. 
+     * Apply the specified mods to the FacetsSelection.
+     * Caches and returns the resultant items set. 
      * */ 
-  modifySelectedFacetValues(states: {[key: string]: boolean}): LineItem[]
-  get selectedFacetValues(): FacetValue[]         // or empty array
+  //modifyFacetsSelection(mods: Record<number, {token: string, selected: boolean}[]>): LineItem[]
+  //get facetsSelection(): FacetsSelection       
 
     // TODO: NEEDED?
-  getFacets(ids: string[]): FacetValue[] //"facets from id's"
+  //getFacets(ids: string[]): FacetValue[] //"facets from id's"
 
-  get specifiedCategories(): Category[] // or empty array
+  //get specifiedCategories(): Category[] // or empty array
   get specifiedItems(): LineItem[]
 
 }

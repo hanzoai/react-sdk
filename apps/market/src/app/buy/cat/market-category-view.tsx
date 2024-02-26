@@ -10,7 +10,7 @@ import { useCommerce } from '@hanzo/cart/service'
 
 import siteDef from '@/siteDef'
 import CartDrawer from '@/components/cart-drawer'
-import type { Category, LineItem } from '@hanzo/cart/types'
+import type { Category, LineItem, FacetsSelection } from '@hanzo/cart/types'
 
 const MarketCategoryView: React.FC<{
   className?: string
@@ -30,19 +30,21 @@ const MarketCategoryView: React.FC<{
   const categoryRef = useRef<Category | undefined>(undefined)
 
   useEffect(() => {
-    const fvs: string[] = []
+    const facets: FacetsSelection = { }
     if (level1) {
-      fvs.push(level1)
+      facets[1] = [level1]
     }
     if (level2) {
-      fvs.push(level2)
+      facets[2] = [level2]
     }
-    const categories = c.setSelectedFacetValues(fvs)
+    const categories = c.setFacetsSelection(facets)
+
     if (categories.length > 1) {
-      throw new Error ("MarketCategoryView: More than one specified Category should never be possible with this UI!")
+      throw new Error (
+        "MarketCategoryView: More than one specified Category should never be possible with this UI!"
+      )
     }
     categoryRef.current = categories[0] 
-
     setLoading(false)
   }, [level1 , level2])
 
@@ -63,7 +65,7 @@ const MarketCategoryView: React.FC<{
         isMobile={mobile}
         facetClassNames={[facets1Clx, facets2Clx]}
         mutators={[{val: level1, set: setLevel1} , {val: level2, set: setLevel2}]}
-        facets={siteDef.ext.store.facets}
+        facets={siteDef.ext.commerce.facets}
       >
         {children}
       </FacetsWidget>

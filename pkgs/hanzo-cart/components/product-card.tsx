@@ -31,8 +31,8 @@ const ProductCard: React.FC<ProductCardProps> = ({
 
   const ProductImage: React.FC<{className?: string}> = ({className=''}) => (
     <Image
-      src={item.product.img!}
-      alt={item.product.title}
+      src={item.img!}
+      alt={item.title}
       className={className}
       loading='lazy'
 //          width={700}
@@ -50,7 +50,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
       {...props}
     >
       <CardHeader className='w-full border-b p-6 min-h-[180px] max-h-[240px] relative'>
-      {item.product.img ? (
+      {item.img ? (
         <ProductImage className='p-6' />
       ) : (
           <div
@@ -65,8 +65,8 @@ const ProductCard: React.FC<ProductCardProps> = ({
       </CardHeader>
       <CardContent className='grid gap-2.5 p-4'>
         <CardTitle className='text-sm sm:text-base flex flex-col justify-start items-center line-clap-3'>
-          {item.product.title.split(', ').map((e, i) => (<p key={i}>{e}</p>))}
-          <p className='mt-1 font-semibold'>{formatPrice(item.product.price)}</p>
+          {item.title.split(', ').map((e, i) => (<p key={i}>{e}</p>))}
+          <p className='mt-1 font-semibold'>{formatPrice(item.price)}</p>
         </CardTitle>
       </CardContent>
       <CardFooter className='p-4 flex flex-row justify-center'>
