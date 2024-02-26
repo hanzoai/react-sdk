@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import Image from 'next/image'
 
 import { cn } from '@hanzo/ui/util'
-import { Label, RadioGroup, RadioGroupItem } from '@hanzo/ui/primitives'
+import { Label, RadioGroup, RadioGroupItem, Skeleton } from '@hanzo/ui/primitives'
 
 import { formatPrice } from '../util'
 import { Icons } from './Icons'
@@ -13,10 +13,12 @@ import type { Category, LineItem } from '../types'
 
 const CategoryView: React.FC<React.HTMLAttributes<HTMLDivElement> & {
   category: Category
+  isLoading?: boolean
   agent?: string
 }> = ({
   category,
   className,
+  isLoading=false,
   agent,
   ...props
 }) => {
@@ -26,6 +28,14 @@ const CategoryView: React.FC<React.HTMLAttributes<HTMLDivElement> & {
   const CategoryImage: React.FC<{className?: string}> = ({
     className=''
   }) => {
+
+    if (isLoading) {
+        // deliberately not Skeleton to have a better overall pulse effect.
+      return <div className={cn(
+        'bg-level-1 rounded-xl aspect-square ' + 
+        ' min-h-[100px] sm:min-h-[200px] lg:aspect-auto lg:h-[300px] lg:w-[200px] 2xl:w-auto 2xl:aspect-square',
+        className)} />
+    }
 
     if (!category.img) {
       return (
@@ -73,7 +83,9 @@ const CategoryView: React.FC<React.HTMLAttributes<HTMLDivElement> & {
 
     const soleOption = category.products.length === 1
 
-    return (
+    return  isLoading  ? (
+      <Skeleton className={'min-h-[120px] w-pr-60 ' + className} />
+    ) : (
       <div /* id='CV_AVAIL_AMOUNTS' */ className={cn(
         'w-full md:w-auto flex flex-col justify-start items-center', 
         (soleOption ? 'gap-2' : 'gap-8'),
@@ -103,6 +115,8 @@ const CategoryView: React.FC<React.HTMLAttributes<HTMLDivElement> & {
   const TitleArea: React.FC<{className?: string}> = ({
     className=''
   }) => (
+    isLoading  ? (<Skeleton className={'h-12 w-pr-80 mx-auto ' + className} />) : (
+
     <div className={cn('flex flex-col justify-start items-center mb-6', className)}>
       <h3 className='text-lg lg:text-xl font-heading text-center'>
         <span className='xs:inline sm:hidden md:inline lg:hidden'>
@@ -118,13 +132,14 @@ const CategoryView: React.FC<React.HTMLAttributes<HTMLDivElement> & {
         </h6>
       ) : ''}
     </div>
-  )
+  ))
 
   const Desc: React.FC<{className?: string}> = ({
     className=''
   }) => (
+    isLoading ? (<Skeleton className={'min-h-20 w-full grow mx-auto ' + className} />) : (
     <p className={cn('text-base lg:text-lg mb-6 xs:mb-0', className)}>{category.desc}</p>
-  )
+  ))
 
   return agent === 'phone' ? (
     <div /* id='CV_OUTER' */ className={cn('w-full flex flex-col justify-start items-stretch gap-4 mt-2', className)} {...props}>
@@ -140,24 +155,24 @@ const CategoryView: React.FC<React.HTMLAttributes<HTMLDivElement> & {
     </div>
   ) : (
     <div /* id='CV_OUTERMOST' */ >
-      <div /* id='CV_OUTER' */ className={cn('w-full flex flex-row justify-between items-stretch gap-6', className)} {...props}>
-        <div /* id='CV_IMAGE_COL' */ className='w-pr-33 relative'>
+      <div /* id='CV_OUTER' */ className={cn('w-full flex flex-row justify-between items-stretch gap-6 sm:gap-4', className)} {...props}>
+        <div /* id='CV_IMAGE_COL' */ className={'relative ' + (!isLoading ? 'w-pr-33' : '')}>
           <CategoryImage className='' />
         </div>
-        <div /* id='CV_CONTENT_COL' */ className='w-pr-66' >
-          <div /* id='CV_CONTENT' */ className='flex flex-col gap-2.5 '>
+        <div /* id='CV_CONTENT_COL */  className='w-pr-66' >
+          <div /*  id='CV_CONTENT' */ className={'flex flex-col gap-2.5 ' + (isLoading ? 'justify-between h-full' : '')}>
             <TitleArea className=''/>
             <Desc className='' />
           </div>
           <div /* id='CV_CTA_AREA_BIG' */  className='hidden lg:flex p-4 flex-col justify-start items-center gap-6'>
             <AvailableAmounts />
-            {selectedItem ? (<QuantityWidget size='default' item={selectedItem}/>) : null }
+            {selectedItem && !isLoading ?  (<QuantityWidget size='default' item={selectedItem}/>) : null }
           </div>
         </div>
       </div>
       <div /* id='CV_CTA_AREA_COMPACT' */ className='lg:hidden flex p-4 flex-col justify-start items-center gap-6'>
         <AvailableAmounts />
-        {selectedItem ? (<QuantityWidget size='default' item={selectedItem}/>) : null /* TO DO.. maybe the add widget disabled*/}
+        {selectedItem && !isLoading ? (<QuantityWidget size='default' item={selectedItem}/>) : null }
       </div>
     </div>
   )

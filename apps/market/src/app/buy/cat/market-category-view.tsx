@@ -12,6 +12,7 @@ import siteDef from '@/siteDef'
 import CartDrawer from '@/components/cart-drawer'
 import type { Category, FacetsSelection } from '@hanzo/cart/types'
 import Link from 'next/link'
+import { Skeleton } from '@hanzo/ui/primitives'
 
 const MarketCategoryView: React.FC<{
   className?: string
@@ -80,7 +81,7 @@ const MarketCategoryView: React.FC<{
         {children}
       </FacetsWidget>
     ) : (
-      <div className={cn('h-16 bg-level-1 rounded-xl', className)} />
+      <Skeleton className={'h-12 ' + className} />
     )
   }
   
@@ -125,7 +126,7 @@ const MarketCategoryView: React.FC<{
   return mobile ? (
     <div /* id='SCV_OUTERMOST' */ className={cn('flex flex-col justify-start items-stretch relative', className)} >
       <div /* id='SCV_FACET_CONTAINER_COMPACT' */ className='py-2 bg-background w-full sticky top-[44px]'>
-        <Facets className='sm:w-full' >
+        <Facets className='sm:w-full ' >
           <CartDrawer className='md:hidden pr-1 text-primary relative' buttonClassName='h-9' >
             <Cart isMobile={mobile} className='p-0 border-none mt-12'/>
           </CartDrawer>
@@ -135,7 +136,7 @@ const MarketCategoryView: React.FC<{
     </div>
   ) : (
     <div /* id='SCV_OUTERMOST' */ className={cn('flex flex-col justify-start items-stretch relative', className)} >
-      <div /* id='SCV_FACET_CONTAINER_COMPACT' */ className='xl:hidden py-2 bg-background w-full sticky top-[80px] z-40 '>
+      <div /* id='SCV_FACET_CONTAINER_COMPACT' */ className='xl:hidden py-2 bg-background w-full sticky top-[80px] sm:top-[44px] z-40 '>
         <Facets className='sm:w-full' >
           <CartDrawer className='md:hidden pr-1 text-primary relative' buttonClassName='h-9' >
             <Cart isMobile={mobile} className='p-0 border-none mt-12'/>
