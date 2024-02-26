@@ -14,6 +14,7 @@ class ObsLineItem implements LineItem {
   id: string    
   sku: string   
   title: string
+  titleAsOption: string
   categoryId: string  
   desc?: string
   price: number
@@ -23,6 +24,7 @@ class ObsLineItem implements LineItem {
     this.id = prod.id
     this.sku = prod.sku
     this.title = prod.title
+    this.titleAsOption = prod.titleAsOption
     this.categoryId = prod.categoryId
     this.desc = prod.desc
     this.price = prod.price

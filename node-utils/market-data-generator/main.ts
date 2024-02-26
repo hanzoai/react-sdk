@@ -8,14 +8,13 @@ import {
   IMG_LEVEL_3, 
   ASSETS_PATH, 
   OUT_DIR, 
-  CAT_FN,
-  PROD_FN,
+  OUT_FN,
   TS,
   DEC,
   ROOT
 } from './config'
 
-const allCategories: any = {}
+const categories: Category[] = []
 const allProducts: Product[] = []
 
 const amountStrFromItemToken = (t: string): string => {
@@ -27,69 +26,72 @@ const amountStrFromItemToken = (t: string): string => {
 }
 
 const visitNode = (
-  category: LevelImportData, 
+  levelData: LevelImportData, 
   titleTokens: string[] = [],
   skuTokens: string[] = [], 
 ): void => {
 
-  const tToken = category.titleToken ?? category.label
+  const tToken = levelData.titleToken ?? levelData.label
     // otherwise extra comma if titleToken is '' at this level
   if (tToken?.length > 0) {
     titleTokens.push(tToken)   
   }
 
-  skuTokens.push(category.t)
+  skuTokens.push(levelData.tok)
 
-    // from LevelImportData to hanzo Category
-  allCategories[category.t] = {
-    id: category.t,
-    title: category.label,
-    skuPath: skuTokens.join(TS),
-    level: category.level ?? 1,
-    desc: category.desc,
-    img: category.img,
-  } satisfies Category
+  if (levelData.ch.length > 0 && 'price' in levelData.ch[0]) {
 
-
-  if (category.ch.length > 0 && 'price' in category.ch[0]) {
+    const categoryTitle = titleTokens.join(', ')
+    const categoryId = skuTokens.join(TS)
 
       // Since we are at the leaf level,
       // these are valid for the entire array.
     const bullionForm = titleTokens.pop()
     const previousTitle = titleTokens.join(', ')
 
-    const products = category.ch as ItemImportData[]
-
-    products.forEach((prod) => {
-        // from ProductData to hanzo Product
-      allProducts.push({
+        // from ItemImportData to hanzo/cart Product
+    const hanzoProducts = (levelData.ch as ItemImportData[]).map(
+      (prod) => ({
         id: unique(),
+
           // add myself to the string
-        sku: [...skuTokens, prod.t].join('-'), 
+        sku: [...skuTokens, prod.tok].join('-'), 
           // Desired result: "Lux Bullion, Gold, 1oz Minted Bar", ie,
           //  `<previous title tokens joined>, <amount> <form>`
-        title: `${previousTitle}, ${amountStrFromItemToken(prod.t)} ${bullionForm}`,
-        desc: prod.desc ? prod.desc : category.desc,
+        title: `${previousTitle}, ${amountStrFromItemToken(prod.tok)} ${bullionForm}`,
+        titleAsOption: amountStrFromItemToken(prod.tok),
+        ...(prod.shortTitle ? {shortTitle: prod.shortTitle} : {}),
+        categoryId: categoryId,
+        desc: prod.desc ? prod.desc : levelData.desc,
         price: prod.price,
-        img: ASSETS_PATH + IMG[prod.img ?? category.img!]   
+        img: ASSETS_PATH + IMG[prod.img ?? levelData.img!]   
       } satisfies Product)
-    })
-  }
-  else if (category.ch.length > 0 && 'ch' in category.ch[0]) {
+    )
 
-    const {level: parentLevel, img: parentImg, desc: parentDesc} = category
-    const subCategories = category.ch as LevelImportData[]
+      // from LevelImportData to hanzo Category
+    categories.push({
+      id: skuTokens.join(TS),
+      title: categoryTitle,
+      desc: levelData.desc,
+      img: levelData.img,
+      products: hanzoProducts
+    } satisfies Category)
     
-    subCategories.forEach(({t, label, img, desc, ch}) => {
+  }
+  else if (levelData.ch.length > 0 && 'ch' in levelData.ch[0]) {
+
+    const {img: parentImg, desc: parentDesc} = levelData
+    const subLevels = levelData.ch as LevelImportData[]
+    
+    subLevels.forEach(({tok, label, img, desc, ch}) => {
       visitNode({
-          t,
+          tok,
           label,
-          level: (parentLevel ?? 1) + 1,
           img: img ?? parentImg, 
           desc: desc ?? parentDesc,
           ch,
         } satisfies LevelImportData,
-          // Each branch (ch category) must have it's own fresh copies to reduce
+          // Each branch (ch levelData) must have it's own fresh copies to reduce
         [...titleTokens], 
         [...skuTokens]
       )
@@ -98,25 +100,10 @@ const visitNode = (
 }
 
 visitNode(ROOT as unknown as LevelImportData)
-
-const keys = Object.keys(allCategories)
-keys.forEach((key) => {
-  if (allCategories[key].img) {
-    allCategories[key].img = ASSETS_PATH + IMG[allCategories[key].img] 
-/*
-    if (allCategories[key].level === 3) {
-      allCategories[key].img = ASSETS_PATH + IMG_LEVEL_3[allCategories[key].id] 
-    }
-    else {
-      allCategories[key].img = ASSETS_PATH + IMG[allCategories[key].img] 
-    }
-*/
-  }
-
+categories.forEach((cat) => {
+    cat.img = ASSETS_PATH + IMG[cat.img!] 
 })
 
-console.log(`Writing products to ${OUT_DIR + PROD_FN}...`)
-Bun.write(OUT_DIR + PROD_FN, JSON.stringify(allProducts, null, 2))
-console.log(`Writing categories as objects to ${OUT_DIR + CAT_FN}...`)
-Bun.write(OUT_DIR + CAT_FN, JSON.stringify(allCategories, null, 2))
+console.log(`Writing Categories with Products ${OUT_DIR + OUT_FN}...`)
+Bun.write(OUT_DIR + OUT_FN, JSON.stringify(categories, null, 2))
 console.log('done')

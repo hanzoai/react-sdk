@@ -39,7 +39,7 @@ const FORM = [
   },
   {
     token: 'GD',
-    label: 'Good Delivery',
+    label: 'GD Bar',
     img: <SVG_GD />,
     imgAR: 24/30
   },

@@ -23,12 +23,12 @@ const CartDrawer: React.FC<PropsWithChildren & {className?: string}> = ({
         size="icon"
         className={className}
       >
-      {c.cartItemCount > 0 && (
+      {c.cartItems.length > 0 && (
         <Badge
           variant="secondary"
           className="absolute -right-2 -top-2 g-6 w-6 h-6 font-sans text-xs rounded-full p-2"
         >
-          {c.cartItemCount}
+          {c.cartItems.length}
         </Badge>
       )}
         <Icons.shoppingCart className="h-4 w-4" aria-hidden="true" />

@@ -23,5 +23,4 @@ export const IMG_LEVEL_3 = {
 
   // must have last '/'
 export const OUT_DIR = '../../apps/market/src/store-conf/data/'
-export const CAT_FN = 'bullion-categories.json'
-export const PROD_FN = 'bullion-products.json'
+export const OUT_FN = 'bullion-products-by-category.json'

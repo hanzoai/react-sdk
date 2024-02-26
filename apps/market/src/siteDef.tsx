@@ -5,7 +5,7 @@ import footer from '@hanzo/ui/siteDef/footer'
 import type { Facets, Category } from '@hanzo/cart/types'
 
 import facets from '@/store-conf/facets'
-import categoriesObj from '@/store-conf/data/bullion-categories.json'
+import categories from '@/store-conf/data/bullion-products-by-category.json'
  
 
 export default {
@@ -24,7 +24,7 @@ export default {
   ext: {
     commerce: {
       facets: facets, 
-      categories: [] //Object.values(categoriesObj) as Category[]
+      categories: categories as Category[]
     }
   }
 } satisfies SiteDef

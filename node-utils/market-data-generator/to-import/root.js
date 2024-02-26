@@ -2,97 +2,99 @@ import AU_B from './AU-B'
 import AG_B from './AG-B'
 
 export default {
-  t: 'LXB',
+  tok: 'LXB',
   label: 'Lux Bullion',
   titleToken: '',
   ch: [
     {
-      t: 'AU',
+      tok: 'AU',
       titleToken: 'Lux Gold',
       label: 'Lux Gold',
       img: 'AU_B',
       desc: "Forge your connection to the real world with Lux Gold, crafted with excellence in Dubai.",
       ch: [
         {
-          t: 'B',
+          tok: 'B',
           label: 'Minted Bar',
           ch: AU_B
         },
         {
-          t: 'C',
+          tok: 'C',
           label: 'Minted Coin',
+          img: 'AU_C',
           ch: [
             {
-              t: '1-OZ',
+              tok: '1-OZ',
               price: 1938,
-              img: 'AU_C'
             }
           ]
         },
         {
-          t: 'MB',
+          tok: 'MB',
           label: 'Multibar',
           img: 'AU_MB',
           ch: [
             {
-              t: '100x1-G',
+              tok: '100x1-G',
               price: 6221.39
             }
           ]
         },
         {
-          t: 'GD',
-          label: 'Good Del. Bar',
+          tok: 'GD',
+          label: 'Good Delivery Bar',
           ch: [
             {
-              t: '400-OZ',
-              price: 800000
+              tok: '400-OZ',
+              price: 800000,
+              shortTitle: 'GD Bar',
             }
           ]
         }
       ]
     },
     {
-      t: 'AG',
+      tok: 'AG',
       img: 'AG_B',
       desc: 'Get unprecedented access to silver with 1:1 asset-backed Lux Silver NFTs, sovereign ownership of physical silver without management fees, and mine-direct discount pricing.',
       titleToken: 'Lux Silver',
       label: 'Lux Silver',
       ch: [
         {
-          t: 'B',
+          tok: 'B',
           label: 'Minted Bar',
           ch: AG_B
         }, 
         {
-          t: 'C',
+          tok: 'C',
           label: 'Minted Coin',
+          img: 'AG_C',
           ch: [
             {
-              t: '1-OZ',
+              tok: '1-OZ',
               price: 23.04,
-              img: 'AG_C',
             }
           ]
         },
         {
-          t: 'MB',
+          tok: 'MB',
           label: 'Multibar',
           img: 'AG_MB',
           ch: [
             {
-              t: '100x1-G',
+              tok: '100x1-G',
               price: 74.15,
             }
           ]
         },
         {
-          t: 'GD',
-          label: 'Good Del. Bar',
+          tok: 'GD',
+          label: 'Good Delivery Bar',
           ch: [
             {
-              t: '1000-OZ',
-              price: 22000
+              tok: '1000-OZ',
+              price: 22000,
+              shortTitle: 'GD Bar',
             }
           ]
         }
