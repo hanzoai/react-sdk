@@ -1,6 +1,6 @@
 import type CommerceService from '../../commerce-service'
 
-import StandaloneCommerceService from './service'
+import StandaloneCommerceService, {type StandaloneServiceOptions} from './service'
 
 import type { Category, Facets } from '../../../types'
 
@@ -8,9 +8,14 @@ import type { Category, Facets } from '../../../types'
 
 let instance: CommerceService | undefined =  undefined
 
-export default (categories: Category[], facets: Facets): CommerceService => {
+export default (categories: Category[], facets: Facets, options?: any): CommerceService => {
 
-  const _instance = instance ?? new StandaloneCommerceService(categories, facets)
+  const _instance = instance ?? 
+    new StandaloneCommerceService(
+      categories, 
+      facets, 
+      options ? (options as StandaloneServiceOptions) : {} 
+    )
       // For server side rendering always create a new store
   if (typeof window === "undefined") return _instance
 

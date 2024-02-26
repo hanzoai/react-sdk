@@ -21,6 +21,7 @@ const RootLayout: React.FC<PropsWithChildren> = ({
   <CommerceServiceProvider 
     facets={siteDef.ext.commerce.facets} 
     categories={siteDef.ext.commerce.categories}
+    options={siteDef.ext.commerce.options}
   >
     <RootLayoutCommon siteDef={siteDef} >
         {children}

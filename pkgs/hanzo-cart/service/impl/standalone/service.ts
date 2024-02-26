@@ -16,6 +16,10 @@ import type CommerceService from '../../commerce-service'
 
 import ObservableLineItem from './obs-line-item'
 
+export type StandaloneServiceOptions = {
+  levelZeroPrefix?: string
+}
+
 class StandaloneCommerceService 
   implements CommerceService
 {
@@ -23,12 +27,16 @@ class StandaloneCommerceService
   private _facets: Facets 
   private _selectedFacets: FacetsSelection = {}
 
+  private _options : StandaloneServiceOptions
+
   constructor(
     categories: Category[],
-    facets: Facets
+    facets: Facets,
+    options: StandaloneServiceOptions={}
   ) {
 
     this._facets = facets
+    this._options = options
 
     categories.forEach((c) => {
       c.products = c.products.map((p) => (new ObservableLineItem(p)))
@@ -80,8 +88,8 @@ class StandaloneCommerceService
     for (let i = 2; i <= keysStr.length; i++) {
       current = StandaloneCommerceService._visit(current, this._selectedFacets[i])
     }
-      // TODO
-    return current.map((almostTheCatId) => (this._categoryMap.get('LXB-' + almostTheCatId)!))
+    const prefix = this._options.levelZeroPrefix ?? ''
+    return current.map((almostTheCatId) => (this._categoryMap.get(prefix + almostTheCatId)!))
   }
 
   private static _visit(current: string[], next: string[]): string[] {
