@@ -71,7 +71,7 @@ export default [
   },
   {
     font: drukTextWide,
-    twName: 'subheading'
+    twName: 'nav'
   },
   {
     font: drukWide,

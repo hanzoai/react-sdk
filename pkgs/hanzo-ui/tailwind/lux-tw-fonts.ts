@@ -9,7 +9,7 @@ export default [
   {
     fontFamily: ['var(--font-druk-text-wide)'], // do not provide fall-backs due to next bug
     cssVar: '--font-druk-text-wide',
-    twName: 'subheading'
+    twName: 'nav'
   },
   {
     fontFamily: ['var(--font-druk-wide)'], // do not provide fall-backs due to next bug
