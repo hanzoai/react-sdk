@@ -11,6 +11,7 @@ import { useCommerce } from '@hanzo/cart/service'
 import siteDef from '@/siteDef'
 import CartDrawer from '@/components/cart-drawer'
 import type { Category, LineItem, FacetsSelection } from '@hanzo/cart/types'
+import Link from 'next/link'
 
 const MarketCategoryView: React.FC<{
   className?: string
@@ -24,12 +25,14 @@ const MarketCategoryView: React.FC<{
   const mobile = (agent === 'phone')
 
   const [loading, setLoading] = useState<boolean>(true)
+  const [message, setMessage] = useState<string>('')
   const [level1, setLevel1] = useQueryState('level1') // level 1 facet value (AG / AU)
   const [level2, setLevel2] = useQueryState('level2') // level 2 facet value (B / C / MB / GD)
 
   const categoryRef = useRef<Category | undefined>(undefined)
 
   useEffect(() => {
+    setMessage('')
     const facets: FacetsSelection = { }
     if (level1) {
       facets[1] = [level1]
@@ -37,19 +40,25 @@ const MarketCategoryView: React.FC<{
     if (level2) {
       facets[2] = [level2]
     }
-    const categories = c.setFacetsSelection(facets)
-
-    if (categories.length > 1) {
-      console.log("CAT", categories.map((c) => (c.title)))
-      throw new Error (
-
-        "MarketCategoryView: More than one specified Category should never be possible with this UI!"
-      )
+    if (level1 && level2) {
+      const categories = c.setFacetsSelection(facets)
+      if (categories.length > 1) {
+        console.log("CAT", categories.map((c) => (c.title)))
+        throw new Error (
+  
+          "MarketCategoryView: More than one specified Category should never be possible with this UI!"
+        )
+      }
+      categoryRef.current = categories[0] 
     }
-    categoryRef.current = categories[0] 
+    else {
+      setMessage('Please select an option from each group above.')
+      // TODO: redirect to /store
+      console.log('MCV: ', "both facet levels not set")
+    }
     setLoading(false)
-  }, [level1 , level2])
 
+  }, [level1 , level2])
 
   const Facets: React.FC<PropsWithChildren & {className?: string}> = ({
     children,
@@ -93,7 +102,17 @@ const MarketCategoryView: React.FC<{
   }) => {
     return (
       <div id='SCV_STAGE' className={className}>
-      {!loading ? (<CategoryView className='' category={categoryRef.current!}/>) : (
+      {!loading ? ( 
+        message ? (
+          <div className={cn('typography lg:min-w-[400px] lg:max-w-[600px] overflow-hidden bg-level-1 h-[50vh] rounded-xl p-6', className)} >
+            <h5 className='text-accent text-center'>{message}</h5>
+            <h6 className='text-accent text-center'>Or, would you like to try a<br/><Link className='text-xl font-semibold ' href='/store'>general search</Link>?</h6>
+
+          </div>
+        ) : (
+          <CategoryView className='' category={categoryRef.current!}/>
+        )
+      ) : (
         <div className={cn('lg:min-w-[400px] lg:max-w-[600px] overflow-hidden bg-level-1 h-[50vh] rounded-xl p-6', className)} >
           <h6 className='text-muted'>Loading item...</h6>
         </div>

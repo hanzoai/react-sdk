@@ -14,20 +14,6 @@ import type { Category, LineItem } from '../types'
 const TS = '-'  // token separator
 const DEC = '_' // decimal substitute
 
-  // TODO: makes this part of the conf!
-const amountLabelFromSKU = (sku: string): string => {
-  const mainTokens = sku.split(TS)
-  const tCount = mainTokens.length
-  const amount = (mainTokens[tCount - 2].includes(DEC) ? 
-    mainTokens[tCount - 2].split(DEC).join('.') 
-    : 
-    mainTokens[tCount - 2]).toLowerCase()
-  
-  const unit = mainTokens[tCount - 1].toLowerCase()
-  return amount + unit
-}
-
-
 const CategoryView: React.FC<React.HTMLAttributes<HTMLDivElement> & {
   category: Category
 }> = ({
@@ -86,20 +72,31 @@ const CategoryView: React.FC<React.HTMLAttributes<HTMLDivElement> & {
       }
     }
 
+    const soleOption = category.products.length === 1
+
     return (
-      <div /* id='CV_AVAIL_AMOUNTS' */ className={cn('w-full md:w-auto flex flex-col justify-start items-center gap-8', className)}>
+      <div /* id='CV_AVAIL_AMOUNTS' */ className={cn(
+        'w-full md:w-auto flex flex-col justify-start items-center', 
+        (soleOption ? 'gap-2' : 'gap-8'),
+        className
+      )}>
         <div className='w-full flex flex-col justify-start items-center'>
-          <h6 className='text-center font-semibold'>Available sizes</h6>
+          <h6 className='text-center font-semibold'>{`Available size${soleOption ? '' : 's'}`}</h6>
           <div className='h-[1px] w-pr-70 bg-muted-3' />
         </div>
-        <RadioGroup className='block columns-3 gap-2 lg:columns-2 lg:gap-6 w-full lg:auto' onValueChange={onSelection} value={selectedItem?.sku ?? undefined}>
-        {category.products.map((item) => (
-          <div className="flex flex-row gap-2 items-center mb-3">
-            <RadioGroupItem value={item.sku} id={item.sku} />
-            <Label htmlFor={item.sku}>{amountLabelFromSKU(item.sku) + ', ' + formatPrice(item.price)}</Label>
-          </div>
-        ))}
-        </RadioGroup>
+        {soleOption ? (
+          <p>{category.products[0].titleAsOption}</p>
+        ) : (
+          <RadioGroup className='block columns-3 gap-2 lg:columns-2 lg:gap-6 w-full lg:auto' onValueChange={onSelection} value={selectedItem?.sku ?? undefined}>
+          {category.products.map((item) => (
+            <div className="flex flex-row gap-2 items-center mb-3" key={item.sku}>
+              <RadioGroupItem value={item.sku} id={item.sku} />
+              <Label htmlFor={item.sku}>{item.titleAsOption + ', ' + formatPrice(item.price)}</Label>
+            </div>
+          ))}
+          </RadioGroup>
+        )}
+
       </div>
     )
   }
@@ -113,7 +110,7 @@ const CategoryView: React.FC<React.HTMLAttributes<HTMLDivElement> & {
         <div className='flex flex-col justify-start items-center mb-6'>
           <h3 className='text-lg lg:text-xl font-heading text-center'>
             <span className='hidden md:inline lg:hidden'>
-              {category.title.split(', ').map((s) => (<p>{s}</p>)) }
+              {category.title.split(', ').map((s, i) => (<p key={i}>{s}</p>)) }
             </span>
             <span  className='inline md:hidden lg:inline'>
               {category.title}
@@ -121,7 +118,7 @@ const CategoryView: React.FC<React.HTMLAttributes<HTMLDivElement> & {
           </h3>
           {selectedItem ? (
             <h6 className='text-center font-semibold'>
-              {amountLabelFromSKU(selectedItem.sku) + ': ' + formatPrice(selectedItem.price)}
+              {selectedItem.titleAsOption + ': ' + formatPrice(selectedItem.price)}
             </h6>
           ) : ''}
         </div>
