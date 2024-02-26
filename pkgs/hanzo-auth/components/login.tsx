@@ -113,6 +113,7 @@ const Login: React.FC<{
             )}
             <h2 className='mx-auto'>Login</h2>
           </div>
+          {redirectUrl === 'checkout' && <p>You will be redirected to checkout after successful login.</p>}
           {/* <EmailPasswordForm onSubmit={loginWithEmailPassword} isLoading={isLoading}/> */}
           <Button onClick={() => login('google')} className='w-full mx-auto flex items-center gap-2' disabled={isLoading}>
             <Google height={20}/>Sign in with Google

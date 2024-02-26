@@ -30,7 +30,7 @@ const QuantityWidget: React.FC<{
       </div>
     )
   }
-  
+
   return ( item.isInCart ? (
     <div className={cn('flex flex-row items-stretch ' + (ghost ? 'bg-transparent  rounded-xl' : 'bg-secondary rounded-xl'), className)}>
       <Button

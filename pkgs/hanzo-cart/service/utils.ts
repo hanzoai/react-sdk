@@ -2,7 +2,7 @@ import type { LineItem } from "../types"
 import firebase_app from "./firebase-config"  
 import { getFirestore, collection, addDoc } from "firebase/firestore"  
   
-const db = getFirestore(firebase_app, 'lux-commerce-db')  
+const db = getFirestore(firebase_app, 'lux-commerce')  
   
 export default async function persistCart(cart: LineItem[], userEmail: string) {  
     let result = null  

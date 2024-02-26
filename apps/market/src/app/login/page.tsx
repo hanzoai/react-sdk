@@ -1,6 +1,7 @@
 'use client'
 
 import React  from 'react'
+import { useSearchParams } from 'next/navigation'
 
 import { Footer } from '@hanzo/ui/common'
 import { Main } from '@hanzo/ui/primitives'
@@ -9,11 +10,13 @@ import { LoginComponent as Login } from '@hanzo/auth'
 import siteDef from '@/siteDef'
 
 const LoginPage = () => {
+  const searchParams = useSearchParams()
+  
   return (<>
     <Main className='md:flex-row md:gap-4 '>
       <Screenful 
         block={{blockType: 'screenful', contentColumns: [[
-          {blockType: 'element', element: <Login getStartedUrl='/' returnToUrl='/'/>} as ElementBlock,
+          {blockType: 'element', element: <Login getStartedUrl='/' returnToUrl='/' redirectUrl={searchParams.get('redirectUrl') ?? undefined}/>} as ElementBlock,
         ]]} as ScreenfulBlock} 
         className='w-full max-w-[30rem] mx-auto'
       />
