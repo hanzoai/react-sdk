@@ -33,7 +33,7 @@ const QuantityWidget: React.FC<{
         size={size}
         variant={ghost ? 'ghost' : 'secondary'}
         rounded={ghost ? 'full' : 'xl'}
-        className='px-1 lg:min-w-0 lg:px-2 grow justify-end'
+        className='px-1 lg:min-w-0 lg:px-2 xs:grow xs:justify-end'
         key='left'
         onClick={item.decrement.bind(item)}
       >
@@ -43,13 +43,13 @@ const QuantityWidget: React.FC<{
         <Icons.trash className={iconClx} aria-hidden='true'/>
       )}
       </Button>
-        <div className={'text-sm flex items-center cursor-default ' + digitClx} >{item.quantity}</div>
+        <div className={'text-sm flex items-center cursor-default xs:px-2 ' + digitClx} >{item.quantity}</div>
       <Button
         aria-label={'Add another ' + item.title + ' to the cart'}
         size={size}
         variant={ghost ? 'ghost' : 'secondary'}
         rounded={ghost ? 'full' : 'xl'}
-        className='px-1 lg:min-w-0 lg:px-2 grow justify-start'
+        className='px-1 lg:min-w-0 lg:px-2 xs:grow xs:justify-start'
         onClick={item.increment.bind(item)}
         key='right'
       >

@@ -135,7 +135,7 @@ const CategoryView: React.FC<React.HTMLAttributes<HTMLDivElement> & {
       <Desc className='' />
       <AvailableAmounts className='mb-2'/>
       {selectedItem ? (
-        <QuantityWidget size='default' wide item={selectedItem} className='w-pr-80 mx-auto'/>
+        <QuantityWidget size='default' wide item={selectedItem} className='w-pr-70 mx-auto'/>
       ) : null }
     </div>
   ) : (
