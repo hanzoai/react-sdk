@@ -1,151 +1,98 @@
 'use client'
-import React, { useState, type PropsWithChildren } from 'react'
+import React, { useState } from 'react'
 
 import { ToggleGroup, ToggleGroupItem,} from "@hanzo/ui/primitives"
 import { cn } from '@hanzo/ui/util'
 
-import type { FacetValue, Facets } from '../../types'
+import type { FacetValue } from '../../types'
 import FacetImage from './facet-image'
 
-export interface FacetMutatorExclusive {
+interface FacetMutatorSingle {
   val: string | null
   set(v: string | null): void
 }
 
-export interface FacetMutatorMultiple {
+interface FacetMutatorMultiple {
   val: string[] | null
   set(v: string[] | null): void
 }
 
-const FacetToggleGroup: React.FC<{
+const FacetTogglesWidget: React.FC<{
   facetValues: FacetValue[]
-  mutator: FacetMutatorExclusive | FacetMutatorMultiple
-  exclusive: boolean
+  mutator: FacetMutatorSingle | FacetMutatorMultiple
+  multiple?: boolean
   className?: string
   isMobile?: boolean
 }> = ({
   facetValues,
   mutator,
-  exclusive,
+  multiple='',
   className='',
   isMobile=false
 }) => {
 
-  const [lastRemaining, setLastRemaining] = useState<string | undefined>(undefined)
+  const [last, setLast] = useState<string | undefined>(undefined)
 
-  const handleValueChangeMultiple = (selected: string[]) => {
+  const handleChangeMultiple = (selected: string[]) => {
     (mutator as FacetMutatorMultiple).set(selected)
     if (selected.length === 1) {
-      setLastRemaining(selected[0])
+      setLast(selected[0])
     }
     else {
-      setLastRemaining(undefined)   
+      setLast(undefined)   
     }
   }
 
-  const handleValueChangeExclusive = (selected: string) => {
-    (mutator as FacetMutatorExclusive).set(selected)
+  const handleChangeSingle = (selected: string) => {
+    (mutator as FacetMutatorSingle).set(selected)
     if (selected) {
-      setLastRemaining(selected)
+      setLast(selected)
     }
   }
 
-  if (exclusive) {
-
-    return (
-      <ToggleGroup 
-        type='single' 
-        value={mutator.val as string}
-        variant='default'
-        size={isMobile ? 'sm' : 'default'}
-        onValueChange={handleValueChangeExclusive}
-        className={className}
-      >
-      {facetValues.map((fv, index) => {
-        let rounded = 'none'  
-        if (index === 0) { rounded = 'llg' }
-        else if (index === facetValues.length - 1) { rounded = 'rlg' } 
-        return (
-          <ToggleGroupItem 
-            value={fv.token} 
-            disabled={(lastRemaining && lastRemaining === fv.token || fv.token === mutator.val) as boolean} 
-            aria-label={`Select ${fv.label}`}
-              // @ts-ignore
-            rounded={rounded}
-            key={fv.token}
-          >
-            <span className={cn('flex flex-row justify-center gap-1 h-4 items-center')} >
-              <FacetImage facetValue={fv} />
-              <span className='hidden md:block whitespace-nowrap'>{fv.label}</span>
-            </span>
-          </ToggleGroupItem>
-        )
-      })}
-      </ToggleGroup>  
-    )
+  const roundedToSpread: any = {}
+  if (multiple) {
+    roundedToSpread.rounded = 'xl'   
   }
 
   return (
     <ToggleGroup 
-      type='multiple'
+      type={multiple ? 'multiple' : 'single'} 
+      value={multiple ? mutator.val as string[] : mutator.val as string}
       variant='default'
-      value={mutator.val as string[]}
-      rounded='xl' 
       size={isMobile ? 'sm' : 'default'}
-      onValueChange={handleValueChangeMultiple}
+      onValueChange={multiple ? handleChangeMultiple : handleChangeSingle}
       className={className}
+      {...roundedToSpread}
     >
-    {facetValues.map((fv) => (
-      <ToggleGroupItem 
-        value={fv.token} 
-        disabled={(lastRemaining && lastRemaining === fv.token) as boolean} 
-        aria-label={`Select ${fv.label}`}
-        key={fv.token}
-      >
-        <span className={cn('flex flex-row justify-center gap-1 h-4 items-center')} >
-          <FacetImage facetValue={fv} />
-          <span className='hidden md:block whitespace-nowrap'>{fv.label}</span>
-        </span>
-      </ToggleGroupItem>
-    ))}
+    {facetValues.map((fv, index) => {
+      const roundedToSpread: any = {}
+      if (!multiple) {
+        roundedToSpread.rounded = 'none'   
+        if (index === 0) { roundedToSpread.rounded = 'llg' }
+        else if (index === facetValues.length - 1) { roundedToSpread.rounded = 'rlg' } 
+      }
+      return (
+        <ToggleGroupItem 
+          key={fv.token}
+          value={fv.token} 
+          disabled={(last && last === fv.token || fv.token === mutator.val)} 
+          aria-label={`Select ${fv.label}`}
+          {...roundedToSpread}
+        >
+          <span className={cn('flex flex-row justify-center gap-1 h-4 items-center')} >
+            <FacetImage facetValue={fv} />
+            <span className='hidden md:block whitespace-nowrap'>{fv.label}</span>
+          </span>
+        </ToggleGroupItem>
+      )
+    })}
     </ToggleGroup>  
   )
 }
 
-const FacetsWidget: React.FC<PropsWithChildren & {
-  facets: Facets
-  exclusive: boolean
-  facetClassNames?: string[]
-  mutators:  FacetMutatorExclusive[] | FacetMutatorMultiple[]
-  isMobile?: boolean
-  id?: string
-  className?: string
-}> = ({
-  children,
-  facets,
-  exclusive,
-  mutators,
-  facetClassNames,
-  isMobile=false,
-  className='',
-  id='FacetsWidget'
-}) => {
-  const horiz = className.includes('flex-row')
-  return (
-    <div id={id} className={className} >
-    {Object.keys(facets).map((key, i) => (
-      <FacetToggleGroup 
-        key={i}
-        exclusive={exclusive}
-        mutator={mutators[i]} 
-        isMobile={isMobile}
-        facetValues={facets[parseInt(key)]} 
-        className={cn((horiz ? '' : 'mb-2'), (i !== 0 && !horiz) ? 'mt-2' : '', (facetClassNames?.[i]) ?? '')} 
-      />
-    ))}
-      {children}
-    </div>
-  )
+export {
+  FacetTogglesWidget as default,
+  type FacetMutatorSingle,
+  type FacetMutatorMultiple
 }
-
-export default FacetsWidget
