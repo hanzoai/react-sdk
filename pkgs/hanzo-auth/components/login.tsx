@@ -97,7 +97,7 @@ const Login: React.FC<{
   return (
     <ApplyTypography className={cn('w-full', className)}>
       <div className='w-full mx-auto'>
-      {user ? (
+      {user && !redirectUrl ? (
         <div className='flex flex-col text-center gap-4'>
           <h3>Welcome!</h3>
           <p>You are signed in as {user.displayName ?? user.email}</p>
