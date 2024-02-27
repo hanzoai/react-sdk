@@ -43,7 +43,7 @@ const Store: React.FC<{
 
     if (categories.length > 1) {
       throw new Error (
-        "MarketCategoryView: More than one specified Category should never be possible with this UI!"
+        "CategoryContents: More than one specified Category should never be possible with this UI!"
       )
     }
     setLoading(false)

@@ -14,20 +14,26 @@ import type { Category, FacetsSelection } from '@hanzo/cart/types'
 import Link from 'next/link'
 import { Skeleton } from '@hanzo/ui/primitives'
 
-const MarketCategoryView: React.FC<{
-  className?: string
-  agent?: string
-}> = observer(({
-  className='',
-  agent,
-}) => {
-  const c = useCommerce() 
+type Props = {
+  params: { mode: 'cat' | 'prod' }
+  searchParams?: { [key: string]: string | string[] | undefined }
+}
 
+const BuyPage: React.FC<Props> = observer(({
+  params,
+  searchParams
+}) => {
+
+  const agent = searchParams?.agent as string
+  const mode = params.mode
   const mobile = (agent === 'phone')
+
+  const c = useCommerce() 
 
   const [loading, setLoading] = useState<boolean>(true)
   const [message, setMessage] = useState<string>('')
   const [level1, setLevel1] = useQueryState('level1') // level 1 facet value (AG / AU)
+  
   const [level2, setLevel2] = useQueryState('level2') // level 2 facet value (B / C / MB / GD)
 
   const categoryRef = useRef<Category | undefined>(undefined)
@@ -47,7 +53,7 @@ const MarketCategoryView: React.FC<{
         console.log("CAT", categories.map((c) => (c.title)))
         throw new Error (
   
-          "MarketCategoryView: More than one specified Category should never be possible with this UI!"
+          "CategoryContents: More than one specified Category should never be possible with this UI!"
         )
       }
       categoryRef.current = categories[0] 
@@ -105,7 +111,7 @@ const MarketCategoryView: React.FC<{
       {message ? (
         <div className={cn('typography lg:min-w-[400px] lg:max-w-[600px] overflow-hidden bg-level-1 h-[50vh] rounded-xl p-6', className)} >
           <h5 className='text-accent text-center'>{message}</h5>
-          <h6 className='text-accent text-center'>Or, would you like to try a<br/><Link className='text-xl font-semibold ' href='/store'>more general search</Link>?</h6>
+          <h6 className='text-accent text-center'>Or, would you like to try a<br/><Link className='text-xl font-semibold ' href='/buy'>more general search</Link>?</h6>
         </div>
       ) : (
         <CategoryView className='' agent={agent} category={categoryRef.current!}/>
@@ -118,7 +124,7 @@ const MarketCategoryView: React.FC<{
     'lg:min-w-[320px] lg:max-w-[360px] xl:min-w-[360px]'
 
   return mobile ? (
-    <div /* id='SCV_OUTERMOST' */ className={cn('flex flex-col justify-start items-stretch relative', className)} >
+    <div /* id='SCV_OUTERMOST' */ className='flex flex-col justify-start items-stretch relative w-full' >
       <div /* id='SCV_FACET_CONTAINER_COMPACT' */ className='py-2 bg-background w-full sticky top-[44px]'>
         <Facets className='sm:w-full ' >
           <CartDrawer isMobile={true} className='md:hidden pr-1 text-primary relative' buttonClassName='h-9' >
@@ -129,7 +135,7 @@ const MarketCategoryView: React.FC<{
       <Stage />
     </div>
   ) : (
-    <div /* id='SCV_OUTERMOST' */ className={cn('flex flex-col justify-start items-stretch relative', className)} >
+    <div /* id='SCV_OUTERMOST' */ className='flex flex-col justify-start items-stretch relative w-full' >
       <div /* id='SCV_FACET_CONTAINER_COMPACT' */ className='xl:hidden py-2 bg-background w-full sticky top-[80px] sm:top-[44px] z-40 '>
         <Facets className='sm:w-full' >
           <CartDrawer className='md:hidden pr-1 text-primary relative' buttonClassName='h-9' >
@@ -152,4 +158,4 @@ const MarketCategoryView: React.FC<{
   )
 }) 
 
-export default MarketCategoryView
+export default BuyPage
