@@ -94,7 +94,6 @@ const Login: React.FC<{
     setIsLoading(false)
   }
 
-  console.log(user)
   return (
     <ApplyTypography className={cn('w-full', className)}>
       <div className='w-full mx-auto'>
