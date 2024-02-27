@@ -15,12 +15,12 @@ import ProductSelectionMobilePicker from './product-selection-mobile-picker'
 const CategoryView: React.FC<React.HTMLAttributes<HTMLDivElement> & {
   category: Category
   isLoading?: boolean
-  agent?: string
+  mobile?: boolean
 }> = ({
   category, 
   className, 
   isLoading = false, 
-  agent, 
+  mobile = false, 
   ...props
 }) => {
 
@@ -84,7 +84,7 @@ const CategoryView: React.FC<React.HTMLAttributes<HTMLDivElement> & {
       }
 
       const soleOption = !waiting() && category.products.length === 1
-      const mobilePicker = !waiting() && (agent === 'phone' && category.products.length > 8) 
+      const mobilePicker = !waiting() && (mobile && category.products.length > 8) 
 
       return waiting() ? (
         <Skeleton className={'min-h-[120px] w-pr-60 mx-auto ' + className} />
@@ -152,7 +152,7 @@ const CategoryView: React.FC<React.HTMLAttributes<HTMLDivElement> & {
         <p className={cn('text-base lg:text-lg mb-6 xs:mb-0', className)}>{category.desc}</p>
       ))
 
-    return agent === 'phone' ? (
+    return mobile ? (
       <div /* id='CV_OUTER' */ className={cn('w-full h-[calc(100svh-96px)] max-h-[700px] flex flex-col justify-between ' + 
       'items-stretch gap-[4vh] mt-[2vh] pb-[6vh]', className)} {...props}>
         

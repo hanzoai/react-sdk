@@ -2,10 +2,14 @@
 import React, { useEffect, useState, type PropsWithChildren, useRef } from 'react'
 import { observer } from 'mobx-react-lite'
 
-import { useQueryState } from 'next-usequerystate'
+import {
+  useQueryState,
+  parseAsArrayOf,
+  parseAsString,
+} from 'next-usequerystate'
 
 import { cn } from '@hanzo/ui/util'
-import { Cart, FacetsWidget, CategoryView } from '@hanzo/cart/components'
+import { Cart, FacetsWidget, CategoryView, ProductCard } from '@hanzo/cart/components'
 import { useCommerce } from '@hanzo/cart/service'
 
 import siteDef from '@/siteDef'
@@ -24,46 +28,55 @@ const BuyPage: React.FC<Props> = observer(({
   searchParams
 }) => {
 
-  const agent = searchParams?.agent as string
-  const mode = params.mode
-  const mobile = (agent === 'phone')
+  const isCat = params.mode === 'cat'
+  const isProd = params.mode === 'prod'
+  const mobile = (searchParams?.agent === 'phone')
 
   const c = useCommerce() 
 
   const [loading, setLoading] = useState<boolean>(true)
   const [message, setMessage] = useState<string>('')
-  const [level1, setLevel1] = useQueryState('level1') // level 1 facet value (AG / AU)
-  
-  const [level2, setLevel2] = useQueryState('level2') // level 2 facet value (B / C / MB / GD)
 
-  const categoryRef = useRef<Category | undefined>(undefined)
+  const [catLevel1, setCatLevel1] = useQueryState('lev1') // level 1 facet value (AG / AU)
+  const [catLevel2, setCatLevel2] = useQueryState('lev2') // level 2 facet value (B / C / MB / GD)
 
-  useEffect(() => {
-    setMessage('')
-    const facets: FacetsSelection = { }
-    if (level1) {
-      facets[1] = [level1]
-    }
-    if (level2) {
-      facets[2] = [level2]
-    }
-    if (level1 && level2) {
-      const categories = c.setFacetsSelection(facets)
-      if (categories.length > 1) {
-        console.log("CAT", categories.map((c) => (c.title)))
-        throw new Error (
-  
-          "CategoryContents: More than one specified Category should never be possible with this UI!"
-        )
+  const [prodLevel1, setProdLevel1] = useQueryState('fac1', parseAsArrayOf(parseAsString).withDefault([]))
+  const [prodLevel2, setProdLevel2] = useQueryState('fac2', parseAsArrayOf(parseAsString).withDefault([]))
+
+  const catModeRef = useRef<Category | undefined>(undefined)
+
+    // For cat mode
+    useEffect(() => {
+      if (!isCat) return
+      setMessage('')
+      const facets: FacetsSelection = { }
+      if (catLevel1) { facets[1] = [catLevel1] }
+      if (catLevel2) { facets[2] = [catLevel2] }
+      if (catLevel1 && catLevel2) {
+        const categories = c.setFacetsSelection(facets)
+        if (categories.length > 1) {
+          console.error("CAT", categories.map((c) => (c.title)))
+          throw new Error ( "CategoryContents: More than one specified Category should never be possible with this UI!")
+        }
+        catModeRef.current = categories[0] 
       }
-      categoryRef.current = categories[0] 
-    }
-    else {
-      setMessage('Please select an option from each group above.')
-    }
-    setLoading(false)
-
-  }, [level1 , level2])
+      else {
+        setMessage('Please select an option from each group above.')
+      }
+      setLoading(false)
+    }, [catLevel1 , catLevel2])
+  
+    // For prod mode
+    useEffect(() => {
+      if (!isProd) return
+      setMessage('')
+      const facets: FacetsSelection = { }
+      if (prodLevel1) { facets[1] = prodLevel1 }
+      if (prodLevel2) { facets[2] = prodLevel2 }
+      c.setFacetsSelection(facets)
+      setLoading(false)
+    }, [prodLevel1 , prodLevel2])
+    
 
   const Facets: React.FC<PropsWithChildren & {className?: string}> = ({
     children,
@@ -74,14 +87,17 @@ const BuyPage: React.FC<Props> = observer(({
     const facets1Clx = 'grid grid-cols-2 gap-0 ' + (mobile ? '' : 'pr-6 ')
     const facets2Clx = 'grid grid-cols-4 gap-0 '
 
+    const catMutators = [{val: catLevel1, set: setCatLevel1} , {val: catLevel2, set: setCatLevel2}]
+    const prodMutators = [{val: prodLevel1, set: setProdLevel1} , {val: prodLevel2, set: setProdLevel2}]
+
     return !loading ? (
       <FacetsWidget
           // using neg margin to compensate for fw putting extra rt padding on shopping cart button
         className={cn(widgetClx, (mobile ? 'relative left-0 -mr-3':''), className)} 
-        exclusive
+        exclusive={isCat}
         isMobile={mobile}
         facetClassNames={[facets1Clx, facets2Clx]}
-        mutators={[{val: level1, set: setLevel1} , {val: level2, set: setLevel2}]}
+        mutators={isCat ? catMutators : prodMutators}
         facets={siteDef.ext.commerce.facets}
       >
         {children}
@@ -108,14 +124,22 @@ const BuyPage: React.FC<Props> = observer(({
   }) => {
     return (
       <div /* id='SCV_STAGE' */ className={className}>
-      {message ? (
+      { message ? (
         <div className={cn('typography lg:min-w-[400px] lg:max-w-[600px] overflow-hidden bg-level-1 h-[50vh] rounded-xl p-6', className)} >
           <h5 className='text-accent text-center'>{message}</h5>
-          <h6 className='text-accent text-center'>Or, would you like to try a<br/><Link className='text-xl font-semibold ' href='/buy'>more general search</Link>?</h6>
+          {isCat && (<h6 className='text-accent text-center'>Or, would you like to try a<br/><Link className='text-xl font-semibold ' href='/buy/prod'>more general search</Link>?</h6>)}
         </div>
+      ) : ( isCat ? (
+        <CategoryView className='' mobile={mobile} category={catModeRef.current!}/>
+      ) : ( c.specifiedItems.length === 0 ? (
+        <div className='flex flex-col items-center text-xl pt-8' >
+          No results. Please select at least one option from each group above.
+        </div> 
       ) : (
-        <CategoryView className='' agent={agent} category={categoryRef.current!}/>
-      )} 
+        <div className='flex flex-row px-4 sm:px-0 sm:grid sm:grid-cols-3 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:grow'>
+          {c.specifiedItems.map((item) => (<ProductCard item={item} key={item.sku} className='rounded-lg w-[40vw] sm:w-auto'/>))}
+        </div> 
+      )))} 
       </div>
     )
   }

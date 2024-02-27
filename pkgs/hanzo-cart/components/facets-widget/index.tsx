@@ -100,8 +100,7 @@ const FacetToggleGroup: React.FC<{
         value={fv.token} 
         disabled={(lastRemaining && lastRemaining === fv.token) as boolean} 
         aria-label={`Select ${fv.label}`}
-          // @ts-ignore
-        key={spec.id}
+        key={fv.token}
       >
         <span className={cn('flex flex-row justify-center gap-1 h-4 items-center')} >
           <FacetImage facetValue={fv} />

@@ -3,6 +3,7 @@ import {
   makeObservable, 
   observable, 
   runInAction, 
+  toJS
 } from 'mobx'
 
 import type { 
@@ -76,12 +77,19 @@ class StandaloneCommerceService
 
   setFacetsSelection(sel: FacetsSelection): Category[] {
     runInAction (() => {
-      this._selectedFacets = this._fullFacetsSelectionFromPartial(sel) 
+      const res = this._processAndValidate(sel) 
+      if (res) {
+        this._selectedFacets = res
+      }
     })
     return this._specifiedCategories
   }
-  
+
   private get _specifiedCategories(): Category[] {
+    if (Object.keys(toJS(this._selectedFacets)).length === 0) {
+      // Facets have never been set or unset, so cannot evaluate them
+      return []
+    }
     const keysStr = Object.keys(this._facets)
       // 1-base, visiting two per iteration
     let current: string[] = this._selectedFacets[1] 
@@ -89,6 +97,7 @@ class StandaloneCommerceService
       current = StandaloneCommerceService._visit(current, this._selectedFacets[i])
     }
     const prefix = this._options.levelZeroPrefix ?? ''
+
     return current.map((almostTheCatId) => (this._categoryMap.get(prefix + almostTheCatId)!))
   }
 
@@ -102,18 +111,36 @@ class StandaloneCommerceService
     return result
   }
 
-  private _fullFacetsSelectionFromPartial(partial: FacetsSelection): FacetsSelection {
+  private _processAndValidate(partial: FacetsSelection): FacetsSelection | undefined {
     const result: FacetsSelection = {}
     const keysStr = Object.keys(this._facets)
     const keysNum = keysStr.map((key) => (parseInt(key)))
     keysNum.forEach((key) => {
-        // if present, ok, if not, then assume the facet is "off" and allow all.
-      result[key] = partial[key] ? [...partial[key]] : this._facets[key].map((fv) => (fv.token))
+        // if not present, assume the facet is "off" and allow all (include all in the set).
+      if (!partial[key]) {
+        result[key] = this._facets[key].map((fv) => (fv.token))
+      }
+        // Make sure every fv selected at this level (key), actually exists at this level
+        /*
+      if(!partial[key].every((val) => (this._facets[key].find((fv) => (fv.token))))) {
+        console.error("Unrecognized facet value")
+        throw new Error("My Error")
+      }
+        */
+
+        // If present, filter out the bad values if any
+      const filtered = partial[key].filter((fv) => this._facets[key].find((fvDesc) => (fvDesc.token === fv)))
+      result[key] = filtered
     })
     return result
   }
 
   get specifiedItems(): LineItem[] {
+    if (Object.keys(toJS(this._selectedFacets)).length === 0) {
+      // Facets have never been set or unset, so cannot evaluate them
+      return []
+    }
+
     return this._specifiedCategories.reduce(
       (allProducts, cat) => ([...allProducts, ...(cat.products as LineItem[])]), [] as LineItem[])
   }
