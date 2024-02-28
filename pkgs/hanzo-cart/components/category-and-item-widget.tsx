@@ -3,43 +3,45 @@ import React, { useEffect } from 'react'
 import { computed } from 'mobx'
 import { observer } from 'mobx-react-lite'
 
-import { cn } from '@hanzo/ui/util'
-import { formatPrice } from '@hanzo/cart/util'
-
-import { FacetTogglesWidget,  } from '@hanzo/cart/components'
-import { useCommerce } from '@hanzo/cart/service'
-
-import siteDef from '@/siteDef'
-import type { FacetsSelection, LineItem } from '@hanzo/cart/types'
 import { ApplyTypography, ListBox } from '@hanzo/ui/primitives'
+import { cn } from '@hanzo/ui/util'
+
+import type { FacetValue, FacetsSelection, LineItem } from '../types'
+import { useCommerce } from '../service'
+import { formatPrice } from '../util'
+
+import FacetTogglesWidget from './facet-toggles-widget'
 
 const formatItem = (item: LineItem, withQuantity: boolean = false): string => (
   `${item.titleAsOption}, ${formatPrice(item.price)}${(withQuantity && item.quantity > 0) ? `  (${item.quantity})` : ''}`
 )
 
-const L2_FACET_VALUES = siteDef.ext.commerce.facets[2]
-
-const FacetLevel2SelectorWidget: React.FC<{
-  level1token: string
+const CategoryAndItemWidget: React.FC<{
+  categoryLevel: number
+  parentLevelToken: string
+  categoryLevelValues: FacetValue[]
   className?: string
 }> = observer(({
-  level1token, 
+  categoryLevel, 
+  parentLevelToken,
+  categoryLevelValues,
   className=''
 }) => {
   const comm = useCommerce()
 
   useEffect(() => {
-    comm.setFacetsSelection({
-      1: [level1token],
-      2: [L2_FACET_VALUES[0].token]
-    } satisfies FacetsSelection as FacetsSelection)
+    const facets: FacetsSelection = {}
+    facets[categoryLevel - 1] = [parentLevelToken]
+    facets[categoryLevel] = [categoryLevelValues[0].token]
+    comm.setFacetsSelection(facets)
+    comm.setCurrentItem(comm.specifiedCategories[0].products[0].sku)
   }, [])
 
   const onFacetTokenChanged = (token: string): void => {
-    comm.setFacetsSelection({
-      1: [level1token],
-      2: [token]
-    } satisfies FacetsSelection as FacetsSelection)
+    const facets: FacetsSelection = {}
+    facets[categoryLevel - 1] = [parentLevelToken]
+    facets[categoryLevel] = [token]
+    comm.setFacetsSelection(facets)
   }
 
   const currentFacetToken = computed((): string | null => {
@@ -52,7 +54,7 @@ const FacetLevel2SelectorWidget: React.FC<{
   return (
     <div className={cn('flex flex-col justify-start gap-4 items-start pt-3', className)}>
       <FacetTogglesWidget 
-        facetValues={L2_FACET_VALUES} 
+        facetValues={categoryLevelValues} 
         mutator={{
           val: currentFacetToken.get(),
           set: onFacetTokenChanged
@@ -79,4 +81,4 @@ const FacetLevel2SelectorWidget: React.FC<{
   )
 })
 
-export default FacetLevel2SelectorWidget
+export default CategoryAndItemWidget
