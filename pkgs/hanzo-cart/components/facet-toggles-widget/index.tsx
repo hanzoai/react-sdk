@@ -4,7 +4,7 @@ import React, { useState } from 'react'
 import { ToggleGroup, ToggleGroupItem,} from "@hanzo/ui/primitives"
 import { cn } from '@hanzo/ui/util'
 
-import type { FacetValue } from '../../types'
+import type { FacetValueDesc } from '../../types'
 import FacetImage from './facet-image'
 
 interface FacetMutatorSingle {
@@ -18,7 +18,7 @@ interface FacetMutatorMultiple {
 }
 
 const FacetTogglesWidget: React.FC<{
-  facetValues: FacetValue[]
+  facetValues: FacetValueDesc[]
   mutator: FacetMutatorSingle | FacetMutatorMultiple
   multiple?: boolean
   className?: string
@@ -74,14 +74,14 @@ const FacetTogglesWidget: React.FC<{
       }
       return (
         <ToggleGroupItem 
-          key={fv.token}
-          value={fv.token} 
-          disabled={(last && last === fv.token || fv.token === mutator.val)} 
+          key={fv.value}
+          value={fv.value} 
+          disabled={(last && last === fv.value || fv.value === mutator.val)} 
           aria-label={`Select ${fv.label}`}
           {...roundedToSpread}
         >
           <span className={cn('flex flex-row justify-center gap-1 h-4 items-center')} >
-            <FacetImage facetValue={fv} />
+            <FacetImage facetValueDesc={fv} />
             <span className='hidden md:block whitespace-nowrap'>{fv.label}</span>
           </span>
         </ToggleGroupItem>

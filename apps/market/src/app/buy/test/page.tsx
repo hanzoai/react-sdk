@@ -17,7 +17,7 @@ import { useCommerce } from '@hanzo/cart/service'
 
 import siteDef from '@/siteDef'
 import CartDrawer from '@/components/cart-drawer'
-import type { Category, FacetsSelection, LineItem } from '@hanzo/cart/types'
+import type { Category, FacetsValue, LineItem } from '@hanzo/cart/types'
 import Link from 'next/link'
 import { ApplyTypography, ListBox } from '@hanzo/ui/primitives'
 

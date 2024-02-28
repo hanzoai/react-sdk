@@ -3,7 +3,7 @@ import React, { type PropsWithChildren } from 'react'
 
 import { cn } from '@hanzo/ui/util'
 
-import type { Facets } from '../types'
+import type { FacetsDesc } from '../types'
 
 import FacetTogglesWidget, { 
   type FacetMutatorSingle, 
@@ -11,7 +11,7 @@ import FacetTogglesWidget, {
 } from './facet-toggles-widget'
 
 const FacetsWidget: React.FC<PropsWithChildren & {
-  facets: Facets
+  facets: FacetsDesc
   facetClassNames?: string[]
   mutators:  FacetMutatorSingle[] | FacetMutatorMultiple[]
   multiple?: boolean

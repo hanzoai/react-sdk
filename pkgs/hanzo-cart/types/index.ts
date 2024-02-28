@@ -22,8 +22,8 @@ interface Category {
 }
 
 
-interface FacetValue {
-  token: string             // a token in the sku
+interface FacetValueDesc {
+  value: string             // a token in the sku
   label: string
   img : string | ReactNode  // icon is required 
   imgAR? : number           // helps with svgs
@@ -47,10 +47,10 @@ interface FacetValue {
   ]
 }
 */
-type Facets = Record<number, FacetValue[]>
+type FacetsDesc = Record<number, FacetValueDesc[]>
 
   // Which facets tokens are on at each level
-type FacetsSelection = Record<number, string[]>
+type FacetsValue = Record<number, string[]>
 
   // Client code always 
   // has a LineItem, whether the Product
@@ -76,9 +76,9 @@ export {
   type Product,
   type Category,
   type LineItem,
-  type Facets,
-  type FacetsSelection,
-  type FacetValue,
+  type FacetsDesc,
+  type FacetsValue,
+  type FacetValueDesc,
 }
 
 

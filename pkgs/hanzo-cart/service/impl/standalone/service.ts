@@ -10,8 +10,8 @@ import {
 import type { 
   Category, 
   LineItem,
-  FacetsSelection, 
-  Facets
+  FacetsValue, 
+  FacetsDesc
 } from '../../../types'
 
 import type CommerceService from '../../commerce-service'
@@ -26,8 +26,8 @@ class StandaloneCommerceService
   implements CommerceService
 {
   private _categoryMap = new Map<string, Category>()
-  private _facets: Facets 
-  private _selectedFacets: FacetsSelection = {}
+  private _facetsDesc: FacetsDesc 
+  private _selectedFacets: FacetsValue = {}
 
   private _options : StandaloneServiceOptions
 
@@ -35,11 +35,11 @@ class StandaloneCommerceService
 
   constructor(
     categories: Category[],
-    facets: Facets,
+    facets: FacetsDesc,
     options: StandaloneServiceOptions={}
   ) {
 
-    this._facets = facets
+    this._facetsDesc = facets
     this._options = options
 
     categories.forEach((c) => {
@@ -63,7 +63,7 @@ class StandaloneCommerceService
       setCurrentItem: action,
       currentItem: computed,
       specifiedCategories: computed 
-      /* NOT setFacetsSelection. It implements it's action mechanism */
+      /* NOT setFacets. It implements it's action mechanism */
     })
 
   }
@@ -114,7 +114,7 @@ class StandaloneCommerceService
     return undefined
   }
 
-  setFacetsSelection(sel: FacetsSelection): Category[] {
+  setFacets(sel: FacetsValue): Category[] {
     runInAction (() => {
       const res = this._processAndValidate(sel) 
       if (res) {
@@ -126,10 +126,10 @@ class StandaloneCommerceService
 
   get specifiedCategories(): Category[] {
     if (Object.keys(toJS(this._selectedFacets)).length === 0) {
-      // Facets have never been set or unset, so cannot evaluate them
+      // FacetsDesc have never been set or unset, so cannot evaluate them
       return []
     }
-    const keysStr = Object.keys(this._facets)
+    const keysStr = Object.keys(this._facetsDesc)
       // 1-base, visiting two per iteration
     let current: string[] = this._selectedFacets[1] 
     for (let i = 2; i <= keysStr.length; i++) {
@@ -149,17 +149,17 @@ class StandaloneCommerceService
     return result
   }
 
-  private _processAndValidate(partial: FacetsSelection): FacetsSelection | undefined {
-    const result: FacetsSelection = {}
-    const keysStr = Object.keys(this._facets)
+  private _processAndValidate(partial: FacetsValue): FacetsValue | undefined {
+    const result: FacetsValue = {}
+    const keysStr = Object.keys(this._facetsDesc)
     const keysNum = keysStr.map((key) => (parseInt(key)))
     keysNum.forEach((key) => {
         // if not present, assume the facet is "off" and allow all (include all in the set).
       if (!partial[key]) {
-        result[key] = this._facets[key].map((fv) => (fv.token))
+        result[key] = this._facetsDesc[key].map((fv) => (fv.value))
       }
         // If present, filter out the bad values if any
-      const filtered = partial[key].filter((fv) => this._facets[key].find((fvDesc) => (fvDesc.token === fv)))
+      const filtered = partial[key].filter((fv) => this._facetsDesc[key].find((fvDesc) => (fvDesc.value === fv)))
       result[key] = filtered
     })
     return result
@@ -167,7 +167,7 @@ class StandaloneCommerceService
 
   get specifiedItems(): LineItem[] {
     if (Object.keys(toJS(this._selectedFacets)).length === 0) {
-      // Facets have never been set or unset, so cannot evaluate them
+      // FacetsDesc have never been set or unset, so cannot evaluate them
       return []
     }
 

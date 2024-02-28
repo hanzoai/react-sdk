@@ -14,7 +14,7 @@ import { useCommerce } from '@hanzo/cart/service'
 
 import siteDef from '@/siteDef'
 import CartDrawer from '@/components/cart-drawer'
-import type { Category, FacetsSelection } from '@hanzo/cart/types'
+import type { Category, FacetsValue } from '@hanzo/cart/types'
 import Link from 'next/link'
 import { Skeleton } from '@hanzo/ui/primitives'
 
@@ -50,11 +50,11 @@ const BuyPage: React.FC<Props> = observer(({
     useEffect(() => {
       if (!isCat) return
       setMessage('')
-      const facets: FacetsSelection = { }
+      const facets: FacetsValue = { }
       if (catLevel1) { facets[1] = [catLevel1] }
       if (catLevel2) { facets[2] = [catLevel2] }
       if (catLevel1 && catLevel2) {
-        const categories = c.setFacetsSelection(facets)
+        const categories = c.setFacets(facets)
         if (categories.length > 1) {
           console.error("CAT", categories.map((c) => (c.title)))
           throw new Error ( "CategoryContents: More than one specified Category should never be possible with this UI!")
@@ -71,15 +71,15 @@ const BuyPage: React.FC<Props> = observer(({
     useEffect(() => {
       if (!isProd) return
       setMessage('')
-      const facets: FacetsSelection = { }
+      const facets: FacetsValue = { }
       if (prodLevel1) { facets[1] = prodLevel1 }
       if (prodLevel2) { facets[2] = prodLevel2 }
-      c.setFacetsSelection(facets)
+      c.setFacets(facets)
       setLoading(false)
     }, [prodLevel1 , prodLevel2])
     
 
-  const Facets: React.FC<PropsWithChildren & {className?: string}> = ({
+  const FacetsDesc: React.FC<PropsWithChildren & {className?: string}> = ({
     children,
     className=''
   }) => {
@@ -151,27 +151,27 @@ const BuyPage: React.FC<Props> = observer(({
   return mobile ? (
     <div /* id='SCV_OUTERMOST' */ className='flex flex-col justify-start items-stretch relative w-full' >
       <div /* id='SCV_FACET_CONTAINER_COMPACT' */ className='py-2 bg-background w-full sticky top-[44px]'>
-        <Facets className='sm:w-full ' >
+        <FacetsDesc className='sm:w-full ' >
           <CartDrawer isMobile={true} className='md:hidden pr-1 text-primary relative' buttonClassName='h-9' >
             <Cart isMobile={true} className='p-0 border-none mt-12'/>
           </CartDrawer>
-        </Facets>   
+        </FacetsDesc>   
       </div>
       <Stage />
     </div>
   ) : (
     <div /* id='SCV_OUTERMOST' */ className='flex flex-col justify-start items-stretch relative w-full' >
       <div /* id='SCV_FACET_CONTAINER_COMPACT' */ className='xl:hidden py-2 bg-background w-full sticky top-[80px] sm:top-[44px] z-40 '>
-        <Facets className='sm:w-full' >
+        <FacetsDesc className='sm:w-full' >
           <CartDrawer className='md:hidden pr-1 text-primary relative' buttonClassName='h-9' >
             <Cart isMobile={mobile} className='p-0 border-none mt-12'/>
           </CartDrawer>
-        </Facets>   
+        </FacetsDesc>   
       </div>
       <div /* id='SCV_COL_CONTAINER' */ className='flex flex-row justify-start gap-6 items-stretch relative h-full pt-3'>
         <div /* id='SCV_STAGE_COL' */ className='grow flex flex-col h-full relative'>
           <div /* id='SCV_FACET_CONTAINER_BIG' */ className='sticky top-[80px] z-30 bg-background pb-2 hidden xl:flex flex-col justify-start mb-6'>
-            <Facets className='' />   
+            <FacetsDesc className='' />   
           </div>
           <Stage />
         </div>

@@ -2,13 +2,13 @@ import type CommerceService from '../../commerce-service'
 
 import StandaloneCommerceService, {type StandaloneServiceOptions} from './service'
 
-import type { Category, Facets } from '../../../types'
+import type { Category, FacetsDesc } from '../../../types'
 
 // https://dev.to/ivandotv/mobx-server-side-rendering-with-next-js-4m18
 
 let instance: CommerceService | undefined =  undefined
 
-export default (categories: Category[], facets: Facets, options?: any): CommerceService => {
+export default (categories: Category[], facets: FacetsDesc, options?: any): CommerceService => {
 
   const _instance = instance ?? 
     new StandaloneCommerceService(

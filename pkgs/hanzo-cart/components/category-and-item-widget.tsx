@@ -6,7 +6,7 @@ import { observer } from 'mobx-react-lite'
 import { ApplyTypography, ListBox } from '@hanzo/ui/primitives'
 import { cn } from '@hanzo/ui/util'
 
-import type { FacetValue, FacetsSelection, LineItem } from '../types'
+import type { FacetValueDesc, FacetsValue, LineItem } from '../types'
 import { useCommerce } from '../service'
 import { formatPrice } from '../util'
 
@@ -19,7 +19,7 @@ const formatItem = (item: LineItem, withQuantity: boolean = false): string => (
 const CategoryAndItemWidget: React.FC<{
   categoryLevel: number
   parentLevelToken: string
-  categoryLevelValues: FacetValue[]
+  categoryLevelValues: FacetValueDesc[]
   className?: string
 }> = observer(({
   categoryLevel, 
@@ -30,18 +30,18 @@ const CategoryAndItemWidget: React.FC<{
   const comm = useCommerce()
 
   useEffect(() => {
-    const facets: FacetsSelection = {}
+    const facets: FacetsValue = {}
     facets[categoryLevel - 1] = [parentLevelToken]
-    facets[categoryLevel] = [categoryLevelValues[0].token]
-    comm.setFacetsSelection(facets)
+    facets[categoryLevel] = [categoryLevelValues[0].value]
+    comm.setFacets(facets)
     comm.setCurrentItem(comm.specifiedCategories[0].products[0].sku)
   }, [])
 
   const onFacetTokenChanged = (token: string): void => {
-    const facets: FacetsSelection = {}
+    const facets: FacetsValue = {}
     facets[categoryLevel - 1] = [parentLevelToken]
     facets[categoryLevel] = [token]
-    comm.setFacetsSelection(facets)
+    comm.setFacets(facets)
   }
 
   const currentFacetToken = computed((): string | null => {
