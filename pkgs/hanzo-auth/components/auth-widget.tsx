@@ -3,7 +3,7 @@
 import { Button, LinkElement, Popover, PopoverContent, PopoverTrigger, Separator } from '@hanzo/ui/primitives'
 
 import { useCurrentUser } from '../service/AuthContext'
-import { signOut, storeWalletAddressToFirestore } from '../lib/firebase/auth'
+import { signOut, associateWalletAddressWithAccount } from '../lib/firebase/auth'
 import type { LinkDef } from '@hanzo/ui/types'
 import { cn } from '@hanzo/ui/util'
 import Ethereum from '../icons/ethereum'
@@ -20,7 +20,7 @@ const AuthWidget: React.FC<{className?: string}> = ({className}) => {
 
   const connectWallet = async () => {
     if (user) {
-      const res = await storeWalletAddressToFirestore(user?.email ?? '')
+      const res = await associateWalletAddressWithAccount(user?.email ?? '')
       if (!res.error) {
         setUser({...user, walletAddress: res.result ?? undefined})
       }

@@ -2,7 +2,7 @@ import React from 'react'
 import { type LucideProps } from 'lucide-react'
 
 
-const GitHub: React.FC<LucideProps> = (props: LucideProps) => (
+const Ethereum: React.FC<LucideProps> = (props: LucideProps) => (
   <svg viewBox="-80.5 0 417 417" preserveAspectRatio="xMidYMid" {...props}>
 	<g>
 		<polygon fill="#343434" points="127.9611 0 125.1661 9.5 125.1661 285.168 127.9611 287.958 255.9231 212.32"></polygon>
@@ -15,4 +15,4 @@ const GitHub: React.FC<LucideProps> = (props: LucideProps) => (
 </svg>
 )
 
-export default GitHub
+export default Ethereum

@@ -1,22 +1,47 @@
 'use client'
+import React, { useEffect, useState } from 'react'
 
-import { ethers } from "ethers"
+import { ethers } from 'ethers'
 
-import { Button, Input, Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue, toast } from '@hanzo/ui/primitives'
+import { 
+  Button, 
+  Input, 
+  Select, 
+  SelectContent, 
+  SelectGroup, 
+  SelectItem, 
+  SelectTrigger, 
+  SelectValue, 
+  toast 
+} from '@hanzo/ui/primitives'
+
+import { 
+  type EnhHeadingBlock, 
+  type ElementBlock, 
+  type ScreenfulBlock, 
+  ScreenfulBlockComponent, 
+  type SpaceBlock 
+} from '@hanzo/ui/blocks'
+
+
+import { associateWalletAddressWithAccount, useCurrentUser } from '@hanzo/auth'
+import { Ethereum as EthIconFromAuth }  from '@hanzo/auth/icons'
 
 import { useCommerce } from '@hanzo/cart/service'
-import { useCurrentUser } from '@hanzo/auth'
-import { useEffect, useState } from 'react'
-import Eth from "../icons/eth"
-import Ethereum from "@hanzo/auth/icons/ethereum"
-import { storeWalletAddressToFirestore } from "@hanzo/auth/lib/firebase/auth"
-import { type EnhHeadingBlock, type ElementBlock, type ScreenfulBlock, ScreenfulBlockComponent, type SpaceBlock } from "@hanzo/ui/blocks"
-import { formatPrice } from "@hanzo/cart/util"
-import { CRYPTO_PAYMENT_ADDRESS } from "@/settings/checkout"
-import Btc from "../icons/btc"
-import Usdt from "../icons/usdt"
+import { formatPrice } from '@hanzo/cart/util'
+  // :aa TODO
+import { CRYPTO_PAYMENT_ADDRESS } from '@/settings/checkout'
 
-const CryptoPay: React.FC<{setStep: (step: number) => void}> = ({setStep}) => {
+import Eth from './icons/eth'
+import Btc from './icons/btc'
+import Usdt from './icons/usdt'
+
+const PayWithCrypto: React.FC<{
+  setStep: (step: number) => void
+}> = ({
+  setStep
+}) => {
+
   const c = useCommerce()
   const {user, setUser} = useCurrentUser()
   const [loadingPrice, setLoadingPrice] = useState(false)
@@ -39,6 +64,7 @@ const CryptoPay: React.FC<{setStep: (step: number) => void}> = ({setStep}) => {
   useEffect(() => {
     const fetchPrice = () => {
       setLoadingPrice(true)
+                // :aa TODO setting or env
       fetch('https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd')
         .then(res => res.json())
         .then((exchangeRate) => {
@@ -61,9 +87,10 @@ const CryptoPay: React.FC<{setStep: (step: number) => void}> = ({setStep}) => {
   const sendPayment = async (ether: number) => {
     try {
       if (!provider)
-        throw new Error("No crypto wallet found. Please install it.")
+              // :aa TODO string table
+        throw new Error('No crypto wallet found. Please install it.')
   
-      await window.ethereum.send("eth_requestAccounts")
+      await window.ethereum.send('eth_requestAccounts')
 
       const signer = await provider.getSigner()
       ethers.getAddress(CRYPTO_PAYMENT_ADDRESS)
@@ -72,16 +99,17 @@ const CryptoPay: React.FC<{setStep: (step: number) => void}> = ({setStep}) => {
         value: ethers.parseEther(ether.toString())
       })
       console.log({ ether, addr: CRYPTO_PAYMENT_ADDRESS })
-      console.log("tx", tx)
+      console.log('tx', tx)
       setStep(2)
     } catch (err) {
+        // :aa TODO string table
       toast({title: 'Not enough funds in your wallet'})
     }
   }
 
   const connectWallet = async () => {
     if (user) {
-      const res = await storeWalletAddressToFirestore(user?.email ?? '')
+      const res = await associateWalletAddressWithAccount(user?.email ?? '')
       if (!res.error) {
         setUser({...user, walletAddress: res.result ?? undefined})
       }
@@ -90,8 +118,8 @@ const CryptoPay: React.FC<{setStep: (step: number) => void}> = ({setStep}) => {
 
   let payWidget = (
     <div className='w-full mx-auto max-w-[20rem]'>
-      <Button variant="outline" className='w-full flex items-center gap-2' onClick={connectWallet}>
-        <Ethereum height={20}/>Connect your wallet
+      <Button variant='outline' className='w-full flex items-center gap-2' onClick={connectWallet}>
+        <EthIconFromAuth height={20}/>Connect your wallet
       </Button>
     </div>
   )
@@ -105,16 +133,16 @@ const CryptoPay: React.FC<{setStep: (step: number) => void}> = ({setStep}) => {
           </SelectTrigger>
           <SelectContent>
             <SelectGroup>
-              <SelectItem value="eth"><div className="flex items-center gap-2"><Eth height={14}/>ETH</div></SelectItem>
-              {/* <SelectItem value="btc" ><div className="flex items-center gap-2"><Btc height={14}/>BTC</div></SelectItem>
-              <SelectItem value="usdt" ><div className="flex items-center gap-2"><Usdt height={14}/>USDT</div></SelectItem> */}
+              <SelectItem value='eth'><div className='flex items-center gap-2'><Eth height={14}/>ETH</div></SelectItem>
+              {/* <SelectItem value='btc' ><div className='flex items-center gap-2'><Btc height={14}/>BTC</div></SelectItem>
+              <SelectItem value='usdt' ><div className='flex items-center gap-2'><Usdt height={14}/>USDT</div></SelectItem> */}
             </SelectGroup>
           </SelectContent>
         </Select>
         <div>Available funds in your wallet: {availableAmount} ETH</div>
         <div>
           <Input value={amount ? amount/(10**18) : amount} contentEditable={false}/>
-          <div className="relative flex items-center gap-2 -top-[32px] justify-end px-2 py-1 rounded-lg bg-muted-4 w-fit text-xs float-right mr-3"><Eth height={10}/>ETH</div>
+          <div className='relative flex items-center gap-2 -top-[32px] justify-end px-2 py-1 rounded-lg bg-muted-4 w-fit text-xs float-right mr-3'><Eth height={10}/>ETH</div>
         </div>
         <Button
           onClick={() => sendPayment(amount ? amount/(10**18) : 0)}
@@ -125,26 +153,33 @@ const CryptoPay: React.FC<{setStep: (step: number) => void}> = ({setStep}) => {
       </div>
     )
   }
-  
 
   return (
-    <ScreenfulBlockComponent block={{blockType: 'screenful',
-      contentColumns: [[
-        {blockType: 'enh-heading',
-        specifiers: 'center',
-        heading: { text: `FINALIZE PAYMENT` },
-      } as EnhHeadingBlock,
-      {blockType: 'space', level: 1} as SpaceBlock,
-      {blockType: 'element',
-        element: payWidget
-      } as ElementBlock,
-      {blockType: 'space', level: 1} as SpaceBlock,
-      {blockType: 'element',
-        element: <Button onClick={() => setStep(0)} variant='outline' className='mx-auto rounded-full w-full max-w-[15rem]'>Back</Button>
-      } as ElementBlock
-      ]]
-    } as ScreenfulBlock}/>
+    <ScreenfulBlockComponent 
+      block={{blockType: 'screenful',
+        contentColumns: [[
+          {blockType: 'enh-heading',
+            specifiers: 'center',
+            heading: { text: `FINALIZE PAYMENT` },
+          } as EnhHeadingBlock,
+          {blockType: 'space', level: 1} as SpaceBlock,
+          {blockType: 'element',
+            element: payWidget
+          } as ElementBlock,
+          {blockType: 'space', level: 1} as SpaceBlock,
+          {blockType: 'element',
+            element: (
+              <Button 
+                onClick={() => setStep(0)} 
+                variant='outline' 
+                className='mx-auto rounded-full w-full max-w-[15rem]'
+              >Back</Button>
+            )
+          } as ElementBlock
+        ]]} as ScreenfulBlock
+      }
+    />
   )
 }
 
-export default CryptoPay
+export default PayWithCrypto

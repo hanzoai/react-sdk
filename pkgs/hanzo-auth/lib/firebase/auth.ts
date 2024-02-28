@@ -85,7 +85,7 @@ export async function signInWithEthereum(opts?: { siteName?: string }): Promise<
 
   try {
     const res = await signInWithEmailPassword(email, password, account)
-    storeWalletAddressToFirestore(email, account)
+    associateWalletAddressWithAccount(email, account)
     return {success: true, user: res.user}
   } catch (e) {
     return {success: false}
@@ -194,7 +194,7 @@ export async function connectWalletAddress(siteName?: string) {
   return {account, signed}
 }
   
-export async function storeWalletAddressToFirestore(userEmail: string, siteName?: string) {  
+export async function associateWalletAddressWithAccount(userEmail: string, siteName?: string) {  
   const {account} = await connectWalletAddress(siteName)
 
   let result = null

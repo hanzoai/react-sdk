@@ -1,17 +1,25 @@
 'use client'
+import React from 'react'
 
 import { Button } from '@hanzo/ui/primitives'
-import { useCommerce } from '@hanzo/cart/service'
 import { type EnhHeadingBlock, EnhHeadingBlockComponent } from '@hanzo/ui/blocks'
-import { formatPrice } from '@hanzo/cart/util'
 import { cn } from '@hanzo/ui/util'
-import CartLineItem from '../store/cart-line-item'
+
+import { useCommerce } from '@hanzo/cart/service'
+import { formatPrice } from '@hanzo/cart/util'
+
+import CartLineItem from '../store/cart-line-item' // :aa todo
 
 const ChoosePaymentMethod: React.FC<{
   paymentMethod?: 'crypto' | 'bank',
   setPaymentMethod: (paymentMethod: 'crypto' | 'bank') => void,
   setStep: (step: number) => void
-}> = ({paymentMethod, setPaymentMethod, setStep}) => {
+}> = ({
+  paymentMethod, 
+  setPaymentMethod, 
+  setStep
+}) => {
+
   const c = useCommerce()
 
   const cart = (

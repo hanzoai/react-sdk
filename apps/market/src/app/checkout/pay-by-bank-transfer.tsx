@@ -4,7 +4,7 @@ import type { ReactNode } from 'react'
 import { Copy } from 'lucide-react'
 
 import { Button, Tabs, TabsContent, TabsList, TabsTrigger, toast } from '@hanzo/ui/primitives'
-import { EnhHeadingBlockComponent, type EnhHeadingBlock } from '@hanzo/ui/blocks'
+import { EnhHeadingBlockComponent, type EnhHeadingBlock, type Block } from '@hanzo/ui/blocks'
 
 const InfoField: React.FC<{label: string, value: ReactNode, copyValue: string}> = ({label, value, copyValue}) => {
   const copyToClipboard = (label: string, text: string) => {
@@ -25,13 +25,15 @@ const InfoField: React.FC<{label: string, value: ReactNode, copyValue: string}> 
   )
 }
 
-const BankInfo: React.FC<{setStep: (step: number) => void}> = ({setStep}) => {
+const PayByBankTransfer: React.FC<{setStep: (step: number) => void}> = ({setStep}) => {
   return (<>
-    <EnhHeadingBlockComponent block={{blockType: 'enh-heading',
-      specifiers: 'center byline-center',
-      heading: { text: `WIRE INFO` },
-      byline: { text: 'Click the copy icon to copy text to your clipboard.', level: 6}
-    } as EnhHeadingBlock}/>
+    <EnhHeadingBlockComponent 
+      block={{blockType: 'enh-heading',
+        specifiers: 'center byline-center',
+        heading: { text: `WIRE INFO` },
+        byline: { text: 'Click the copy icon to copy text to your clipboard.', level: 6}
+      } satisfies EnhHeadingBlock as Block}
+    />
     <Tabs defaultValue="usd" className='w-full mx-auto max-w-[50rem]'>
       <TabsList className="grid w-full grid-cols-2 w-full max-w-[15rem] mx-auto bg-level-2">
         <TabsTrigger value="usd">USD</TabsTrigger>
@@ -75,4 +77,4 @@ const BankInfo: React.FC<{setStep: (step: number) => void}> = ({setStep}) => {
   </>)
 }
 
-export default BankInfo
+export default PayByBankTransfer

@@ -6,8 +6,8 @@ import { Footer } from '@hanzo/ui/common'
 import { Main } from '@hanzo/ui/primitives'
 
 import siteDef from '../../siteDef'
-import BankInfo from './bank-info'
-import CryptoPay from './crypto-pay'
+import PayByBankTransfer from './pay-by-bank-transfer'
+import PayWithCrypto from './pay-with-crypto'
 import { useCurrentUser } from '@hanzo/auth'
 import { redirect } from 'next/navigation'
 import ThankYou from './thank-you'
@@ -29,9 +29,9 @@ const CheckoutPage = () => {
       ) : step === 1 ? (
         <>
           {paymentMethod === 'crypto' ? (
-            <CryptoPay setStep={setStep}/>
+            <PayWithCrypto setStep={setStep}/>
           ) : paymentMethod === 'bank' ? (
-            <BankInfo setStep={setStep}/>
+            <PayByBankTransfer setStep={setStep}/>
           ) : null}
         </>
       ) : (
