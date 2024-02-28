@@ -90,31 +90,28 @@ class StandaloneCommerceService
   get currentItem(): LineItem | undefined {
     if (!this._currentItemSku) return undefined
 
-    let foundItem: LineItem | undefined = undefined
-    const catIdsTried: string[] = []
+    const categoriesTried: string[] = []
     if (this.specifiedCategories && this.specifiedCategories.length > 0) {
-      const specCatsIter = this.specifiedCategories.entries()
-      let catNode
-      do {
-        catNode = specCatsIter.next()
-        const [ , cat] = catNode.value
-        catIdsTried.push(cat.id)
-        foundItem = 
-          (cat.products as LineItem[]).find((item) => (item.sku === this._currentItemSku))
-      }  while (!foundItem && !catNode.done)
-    }
-    if (foundItem) return foundItem
 
-    const allCatsIter = this._categoryMap.entries()
-    let catNode
-    do {
-      catNode = allCatsIter.next()
-      const [ , cat] = catNode.value
-      if (catIdsTried.includes(cat.id)) continue
-      foundItem = (cat.products as LineItem[])
-        .find((item) => (item.sku === this._currentItemSku))
-    }  while (!foundItem && !catNode.done)
-    return foundItem
+      for (let category of this.specifiedCategories) {
+        categoriesTried.push(category.id)
+        const foundItem = 
+          (category.products as LineItem[]).find((item) => (item.sku === this._currentItemSku))
+        if (foundItem) {
+          return foundItem
+        }
+      }
+    }
+    
+    for (let category of this.specifiedCategories) {
+      if (categoriesTried.includes(category.id)) continue
+      const foundItem = 
+         (category.products as LineItem[]).find((item) => (item.sku === this._currentItemSku))
+      if (foundItem) {
+        return foundItem
+      }
+    }
+    return undefined
   }
 
   setFacetsSelection(sel: FacetsSelection): Category[] {

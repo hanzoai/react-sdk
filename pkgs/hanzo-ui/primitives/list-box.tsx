@@ -23,9 +23,9 @@ function Item<T>({
   return (
     <div 
       className={cn(
-        'font-normal text-muted', 
+        'font-normal text-muted-1 px-3 py-1 cursor-pointer hover:text-foreground ', 
         last ? '' : 'border-b', 
-        selected ? 'font-semibold text-foreground' : '', 
+        selected ? 'font-semibold text-accent hover:text-accent' : '', 
         className
       )} 
       onClick={() => {onClick(value)}}
@@ -54,7 +54,7 @@ function ListBox<T>({
 }): JSX.Element {
 
   return (
-    <div className={cn('border rounded-md', outClx)} >
+    <div className={cn('border rounded-md select-none', outClx)} >
     {values.map((val, i) => (
       <Item<T> 
         value={val} 
@@ -62,7 +62,7 @@ function ListBox<T>({
         onClick={onValueChange} 
         className={itemClx}
         first={i === 0}
-        last={i === 0}
+        last={i === values.length - 1}
         selected={value && isEqual(val, value)}
         key={labels[i]}
       />
