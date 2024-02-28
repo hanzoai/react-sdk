@@ -6,13 +6,7 @@ export default {
   currentAs: 'https://lux.market',
   nav: {
     common,
-    featured: [{
-      title: "Enter App",
-      href: "https://app.lux.market",
-      newTab: false,
-      external: true,
-      variant: 'primary',
-    }],
+    auth: true,
   },
-  footer
+  footer,
 } satisfies SiteDef

@@ -87,9 +87,9 @@ const ProductCard: React.FC<ProductCardProps> = ({
             {formatPrice(item.product.price)}
           </CardDescription>
         </CardContent>
-      <CardFooter className='p-4 flex flex-row justify-center'>
-        <QuantityWidget item={item}/>
-      </CardFooter>
+        <CardFooter className='p-4 flex flex-row justify-center'>
+          <QuantityWidget item={item}/>
+        </CardFooter>
     </Card>
   )
 }

@@ -1,5 +1,6 @@
 import React from 'react'
 
+import {AuthWidget} from '@hanzo/auth'
 import type { SiteDef } from '../../types'
 import { NavItems } from '../../primitives'
 import { Icons, DrawerMenu, Logo } from '..'
@@ -28,7 +29,7 @@ const Header: React.FC<{
         <Logo size='md' className='hidden lg:flex' key='two'/>
         <Logo size='sm' className='hidden md:flex lg:hidden' key='one'/>
         {/* md or larger */}
-        <div className='flex gap-2 items-center'>
+        <div className='flex gap-7 items-center'>
           <NavItems 
             currentAs={siteDef.currentAs}
             items={allElements} 
@@ -36,14 +37,16 @@ const Header: React.FC<{
             itemClx={navItemClx} 
             key='three'
           />
+          {siteDef.nav.auth && <AuthWidget/>}
           {siteDef.nav.cart}
         </div>
       </div>
       {/* smaller than md: mobile style drawer menu */}
       <div className="flex md:hidden h-[44px] items-center justify-between px-2">
         <Logo size='sm' />
-        <div className='flex gap-2'>
+        <div className='flex gap-4'>
           {siteDef.nav.cart}
+          {siteDef.nav.auth && <AuthWidget/>}
           <DrawerMenu 
             className='p-0 text-primary' // ui has 'text-inherit', so need this for close buttons to appear.
             trigger={<Icons.burger className='h-7 w-7'/>}
