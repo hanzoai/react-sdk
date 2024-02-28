@@ -64,6 +64,7 @@ function ListBox<T>({
         first={i === 0}
         last={i === 0}
         selected={value && isEqual(val, value)}
+        key={labels[i]}
       />
     ))}
     </div>

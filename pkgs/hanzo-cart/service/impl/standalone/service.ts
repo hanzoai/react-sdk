@@ -3,6 +3,7 @@ import {
   makeObservable, 
   observable, 
   runInAction, 
+  action,
   toJS
 } from 'mobx'
 
@@ -30,6 +31,8 @@ class StandaloneCommerceService
 
   private _options : StandaloneServiceOptions
 
+  private _currentItemSku: string | undefined = undefined
+
   constructor(
     categories: Category[],
     facets: Facets,
@@ -45,17 +48,22 @@ class StandaloneCommerceService
     })
 
     makeObservable<
-      StandaloneCommerceService, '_selectedFacets' | '_specifiedCategories'
+      StandaloneCommerceService, 
+        '_selectedFacets' | 
+        '_currentItemSku' 
     >(this, {
       _selectedFacets :  observable.deep,
-      _specifiedCategories : computed
+      _currentItemSku: observable,
     })
 
     makeObservable(this, {
       cartItems: computed,
       cartTotal: computed, 
       specifiedItems: computed,
-      //setFacetsSelection: action, // implements it's action mechanism
+      setCurrentItem: action,
+      currentItem: computed,
+      specifiedCategories: computed 
+      /* NOT setFacetsSelection. It implements it's action mechanism */
     })
 
   }
@@ -75,6 +83,40 @@ class StandaloneCommerceService
     )
   }
 
+  setCurrentItem(sku: string | undefined): void {
+    this._currentItemSku = sku
+  }
+
+  get currentItem(): LineItem | undefined {
+    if (!this._currentItemSku) return undefined
+
+    let foundItem: LineItem | undefined = undefined
+    const catIdsTried: string[] = []
+    if (this.specifiedCategories && this.specifiedCategories.length > 0) {
+      const specCatsIter = this.specifiedCategories.entries()
+      let catNode
+      do {
+        catNode = specCatsIter.next()
+        const [ , cat] = catNode.value
+        catIdsTried.push(cat.id)
+        foundItem = 
+          (cat.products as LineItem[]).find((item) => (item.sku === this._currentItemSku))
+      }  while (!foundItem && !catNode.done)
+    }
+    if (foundItem) return foundItem
+
+    const allCatsIter = this._categoryMap.entries()
+    let catNode
+    do {
+      catNode = allCatsIter.next()
+      const [ , cat] = catNode.value
+      if (catIdsTried.includes(cat.id)) continue
+      foundItem = (cat.products as LineItem[])
+        .find((item) => (item.sku === this._currentItemSku))
+    }  while (!foundItem && !catNode.done)
+    return foundItem
+  }
+
   setFacetsSelection(sel: FacetsSelection): Category[] {
     runInAction (() => {
       const res = this._processAndValidate(sel) 
@@ -82,10 +124,10 @@ class StandaloneCommerceService
         this._selectedFacets = res
       }
     })
-    return this._specifiedCategories
+    return this.specifiedCategories
   }
 
-  private get _specifiedCategories(): Category[] {
+  get specifiedCategories(): Category[] {
     if (Object.keys(toJS(this._selectedFacets)).length === 0) {
       // Facets have never been set or unset, so cannot evaluate them
       return []
@@ -97,7 +139,6 @@ class StandaloneCommerceService
       current = StandaloneCommerceService._visit(current, this._selectedFacets[i])
     }
     const prefix = this._options.levelZeroPrefix ?? ''
-
     return current.map((almostTheCatId) => (this._categoryMap.get(prefix + almostTheCatId)!))
   }
 
@@ -120,14 +161,6 @@ class StandaloneCommerceService
       if (!partial[key]) {
         result[key] = this._facets[key].map((fv) => (fv.token))
       }
-        // Make sure every fv selected at this level (key), actually exists at this level
-        /*
-      if(!partial[key].every((val) => (this._facets[key].find((fv) => (fv.token))))) {
-        console.error("Unrecognized facet value")
-        throw new Error("My Error")
-      }
-        */
-
         // If present, filter out the bad values if any
       const filtered = partial[key].filter((fv) => this._facets[key].find((fvDesc) => (fvDesc.token === fv)))
       result[key] = filtered
@@ -141,7 +174,7 @@ class StandaloneCommerceService
       return []
     }
 
-    return this._specifiedCategories.reduce(
+    return this.specifiedCategories.reduce(
       (allProducts, cat) => ([...allProducts, ...(cat.products as LineItem[])]), [] as LineItem[])
   }
 

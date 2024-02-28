@@ -22,20 +22,11 @@ interface CommerceService {
      * and items in the store
      * */ 
   setFacetsSelection(sel: FacetsSelection): Category[]
-
-    /** 
-     * Apply the specified mods to the FacetsSelection.
-     * Caches and returns the resultant items set. 
-     * */ 
-  //modifyFacetsSelection(mods: Record<number, {token: string, selected: boolean}[]>): LineItem[]
-  //get facetsSelection(): FacetsSelection       
-
-    // TODO: NEEDED?
-  //getFacets(ids: string[]): FacetValue[] //"facets from id's"
-
-  //get specifiedCategories(): Category[] // or empty array
   get specifiedItems(): LineItem[]
+  get specifiedCategories(): Category[] 
 
+  setCurrentItem(sku: string | undefined): void
+  get currentItem(): LineItem | undefined
 }
 
 export {
