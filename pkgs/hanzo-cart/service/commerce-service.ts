@@ -17,8 +17,7 @@ interface CommerceService {
      * 
      * This specifies one or more Category's, and all the LineItem's in them
      * 
-     * An empty value object set specifiedCategories to all of them,
-     * and specifiedItems to everything in the story 
+     * An empty value object specifies all Category's and all LineItem's,
      * */ 
   setFacets(value: FacetsValue): Category[]
   get specifiedItems(): LineItem[]
