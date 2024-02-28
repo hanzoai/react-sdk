@@ -9,7 +9,13 @@ export const firebaseApp =
   getApps().find((it) => it.name === 'firebase-admin-app') ||
   initializeApp(
     {
-      credential: cert(JSON.parse(process.env.FIREBASE_ADMIN_SERVICE_ACCOUNT!)),
+      credential: cert({
+        projectId: process.env.FIREBASE_PROJECT_ID,
+        privateKey: process.env.FIREBASE_PRIVATE_KEY 
+          ? JSON.parse(process.env.FIREBASE_PRIVATE_KEY)
+          : undefined,
+        clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+      }),
     },
     'firebase-admin-app'
   )
