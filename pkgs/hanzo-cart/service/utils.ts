@@ -1,12 +1,13 @@
 import type { LineItem } from "../types"  
 import firebase_app from "./firebase-config"  
-import { getFirestore, collection, addDoc } from "firebase/firestore"  
+import { getFirestore, collection, addDoc, setDoc, doc } from "firebase/firestore"  
   
 const db = getFirestore(firebase_app, 'lux-commerce')  
   
 export default async function persistCart(cart: LineItem[], userEmail: string) {  
     let result = null  
     let error = null
+    const ordersRef = collection(db, "orders");
 
     const cartAsObject = cart.reduce((acc, item) => {
         acc[item.product.id] = {
@@ -18,7 +19,7 @@ export default async function persistCart(cart: LineItem[], userEmail: string) {
   
     try {  
         try {
-            result = await addDoc(collection(db, userEmail), {cartAsObject, timestamp: Date.now()})
+            result = await setDoc(doc(ordersRef, `${userEmail}-${Date.now()}`), { cartAsObject })
         } catch (e) {  
             console.error('Error writing item document: ', e)
             error = e  

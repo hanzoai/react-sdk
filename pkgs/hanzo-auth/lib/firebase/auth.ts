@@ -9,8 +9,9 @@ import {
   signInWithEmailAndPassword
 } from 'firebase/auth'
 
-import { auth } from './firebase'
+import { auth, firebaseApp } from './firebase'
 import type APIResponse from './api-response'
+import { collection, doc, getDoc, getFirestore, setDoc } from 'firebase/firestore'
 
 const isObject = (obj: any): obj is Record<any, any> => typeof obj === 'object' && obj !== null
 const isGlobalThisEthereum = (obj: any): obj is { ethereum: { request: <R = any>(payload: Record<any, any>) => Promise<R> } } => isObject(obj) && isObject(obj.ethereum) && typeof obj.ethereum.request === 'function'
@@ -20,9 +21,12 @@ const ethereum = getEthereum(globalThis)
 
 let signMessage = (opts: { siteName: string, address: string }) => `${opts.siteName} wants you to sign in with your Ethereum account:\n${opts.address}`
 
+const authDb = getFirestore(firebaseApp, 'lux-accounts')  
+
 export type LuxUser = {
   email: string,
-  displayName?: string
+  displayName?: string,
+  walletAddress?: string
 }
 
 export async function signInWithProvider(provider: string): Promise<{success: boolean, user?: LuxUser | null}> {
@@ -57,7 +61,8 @@ export async function signInWithProvider(provider: string): Promise<{success: bo
     const resBody = (await response.json()) as unknown as APIResponse<string>
 
     if (response.ok && resBody.success) {
-      return {success: true, user: userCreds.user.email ? {email: userCreds.user.email, displayName: userCreds.user.displayName ?? undefined}: null}
+      const walletAddress = await getWalletAddressFromFirestore(userCreds.user.email ?? '')
+      return {success: true, user: userCreds.user.email ? {email: userCreds.user.email, displayName: userCreds.user.displayName ?? undefined, walletAddress: walletAddress.result}: null}
     } 
     else {
       return {success: false}
@@ -71,36 +76,16 @@ export async function signInWithProvider(provider: string): Promise<{success: bo
 
 // https://github.com/JonDotsoy/firebase-sign-in-with-ethereum
 export async function signInWithEthereum(opts?: { siteName?: string }): Promise<{success: boolean, user?: LuxUser | null}> {
-  if (!ethereum) {
-    throw new Error('No ethereum provider found')
-  }
-
-  const [account] = await ethereum.request<string[]>({ method: 'eth_requestAccounts' })
-
-  if (!account) {
-    throw new Error('No account found')
-  }
-
-  const signed = await ethereum.request<string>({
-    method: 'personal_sign',
-    params: [
-      signMessage({
-        siteName: opts?.siteName ?? auth.app.options.projectId ?? globalThis.location.hostname,
-        address: account,
-      }),
-      account,
-      auth.app.options.appId,
-    ],
-  })
+  const {account, signed} = await connectWalletAddress(opts?.siteName)
 
   let fragment = signed.slice(-10)
 
   const email = `${account}.${fragment}.3@${auth.app.options.authDomain}`
   const password = signed
 
-
   try {
     const res = await signInWithEmailPassword(email, password, account)
+    storeWalletAddressToFirestore(email, account)
     return {success: true, user: res.user}
   } catch (e) {
     return {success: false}
@@ -143,7 +128,8 @@ export async function signInWithEmailPassword(email: string, password: string, e
     const resBody = (await response.json()) as unknown as APIResponse<string>
 
     if (response.ok && resBody.success) {
-      return {success: true, user: user.email ? {email: user.email, displayName: user.displayName ?? undefined}: null}
+      const walletAddress = await getWalletAddressFromFirestore(user.email ?? '')
+      return {success: true, user: user.email ? {email: user.email, displayName: user.displayName ?? undefined, walletAddress: walletAddress.result}: null}
     } 
     else {
       return {success: false}
@@ -176,4 +162,77 @@ export async function signOut(): Promise<{success: boolean}> {
     console.error('Error signing out with Google', error)
     return {success: false}
   }
+}
+
+export async function connectWalletAddress(siteName?: string) {
+  if (!ethereum) {
+    throw new Error('No ethereum provider found')
+  }
+
+  const [account] = await ethereum.request<string[]>({ method: 'eth_requestAccounts' })
+
+  if (!account) {
+    throw new Error('No account found')
+  }
+
+  const signed = await ethereum.request<string>({
+    method: 'personal_sign',
+    params: [
+      signMessage({
+        siteName: siteName ?? auth.app.options.projectId ?? globalThis.location.hostname,
+        address: account,
+      }),
+      account,
+      auth.app.options.appId,
+    ],
+  })
+
+  if (!signed) {
+    throw new Error('Not signed')
+  }
+
+  return {account, signed}
+}
+  
+export async function storeWalletAddressToFirestore(userEmail: string, siteName?: string) {  
+  const {account} = await connectWalletAddress(siteName)
+
+  let result = null
+  let error = null
+  const accountsRef = collection(authDb, "accounts")
+
+  try {  
+    try {
+      await setDoc(doc(accountsRef, userEmail), { walletAddress: account })
+      result = account
+    } catch (e) {  
+      console.error(e)
+      error = e  
+    }  
+  } catch (e) {  
+    console.error(e)
+    error = e  
+  }  
+
+  return { result, error }  
+}
+
+export async function getWalletAddressFromFirestore(userEmail: string) {  
+  let result = null
+  let error = null
+
+  try {  
+    try {
+      result = await getDoc(doc(authDb, "accounts", userEmail))
+      result = result.data()?.walletAddress
+    } catch (e) {  
+      console.error(e)
+      error = e  
+    }  
+  } catch (e) {  
+    console.error(e)
+    error = e  
+  }  
+
+  return { result, error }  
 }

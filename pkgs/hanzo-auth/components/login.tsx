@@ -12,10 +12,9 @@ import type { LinkDef } from '@hanzo/ui/types'
 import { cn } from '@hanzo/ui/util'
 
 import { useCurrentUser } from '../service/AuthContext'
-import { signInWithEmailPassword, signInWithEthereum, signInWithProvider, signOut } from '../lib/firebase/auth'
+import { signInWithEmailPassword, signInWithProvider, signOut } from '../lib/firebase/auth'
 import { Facebook, Google, GitHub } from '../icons'
 import EmailPasswordForm from './email-password-form'
-import Ethereum from '../icons/ethereum'
 
 const Login: React.FC<{
   redirectUrl?: string,
@@ -43,7 +42,7 @@ const Login: React.FC<{
     try {
       const res = await signInWithEmailPassword(email, password)
       if (res.success && res.user) {
-        setUser({email: res.user?.email, displayName: res.user?.displayName})
+        setUser({email: res.user?.email, displayName: res.user?.displayName, walletAddress: res.user?.walletAddress})
         if (redirectUrl) {
           router.push(redirectUrl)
         }
@@ -54,27 +53,27 @@ const Login: React.FC<{
     setIsLoading(false)
   }
 
-  const loginWithEthereum = async () => {
-    setIsLoading(true)
-    try {
-      const res = await signInWithEthereum()
-      if (res.success && res.user) {
-        setUser({email: res.user?.email, displayName: res.user?.displayName})
-        if (redirectUrl) {
-          router.push(redirectUrl)
-        }
-      }
-    } catch (e) {
-      toast({title: "No Ethereum provider found"})
-    }
-    setIsLoading(false)
-  }
+  // const loginWithEthereum = async () => {
+  //   setIsLoading(true)
+  //   try {
+  //     const res = await signInWithEthereum()
+  //     if (res.success && res.user) {
+  //       setUser({email: res.user?.email, displayName: res.user?.displayName, walletAddress: res.user?.walletAddress})
+  //       if (redirectUrl) {
+  //         router.push(redirectUrl)
+  //       }
+  //     }
+  //   } catch (e) {
+  //     toast({title: "No Ethereum provider found"})
+  //   }
+  //   setIsLoading(false)
+  // }
 
   const login = async (provider: string) => {
     setIsLoading(true)
     const res = await signInWithProvider(provider)
     if (res.success && res.user) {
-      setUser({email: res.user?.email, displayName: res.user?.displayName})
+      setUser({email: res.user?.email, displayName: res.user?.displayName, walletAddress: res.user?.walletAddress})
       if (redirectUrl) {
         router.push(redirectUrl)
       }
@@ -118,9 +117,9 @@ const Login: React.FC<{
           </div>
           {redirectUrl === 'checkout' && <p>You will be redirected to checkout after successful login.</p>}
           <EmailPasswordForm onSubmit={loginWithEmailPassword} isLoading={isLoading}/>
-          <Button onClick={loginWithEthereum} className='w-full mx-auto flex items-center gap-2' disabled={isLoading}>
+          {/* <Button onClick={loginWithEthereum} className='w-full mx-auto flex items-center gap-2' disabled={isLoading}>
             <Ethereum height={20}/>Sign in with your wallet
-          </Button>
+          </Button> */}
           <Button onClick={() => login('google')} className='w-full mx-auto flex items-center gap-2' disabled={isLoading}>
             <Google height={20}/>Sign in with Google
           </Button>

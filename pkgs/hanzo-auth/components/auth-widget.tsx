@@ -3,9 +3,10 @@
 import { Button, LinkElement, Popover, PopoverContent, PopoverTrigger, Separator } from '@hanzo/ui/primitives'
 
 import { useCurrentUser } from '../service/AuthContext'
-import { signOut } from '../lib/firebase/auth'
+import { signOut, storeWalletAddressToFirestore } from '../lib/firebase/auth'
 import type { LinkDef } from '@hanzo/ui/types'
 import { cn } from '@hanzo/ui/util'
+import Ethereum from '../icons/ethereum'
 
 const AuthWidget: React.FC<{className?: string}> = ({className}) => {
   const {user, setUser} = useCurrentUser()
@@ -14,6 +15,15 @@ const AuthWidget: React.FC<{className?: string}> = ({className}) => {
     const res = await signOut()
     if (res.success) {
       setUser(null)
+    }
+  }
+
+  const connectWallet = async () => {
+    if (user) {
+      const res = await storeWalletAddressToFirestore(user?.email ?? '')
+      if (!res.error) {
+        setUser({...user, walletAddress: res.result ?? undefined})
+      }
     }
   }
 
@@ -41,6 +51,13 @@ const AuthWidget: React.FC<{className?: string}> = ({className}) => {
               </>
             ) : (
               <h4 className="font-medium leading-none truncate">{user?.email}</h4>
+            )}
+            {user?.walletAddress ? (
+              <p className="text-sm opacity-50 truncate">{user?.walletAddress}</p>
+            ) : (
+              <Button variant="outline" className='w-full flex items-center gap-2' onClick={connectWallet}>
+                <Ethereum height={20}/>Connect your wallet
+              </Button>
             )}
           </div>
           <Separator />
