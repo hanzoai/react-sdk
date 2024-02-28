@@ -95,7 +95,7 @@ const BuyPage: React.FC<Props> = observer(({
       <FacetsWidget
           // using neg margin to compensate for fw putting extra rt padding on shopping cart button
         className={cn(widgetClx, (mobile ? 'relative left-0 -mr-3':''), className)} 
-        exclusive={isCat}
+        multiple={isProd}
         isMobile={mobile}
         facetClassNames={[facets1Clx, facets2Clx]}
         mutators={isCat ? catMutators : prodMutators}
