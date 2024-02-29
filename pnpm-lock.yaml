@@ -483,9 +483,6 @@ importers:
 
   pkgs/hanzo-ui:
     dependencies:
-      '@hanzo/auth':
-        specifier: workspace:*
-        version: link:../hanzo-auth
       '@hookform/resolvers':
         specifier: ^3.3.2
         version: 3.3.4(react-hook-form@7.49.3)
