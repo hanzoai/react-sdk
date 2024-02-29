@@ -27,7 +27,6 @@ const firebaseApp =
 const USER_INFO_COLLECTION = 'HZ_USER_INFO'
 
 const auth = getAuth(firebaseApp)
-    // TODO
 const db = getFirestore(firebaseApp, 'lux-accounts')  
 
 async function isUserAuthenticated(session: string | undefined = undefined) {
@@ -52,14 +51,12 @@ export async function getUserServerSide(): Promise<HanzoUserInfoValue | null> {
 
   const decodedIdToken = await auth.verifySessionCookie(session!)
   const currentUser = await auth.getUser(decodedIdToken.uid)
-
-    // TODO
-  // const walletAddress = await getAssociatedWalletAddress(currentUser?.email ?? '')
+  const walletAddress = await db.collection(USER_INFO_COLLECTION).doc(currentUser.email ?? '').get()
 
   return {
     email: currentUser.email ?? '',
     displayName: currentUser.displayName ?? null,
-    walletAddress: null
+    walletAddress: walletAddress.get('walletAddress') ?? null,
   }
 }
 
