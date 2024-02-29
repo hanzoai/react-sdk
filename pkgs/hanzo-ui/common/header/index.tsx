@@ -25,7 +25,10 @@ const Header: React.FC<{
   return (
     <header className={cn('bg-background sticky z-10 top-0 ', className)} >
       {/* md or larger */}
-      <div className="hidden md:flex flex-row md:h-[80px] items-center justify-between px-[32px] 2xl:mx-auto max-w-screen-2xl">
+      <div className={
+        'hidden md:flex flex-row md:h-[80px] items-center justify-between ' +
+        'px-[32px] 2xl:mx-auto max-w-screen-2xl'
+      }>
         <Logo size='md' className='hidden lg:flex' key='two'/>
         <Logo size='sm' className='hidden md:flex lg:hidden' key='one'/>
         {/* md or larger */}

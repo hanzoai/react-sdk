@@ -1,28 +1,40 @@
-import type { LineItem, Category } from '../types'
+import type {  
+  Category, 
+  FacetsValue,
+  LineItem 
+} from '../types'
 
 interface CommerceService {
 
-    /** alpha by SKU */
   get cartItems(): LineItem[]
-  get cartTotalValue(): number
-  get cartItemCount(): number
-  
-  getCategorySubtotal: (categoryId: string) => number
+  get cartTotal(): number
+  getCartCategorySubtotal(categoryId: string): number
 
     /** 
-     * returns Product's that belong to all categories 
-     * (and caches them until the next call) 
+     * Sets the tokens at each level supplied.
+     * If a level is specifed as [], nothing will be specified.
+     * If a level is missing (undefined), everything at that level is included
      * 
-     * null resets the specified set to all products in the store
+     * This specifies one or more Category's, and all the LineItem's in them
+     * 
+     * An empty value object specifies all Category's and all LineItem's,
      * */ 
-  setSpecifiedCategories(categoryIds: string[] | null): LineItem[]
-  get specifiedCategories(): Category[] // or empty array
+  setFacets(value: FacetsValue): Category[]
   get specifiedItems(): LineItem[]
+  get specifiedCategories(): Category[] 
 
-    /** sorted by level */
-  get allCategories(): Category[]
-    /** for dev convenience */ 
-  get allItems(): LineItem[] 
+    /**
+     * For convenience, so widgets can share state.
+     * "current" is unrelated to what is "specified",
+     * ie, facets' values 
+     *  */ 
+  setCurrentItem(sku: string | undefined): void
+    /**
+     * For convenience, so widgets can share state.
+     * "current" is unrelated to what is "specified",
+     * ie, facets' values 
+     *  */ 
+  get currentItem(): LineItem | undefined
 }
 
 export {
