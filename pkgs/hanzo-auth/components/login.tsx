@@ -94,11 +94,13 @@ const Login: React.FC<{
       {auth.loggedIn() && !redirectUrl ? (
         <div className='flex flex-col text-center gap-4'>
           <h3>Welcome!</h3>
-          <p>You are signed in as {auth.user!.displayName ?? auth.user!.email}</p>
-          <div className='flex gap-4 items-center justify-center'>
-            <Button onClick={() => logout()} variant='outline' disabled={isLoading}>Sign Out</Button>
-            {getStartedUrl && <Button variant='primary' onClick={() => router.push(getStartedUrl)}>GET STARTED</Button>}
-          </div>
+          {auth.user && (<> {/*  this means the hanzo user isn't loaded yet ...*/}
+            <p>You are signed in as {auth.user?.displayName ?? auth.user?.email}</p>
+            <div className='flex gap-4 items-center justify-center'>
+              <Button onClick={() => logout()} variant='outline' disabled={isLoading}>Sign Out</Button>
+              {getStartedUrl && <Button variant='primary' onClick={() => router.push(getStartedUrl)}>GET STARTED</Button>}
+            </div>
+          </>)}
         </div>
       ) : (
         <div className='flex flex-col gap-4 text-center'>
