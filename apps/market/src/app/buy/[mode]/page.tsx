@@ -39,7 +39,7 @@ const BuyPage: React.FC<Props> = observer(({
 
   const [catLevel1, setCatLevel1] = useQueryState('lev1') // level 1 facet value (AG / AU)
   const [catLevel2, setCatLevel2] = useQueryState('lev2') // level 2 facet value (B / C / MB / GD)
-  const [selByParam, setSelByParam] = useQueryState('size') // Last two tokens for SKU. eg, '1-OZ'
+  //const [selByParam, setSelByParam] = useQueryState('size') // Last two tokens for SKU. eg, '1-OZ'
 
   const [prodLevel1, setProdLevel1] = useQueryState('fac1', parseAsArrayOf(parseAsString).withDefault([]))
   const [prodLevel2, setProdLevel2] = useQueryState('fac2', parseAsArrayOf(parseAsString).withDefault([]))
