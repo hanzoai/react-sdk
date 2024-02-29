@@ -43,7 +43,7 @@ const Cart: React.FC<{
       </div>
       {c.cartItems.length > 0 && (
         <>
-          {!auth.loggedIn() ? (
+          {!auth.loggedIn ? (
             <Button size='lg' variant='secondary' rounded='lg' className='mt-12 mx-auto' onClick={() => router.push('/login?redirectUrl=checkout')}>Login</Button>
           ) : (
             <Button size='lg' variant='secondary' rounded='lg' className='mt-12 mx-auto' onClick={checkout} disabled={loadingCheckout}>Checkout</Button>

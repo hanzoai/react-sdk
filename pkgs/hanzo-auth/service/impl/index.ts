@@ -1,4 +1,4 @@
-import { observable, computed, action, runInAction } from 'mobx'
+import { makeAutoObservable, makeObservable, computed  } from 'mobx'
 
 import type AuthService from '../auth-service'
 import type { AuthServiceConf, HanzoUserInfo, HanzoUserInfoValue } from '../../types'
@@ -13,27 +13,31 @@ import { associateWalletAddressWithAccount, getAssociatedWalletAddress } from '.
 
 class HanzoUserInfoStore implements HanzoUserInfo {
 
-  @observable _email: string = ''
-  @observable _displayName: string | null = null 
-  @observable _walletAddress: string | null = null
+  constructor() {
+    makeAutoObservable(this)
+  }
 
-  @computed get email(): string { return this._email}
-  @computed get displayName(): string | null { return this._displayName}
-  @computed get walletAddress(): string | null { return this._walletAddress}
+  _email: string = ''
+  _displayName: string | null = null 
+  _walletAddress: string | null = null
 
-  @action clear() {
+  get email(): string { return this._email}
+  get displayName(): string | null { return this._displayName}
+  get walletAddress(): string | null { return this._walletAddress}
+
+  clear():void  {
     this._email = ''
     this._displayName = null
     this._walletAddress = null
   }
 
-  @action set(v: HanzoUserInfoValue) {
+  set(v: HanzoUserInfoValue):void {
     this._email = v.email
     this._displayName = v.displayName
     this._walletAddress = v.walletAddress
   }
 
-  @computed get isValid(): boolean {
+  get isValid(): boolean {
     return (this._email.length > 0)  
   }
 }
@@ -45,6 +49,11 @@ class AuthServiceImpl implements AuthService {
   private _hzUser = new HanzoUserInfoStore()
 
   constructor(conf: AuthServiceConf, user: HanzoUserInfoValue | null) {
+
+    makeObservable(this, {
+      loggedIn: computed,
+      user: computed
+    })
       // ignore conf for now
     if (user) {
       this._hzUser.set(user)
@@ -55,9 +64,11 @@ class AuthServiceImpl implements AuthService {
     return this._hzUser.isValid ? this._hzUser : null
   }
 
-  loggedIn = (): boolean => (
-    !!fbAuth.currentUser
-  )
+  get loggedIn(): boolean {
+    return (
+      /*!!fbAuth.currentUser &&*/ this._hzUser.isValid
+    )
+  }
 
   loginEmailAndPassword = async (
     email: string, 

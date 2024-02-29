@@ -91,7 +91,7 @@ const Login: React.FC<{
   return (
     <ApplyTypography className={cn('w-full', className)}>
       <div className='w-full mx-auto'>
-      {auth.loggedIn() && !redirectUrl ? (
+      {auth.loggedIn && !redirectUrl ? (
         <div className='flex flex-col text-center gap-4'>
           <h3>Welcome!</h3>
           {auth.user && (<> {/*  this means the hanzo user isn't loaded yet ...*/}

@@ -19,7 +19,7 @@ const CheckoutPage = () => {
   const [paymentMethod, setPaymentMethod] = useState<'crypto' | 'bank'>()
   const [step, setStep] = useState(0)
 
-  if (!auth.loggedIn()) {
+  if (!auth.loggedIn) {
     redirect('/login')
   }
 

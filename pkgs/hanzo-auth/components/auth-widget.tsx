@@ -27,7 +27,7 @@ const AuthWidget: React.FC<{
 
   const auth = useAuth()
   
-  if (!auth.loggedIn()) {
+  if (!auth.loggedIn) {
     return (
       <LinkElement
         def={{href: '/login', title: 'Login', variant: 'primary'} as LinkDef}

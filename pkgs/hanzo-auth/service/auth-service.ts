@@ -2,7 +2,7 @@ import type { HanzoUserInfo } from "../types"
 
 interface AuthService {
 
-  loggedIn: () => boolean // checks actual Firebase Auth status
+  get loggedIn(): boolean 
   get user(): HanzoUserInfo | null // returns current info obj // all fields observable :)
 
   loginEmailAndPassword: (
