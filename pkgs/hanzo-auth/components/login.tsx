@@ -33,11 +33,6 @@ const Login: React.FC<{
   const [isLoading, setIsLoading] = useState(false)
   const { toast } = useToast()
 
-  const elements: LinkDef[] = [{title: 'Sign Out', variant: 'outline', href: '/'}];
-  if (getStartedUrl) {
-    elements.push({title: 'GET STARTED', variant: 'primary', href: getStartedUrl});
-  }
-
   const loginWithEmailPassword = async (email: string, password: string) => {
     setIsLoading(true)
     try {
@@ -96,9 +91,9 @@ const Login: React.FC<{
           <h3>Welcome!</h3>
           {auth.user && (<> {/*  this means the hanzo user isn't loaded yet ...*/}
             <p>You are signed in as {auth.user?.displayName ?? auth.user?.email}</p>
-            <div className='flex gap-4 items-center justify-center'>
-              <Button onClick={() => logout()} variant='outline' disabled={isLoading}>Sign Out</Button>
+            <div className='flex flex-col gap-4 items-center justify-center'>
               {getStartedUrl && <Button variant='primary' onClick={() => router.push(getStartedUrl)}>GET STARTED</Button>}
+              <Button onClick={() => logout()} variant='outline' disabled={isLoading}>Sign Out</Button>
             </div>
           </>)}
         </div>
@@ -113,18 +108,19 @@ const Login: React.FC<{
             <h2 className='mx-auto'>Login</h2>
           </div>
           {redirectUrl === 'checkout' && <p>You will be redirected to checkout after login.</p>}
-          <EmailPasswordForm onSubmit={loginWithEmailPassword} isLoading={isLoading}/>
+          <EmailPasswordForm onSubmit={loginWithEmailPassword} isLoading={isLoading} className='mb-4'/>
+          <p>- <span className='font-normal font-nav'>or</span> -</p>
           {/* <Button onClick={loginWithEthereum} className='w-full mx-auto flex items-center gap-2' disabled={isLoading}>
-            <Ethereum height={20}/>Sign in with your wallet
+            <Ethereum height={20}/>Login with your wallet
           </Button> */}
           <Button onClick={() => loginWithProvider('google')} className='w-full mx-auto flex items-center gap-2' disabled={isLoading}>
-            <Google height={20}/>Sign in with Google
+            <Google height={20}/>Login with Google
           </Button>
           <Button onClick={() => loginWithProvider('facebook')} className='w-full mx-auto flex items-center gap-2' disabled={isLoading}>
-            <Facebook height={20}/>Sign in with Facebook
+            <Facebook height={20}/>Login with Facebook
           </Button>
           <Button onClick={() => loginWithProvider('github')} className='w-full mx-auto flex items-center gap-2' disabled={isLoading}>
-            <GitHub height={20}/>Sign in with Github
+            <GitHub height={20}/>Login with Github
           </Button>
         </div>
       )}

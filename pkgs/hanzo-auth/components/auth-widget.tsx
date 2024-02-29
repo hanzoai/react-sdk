@@ -31,7 +31,7 @@ const AuthWidget: React.FC<{
     return (
       <LinkElement
         def={{href: '/login', title: 'Login', variant: 'primary'} as LinkDef}
-        className='font-heading h-8 tracking-[-0.3px] !text-[13px]/[13px] w-fit !min-w-0'
+        className='h-8 !text-[13px]/[13px] w-fit !min-w-0'
       />
     )
   }

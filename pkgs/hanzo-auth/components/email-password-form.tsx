@@ -13,13 +13,22 @@ import {
   FormMessage,
 } from '@hanzo/ui/primitives/form'
 import { Input, Button } from '@hanzo/ui/primitives'
+import { cn } from '@hanzo/ui/util'
  
 const formSchema = z.object({
   email: z.string().email(),
   password: z.string().min(2, 'Password must be at least 2 characters'),
 })
  
-const EmailPasswordForm: React.FC<{onSubmit: (email: string, password: string) => void, isLoading: boolean}> = ({onSubmit, isLoading}) => {
+const EmailPasswordForm: React.FC<{
+  onSubmit: (email: string, password: string) => void 
+  isLoading: boolean
+  className?: string
+}> = ({
+  onSubmit, 
+  isLoading, 
+  className
+}) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -30,12 +39,13 @@ const EmailPasswordForm: React.FC<{onSubmit: (email: string, password: string) =
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(({email, password}) => onSubmit(email, password))} className='text-left'>
+      <form onSubmit={form.handleSubmit(({email, password}) => onSubmit(email, password))} className={cn('text-left', className)}>
         <FormField
+          
           control={form.control}
           name='email'
           render={({ field }) => (
-            <FormItem>
+            <FormItem className='space-y-1'>
               <FormLabel>Email</FormLabel>
               <FormControl>
                 <Input {...field} />
@@ -48,7 +58,7 @@ const EmailPasswordForm: React.FC<{onSubmit: (email: string, password: string) =
           control={form.control}
           name='password'
           render={({ field }) => (
-            <FormItem>
+            <FormItem  className='space-y-1'>
               <FormLabel>Password</FormLabel>
               <FormControl>
                 <Input type='password' {...field} />
@@ -57,7 +67,7 @@ const EmailPasswordForm: React.FC<{onSubmit: (email: string, password: string) =
             </FormItem>
           )}
         />
-        <Button type='submit' className='w-full' disabled={isLoading}>Sign in</Button>
+        <Button type='submit' className='w-full' disabled={isLoading}>Login</Button>
       </form>
     </Form>
   )

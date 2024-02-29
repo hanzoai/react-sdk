@@ -17,7 +17,7 @@ const LoginPage = () => {
         block={{blockType: 'screenful', contentColumns: [[
           {blockType: 'element', element: <Login getStartedUrl='/' returnToUrl='/' redirectUrl={searchParams.get('redirectUrl') ?? undefined}/>} as ElementBlock,
         ]]} as ScreenfulBlock} 
-        className='w-full max-w-[30rem] mx-auto'
+        className='w-full xs:w-full sm:max-w-[320px] sm:mx-auto'
       />
     </Main>
     <Footer siteDef={siteDef} className='max-w-screen-2xl w-full pt-16 lg:mx-auto ' />
