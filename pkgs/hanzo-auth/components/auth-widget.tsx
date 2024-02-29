@@ -26,7 +26,7 @@ const AuthWidget: React.FC<{
 }) => {
 
   const auth = useAuth()
-
+  
   if (!auth.loggedIn()) {
     return (
       <LinkElement
