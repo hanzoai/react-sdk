@@ -48,7 +48,7 @@ const Cart: React.FC<PropsWithChildren & {
         <p className='mt-6 text-right border-t pt-1'>TOTAL: {c.cartTotal === 0 ? '0' : formatPrice(c.cartTotal)}</p>
       </>)}
       </div>
-      {c.cartItems.length > 0 && hideCheckout && (
+      {c.cartItems.length > 0 && !hideCheckout && (
         <>
           {!auth.loggedIn ? (
             <Button size='lg' variant='secondary' rounded='lg' className='mt-12 mx-auto' onClick={() => router.push('/login?redirectUrl=checkout')}>Login</Button>
