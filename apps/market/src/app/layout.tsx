@@ -21,12 +21,16 @@ export const viewport = {
 
 const RootLayout: React.FC<PropsWithChildren> = async ({
   children
-}) => {
+}) =>  {
   const currentUser = await getUserServerSide()
 
   return (
     <AuthServiceProvider user={currentUser} conf={{} as AuthServiceConf}>
-      <CommerceServiceProvider>
+      <CommerceServiceProvider 
+        facets={siteDef.ext.commerce.facets} 
+        categories={siteDef.ext.commerce.categories}
+        options={siteDef.ext.commerce.options}
+      >
         <RootLayoutCommon siteDef={siteDef} >
           {children}
           <Toaster />
@@ -34,5 +38,6 @@ const RootLayout: React.FC<PropsWithChildren> = async ({
       </CommerceServiceProvider>
     </AuthServiceProvider>
   )
-  }
+}
+
 export default RootLayout
