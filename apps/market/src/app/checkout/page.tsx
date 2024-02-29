@@ -8,17 +8,18 @@ import { Main } from '@hanzo/ui/primitives'
 import siteDef from '../../siteDef'
 import PayByBankTransfer from './pay-by-bank-transfer'
 import PayWithCrypto from './pay-with-crypto'
-import { useCurrentUser } from '@hanzo/auth'
+import { useAuth } from '@hanzo/auth/service'
 import { redirect } from 'next/navigation'
 import ThankYou from './thank-you'
 import ChoosePaymentMethod from './choose-payment-method'
 
 const CheckoutPage = () => {
-  const {user} = useCurrentUser()
+
+  const auth = useAuth()
   const [paymentMethod, setPaymentMethod] = useState<'crypto' | 'bank'>()
   const [step, setStep] = useState(0)
 
-  if (!user) {
+  if (!auth.loggedIn()) {
     redirect('/login')
   }
 

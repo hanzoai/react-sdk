@@ -1,6 +1,9 @@
 'use client'
 import React, { useEffect, useState } from 'react'
 
+import { autorun } from 'mobx'
+import { observer } from 'mobx-react-lite'
+
 import { ethers } from 'ethers'
 
 import { 
@@ -24,7 +27,7 @@ import {
 } from '@hanzo/ui/blocks'
 
 
-import { associateWalletAddressWithAccount, useCurrentUser } from '@hanzo/auth'
+import { useAuth } from '@hanzo/auth/service'
 import { Ethereum as EthIconFromAuth }  from '@hanzo/auth/icons'
 
 import { useCommerce } from '@hanzo/cart/service'
@@ -38,27 +41,32 @@ import Usdt from './icons/usdt'
 
 const PayWithCrypto: React.FC<{
   setStep: (step: number) => void
-}> = ({
+}> = observer(({
   setStep
 }) => {
 
   const c = useCommerce()
-  const {user, setUser} = useCurrentUser()
+  const auth = useAuth()
   const [loadingPrice, setLoadingPrice] = useState(false)
-  const [selectedToken, setSelectedToken] = useState('eth')
+  //const [selectedToken, setSelectedToken] = useState('eth')
   const [amount, setAmount] = useState<number>()
   const [availableAmount, setAvailableAmount] = useState<number>()
   const [provider, setProvider] = useState<ethers.BrowserProvider>()
 
+  //const selectedToken = 'eth'
+
   useEffect(() => {
-    const newProvider = new ethers.BrowserProvider(window.ethereum)
-    setProvider(newProvider)
-    if (user?.walletAddress) {
-      newProvider.getBalance(user?.walletAddress).then((balance) => {
-        setAvailableAmount(Number(balance)/(10**18))
-      })
-    }
-  }, [user, selectedToken])
+      // responding to changes in user.walletAddress
+    return autorun(() => {
+      const newProvider = new ethers.BrowserProvider(window.ethereum)
+      setProvider(newProvider)
+      if (auth.user?.walletAddress) {
+        newProvider.getBalance(auth.user?.walletAddress).then((balance) => {
+          setAvailableAmount(Number(balance)/(10**18))
+        })
+      }
+    })
+  }, [])
 
   // Get latest USD -> ETH exchange rate
   useEffect(() => {
@@ -107,52 +115,40 @@ const PayWithCrypto: React.FC<{
     }
   }
 
-  const connectWallet = async () => {
-    if (user) {
-      const res = await associateWalletAddressWithAccount(user?.email ?? '')
-      if (!res.error) {
-        setUser({...user, walletAddress: res.result ?? undefined})
-      }
-    }
-  }
-
-  let payWidget = (
+  const payWidget = !!!(auth.user?.walletAddress) ? (
     <div className='w-full mx-auto max-w-[20rem]'>
-      <Button variant='outline' className='w-full flex items-center gap-2' onClick={connectWallet}>
+      <Button variant='outline' className='w-full flex items-center gap-2' onClick={auth.associateWallet.bind(auth)}>
         <EthIconFromAuth height={20}/>Connect your wallet
       </Button>
     </div>
-  )
-  if (user?.walletAddress) {
-    payWidget = (
-      <div className='flex flex-col gap-2 w-full mx-auto max-w-[20rem]'>
-        <div>Cart value: {formatPrice(c.cartTotalValue)}</div>
-        <Select onValueChange={(token) => setSelectedToken(token)} defaultValue='eth'>
-          <SelectTrigger>
-            <SelectValue defaultValue='eth' />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectGroup>
-              <SelectItem value='eth'><div className='flex items-center gap-2'><Eth height={14}/>ETH</div></SelectItem>
-              {/* <SelectItem value='btc' ><div className='flex items-center gap-2'><Btc height={14}/>BTC</div></SelectItem>
-              <SelectItem value='usdt' ><div className='flex items-center gap-2'><Usdt height={14}/>USDT</div></SelectItem> */}
-            </SelectGroup>
-          </SelectContent>
-        </Select>
-        <div>Available funds in your wallet: {availableAmount} ETH</div>
-        <div>
-          <Input value={amount ? amount/(10**18) : amount} contentEditable={false}/>
-          <div className='relative flex items-center gap-2 -top-[32px] justify-end px-2 py-1 rounded-lg bg-muted-4 w-fit text-xs float-right mr-3'><Eth height={10}/>ETH</div>
-        </div>
-        <Button
-          onClick={() => sendPayment(amount ? amount/(10**18) : 0)}
-          disabled={!amount || loadingPrice}
-        >
-          Pay now
-        </Button>
+  ) : (
+    <div className='flex flex-col gap-2 w-full mx-auto max-w-[20rem]'>
+      <div>Cart value: {formatPrice(c.cartTotalValue)}</div>
+      <Select onValueChange={(token) => {/*ONLY ETH  setSelectedToken(token) */}} defaultValue='eth'>
+        <SelectTrigger>
+          <SelectValue defaultValue='eth' />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectGroup>
+            <SelectItem value='eth'><div className='flex items-center gap-2'><Eth height={14}/>ETH</div></SelectItem>
+            {/* <SelectItem value='btc' ><div className='flex items-center gap-2'><Btc height={14}/>BTC</div></SelectItem>
+            <SelectItem value='usdt' ><div className='flex items-center gap-2'><Usdt height={14}/>USDT</div></SelectItem> */}
+          </SelectGroup>
+        </SelectContent>
+      </Select>
+      <div>Available funds in your wallet: {availableAmount} ETH</div>
+      <div>
+        <Input value={amount ? amount/(10**18) : amount} contentEditable={false}/>
+        <div className='relative flex items-center gap-2 -top-[32px] justify-end px-2 py-1 rounded-lg bg-muted-4 w-fit text-xs float-right mr-3'><Eth height={10}/>ETH</div>
       </div>
-    )
-  }
+      <Button
+        onClick={() => sendPayment(amount ? amount/(10**18) : 0)}
+        disabled={!amount || loadingPrice}
+      >
+        Pay now
+      </Button>
+    </div>
+  )
 
   return (
     <ScreenfulBlockComponent 
@@ -180,6 +176,6 @@ const PayWithCrypto: React.FC<{
       }
     />
   )
-}
+})
 
 export default PayWithCrypto

@@ -1,7 +1,7 @@
 'use client'
-
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { observer } from 'mobx-react-lite'
 
 import { ArrowLeft } from 'lucide-react'
 
@@ -11,8 +11,7 @@ import { useToast } from '@hanzo/ui/primitives/use-toast'
 import type { LinkDef } from '@hanzo/ui/types'
 import { cn } from '@hanzo/ui/util'
 
-import { useCurrentUser } from '../service/AuthContext'
-import { signInWithEmailPassword, signInWithProvider, signOut } from '../lib/firebase/auth'
+import { useAuth } from '../service'
 import { Facebook, Google, GitHub } from '../icons'
 import EmailPasswordForm from './email-password-form'
 
@@ -21,14 +20,16 @@ const Login: React.FC<{
   getStartedUrl?: string,
   returnToUrl?: string,
   className?: string
-}> = ({
+}> = observer(({
   redirectUrl,
   getStartedUrl,
   returnToUrl,
   className
 }) => {
   const router = useRouter()
-  const {user, setUser} = useCurrentUser()
+  
+  const auth = useAuth()
+
   const [isLoading, setIsLoading] = useState(false)
   const { toast } = useToast()
 
@@ -40,14 +41,14 @@ const Login: React.FC<{
   const loginWithEmailPassword = async (email: string, password: string) => {
     setIsLoading(true)
     try {
-      const res = await signInWithEmailPassword(email, password)
-      if (res.success && res.user) {
-        setUser({email: res.user?.email, displayName: res.user?.displayName, walletAddress: res.user?.walletAddress})
+      const res = await auth.loginEmailAndPassword(email, password)
+      if (res.success ) {
         if (redirectUrl) {
           router.push(redirectUrl)
         }
       }
-    } catch (e) {
+    } 
+    catch (e) {
       toast({title: "User with this email already signed up using a different provider"})
     }
     setIsLoading(false)
@@ -69,26 +70,20 @@ const Login: React.FC<{
   //   setIsLoading(false)
   // }
 
-  const login = async (provider: string) => {
+  const loginWithProvider = async (provider: 'google' | 'facebook' | 'github') => {
     setIsLoading(true)
-    const res = await signInWithProvider(provider)
-    if (res.success && res.user) {
-      setUser({email: res.user?.email, displayName: res.user?.displayName, walletAddress: res.user?.walletAddress})
-      if (redirectUrl) {
-        router.push(redirectUrl)
-      }
+    const res = await auth.loginWithProvider(provider)
+    if (res.success && redirectUrl) {
+      router.push(redirectUrl)
     }
     setIsLoading(false)
   }
 
   const logout = async () => {
     setIsLoading(true)
-    const res = await signOut()
-    if (res.success) {
-      setUser(null)
-      if (redirectUrl) {
-        router.push(redirectUrl)
-      }
+    const res = await auth.logout()
+    if (res.success && redirectUrl) {
+      router.push(redirectUrl)
     }
     setIsLoading(false)
   }
@@ -96,10 +91,10 @@ const Login: React.FC<{
   return (
     <ApplyTypography className={cn('w-full', className)}>
       <div className='w-full mx-auto'>
-      {user && !redirectUrl ? (
+      {auth.loggedIn() && !redirectUrl ? (
         <div className='flex flex-col text-center gap-4'>
           <h3>Welcome!</h3>
-          <p>You are signed in as {user.displayName ?? user.email}</p>
+          <p>You are signed in as {auth.user!.displayName ?? auth.user!.email}</p>
           <div className='flex gap-4 items-center justify-center'>
             <Button onClick={() => logout()} variant='outline' disabled={isLoading}>Sign Out</Button>
             {getStartedUrl && <Button variant='primary' onClick={() => router.push(getStartedUrl)}>GET STARTED</Button>}
@@ -115,18 +110,18 @@ const Login: React.FC<{
             )}
             <h2 className='mx-auto'>Login</h2>
           </div>
-          {redirectUrl === 'checkout' && <p>You will be redirected to checkout after successful login.</p>}
+          {redirectUrl === 'checkout' && <p>You will be redirected to checkout after login.</p>}
           <EmailPasswordForm onSubmit={loginWithEmailPassword} isLoading={isLoading}/>
           {/* <Button onClick={loginWithEthereum} className='w-full mx-auto flex items-center gap-2' disabled={isLoading}>
             <Ethereum height={20}/>Sign in with your wallet
           </Button> */}
-          <Button onClick={() => login('google')} className='w-full mx-auto flex items-center gap-2' disabled={isLoading}>
+          <Button onClick={() => loginWithProvider('google')} className='w-full mx-auto flex items-center gap-2' disabled={isLoading}>
             <Google height={20}/>Sign in with Google
           </Button>
-          <Button onClick={() => login('facebook')} className='w-full mx-auto flex items-center gap-2' disabled={isLoading}>
+          <Button onClick={() => loginWithProvider('facebook')} className='w-full mx-auto flex items-center gap-2' disabled={isLoading}>
             <Facebook height={20}/>Sign in with Facebook
           </Button>
-          <Button onClick={() => login('github')} className='w-full mx-auto flex items-center gap-2' disabled={isLoading}>
+          <Button onClick={() => loginWithProvider('github')} className='w-full mx-auto flex items-center gap-2' disabled={isLoading}>
             <GitHub height={20}/>Sign in with Github
           </Button>
         </div>
@@ -134,6 +129,6 @@ const Login: React.FC<{
       </div>
     </ApplyTypography>
   )
-}
+})
 
 export default Login

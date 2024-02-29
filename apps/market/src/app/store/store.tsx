@@ -11,7 +11,7 @@ import { persistCart, useCommerce } from '@hanzo/cart/service'
 import { formatPrice } from '@hanzo/cart/util'
 
 import CartLineItem from './cart-line-item'
-import { useCurrentUser } from '@hanzo/auth'
+import { useAuth } from '@hanzo/auth/service'
 
 const Cart: React.FC<{
   className?: string
@@ -21,12 +21,12 @@ const Cart: React.FC<{
   const router = useRouter()
   const [loadingCheckout, setLoadingCheckout] = React.useState(false)
   const c = useCommerce()
-  const {user} = useCurrentUser()
+  const auth = useAuth()
 
   const checkout = async () => {
     setLoadingCheckout(true)
-    if (user?.email) {
-      await persistCart(c.cartItems, user?.email)
+    if (auth.user) {
+      await persistCart(c.cartItems, auth.user.email)
     }
     router.push('/checkout')
   }
@@ -43,7 +43,7 @@ const Cart: React.FC<{
       </div>
       {c.cartItems.length > 0 && (
         <>
-          {!user ? (
+          {!auth.loggedIn() ? (
             <Button size='lg' variant='secondary' rounded='lg' className='mt-12 mx-auto' onClick={() => router.push('/login?redirectUrl=checkout')}>Login</Button>
           ) : (
             <Button size='lg' variant='secondary' rounded='lg' className='mt-12 mx-auto' onClick={checkout} disabled={loadingCheckout}>Checkout</Button>

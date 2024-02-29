@@ -1,33 +1,33 @@
 'use client'
+import React from 'react'
 
-import { Button, LinkElement, Popover, PopoverContent, PopoverTrigger, Separator } from '@hanzo/ui/primitives'
+import { observer } from 'mobx-react-lite'
 
-import { useCurrentUser } from '../service/AuthContext'
-import { signOut, associateWalletAddressWithAccount } from '../lib/firebase/auth'
+import { 
+  Button, 
+  LinkElement, 
+  Popover, 
+  PopoverContent, 
+  PopoverTrigger, 
+  Separator 
+} from '@hanzo/ui/primitives'
+
 import type { LinkDef } from '@hanzo/ui/types'
 import { cn } from '@hanzo/ui/util'
+
+import { useAuth } from '../service'
+
 import Ethereum from '../icons/ethereum'
 
-const AuthWidget: React.FC<{className?: string}> = ({className}) => {
-  const {user, setUser} = useCurrentUser()
+const AuthWidget: React.FC<{
+  className?: string
+}> = observer(({
+  className
+}) => {
 
-  const logout = async () => {
-    const res = await signOut()
-    if (res.success) {
-      setUser(null)
-    }
-  }
+  const auth = useAuth()
 
-  const connectWallet = async () => {
-    if (user) {
-      const res = await associateWalletAddressWithAccount(user?.email ?? '')
-      if (!res.error) {
-        setUser({...user, walletAddress: res.result ?? undefined})
-      }
-    }
-  }
-
-  if (!user) {
+  if (!auth.loggedIn()) {
     return (
       <LinkElement
         def={{href: '/login', title: 'Login', variant: 'primary'} as LinkDef}
@@ -39,33 +39,37 @@ const AuthWidget: React.FC<{className?: string}> = ({className}) => {
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button variant="outline" size='icon' className={cn('rounded-full text-foreground uppercase w-9 h-9', className)}>{user?.email[0]}</Button>
+        <Button 
+          variant="outline" 
+          size='icon' 
+          className={cn('rounded-full text-foreground uppercase w-9 h-9', className)}
+        >{auth.user?.email[0]}</Button>
       </PopoverTrigger>
       <PopoverContent className='bg-level-0'>
         <div className="grid gap-4">
           <div className="space-y-2 truncate">
-            {user?.displayName ? (
+            {auth.user?.displayName ? (
               <>
-                <h4 className="font-medium leading-none truncate">{user?.displayName}</h4>
-                <p className="text-sm opacity-50 truncate">{user?.email}</p>
+                <h4 className="font-medium leading-none truncate">{auth.user.displayName}</h4>
+                <p className="text-sm opacity-50 truncate">{auth.user.email}</p>
               </>
             ) : (
-              <h4 className="font-medium leading-none truncate">{user?.email}</h4>
+              <h4 className="font-medium leading-none truncate">{auth.user?.email}</h4>
             )}
-            {user?.walletAddress ? (
-              <p className="text-sm opacity-50 truncate">{user?.walletAddress}</p>
+            {auth.user?.walletAddress ? (
+              <p className="text-sm opacity-50 truncate">{auth.user.walletAddress}</p>
             ) : (
-              <Button variant="outline" className='w-full flex items-center gap-2' onClick={connectWallet}>
+              <Button variant="outline" className='w-full flex items-center gap-2' onClick={auth.associateWallet.bind(auth)}>
                 <Ethereum height={20}/>Connect your wallet
               </Button>
             )}
           </div>
           <Separator />
-          <Button variant="outline" onClick={logout}>Logout</Button>
+          <Button variant="outline" onClick={auth.logout.bind(auth)}>Logout</Button>
         </div>
       </PopoverContent>
     </Popover>
   )
-}
+})
 
 export default AuthWidget

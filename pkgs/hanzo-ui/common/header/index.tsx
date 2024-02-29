@@ -1,6 +1,6 @@
 import React from 'react'
 
-import {AuthWidget} from '@hanzo/auth'
+import { AuthWidget } from '@hanzo/auth/components'
 import type { SiteDef } from '../../types'
 import { NavItems } from '../../primitives'
 import { Icons, DrawerMenu, Logo } from '..'

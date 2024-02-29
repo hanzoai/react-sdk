@@ -6,10 +6,10 @@ import '@hanzo/ui/style/globals.css'
 import siteDef from '../siteDef'
 import _metadata from '../metadata'
 import { CommerceServiceProvider } from '@hanzo/cart/service'
-import { AuthServiceProvider } from '@hanzo/auth'
-import { getCurrentUserServerSide } from '@hanzo/auth/server'
+import { AuthServiceProvider } from '@hanzo/auth/service'
+import { getUserServerSide } from '@hanzo/auth/server'
 import { Toaster } from '@hanzo/ui/primitives'
-import { getWalletAddressFromFirestore } from '@hanzo/auth/lib/firebase/auth'
+import type { AuthServiceConf } from '@hanzo/auth/types'
 
 export const metadata = {
   ..._metadata
@@ -22,11 +22,10 @@ export const viewport = {
 const RootLayout: React.FC<PropsWithChildren> = async ({
   children
 }) => {
-  const currentUser = await getCurrentUserServerSide()
-  const walletAddress = await getWalletAddressFromFirestore(currentUser?.email ?? '')
+  const currentUser = await getUserServerSide()
 
   return (
-    <AuthServiceProvider user={currentUser?.email ? {email: currentUser.email, displayName: currentUser.displayName, walletAddress: walletAddress.result} : null}>
+    <AuthServiceProvider user={currentUser} conf={{} as AuthServiceConf}>
       <CommerceServiceProvider>
         <RootLayoutCommon siteDef={siteDef} >
           {children}
