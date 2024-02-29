@@ -11,6 +11,8 @@ import { getUserServerSide } from '@hanzo/auth/server'
 import { Toaster } from '@hanzo/ui/primitives'
 import type { AuthServiceConf } from '@hanzo/auth/types'
 
+import Header from '@/components/header'
+
 export const metadata = {
   ..._metadata
 }
@@ -31,7 +33,8 @@ const RootLayout: React.FC<PropsWithChildren> = async ({
         categories={siteDef.ext.commerce.categories}
         options={siteDef.ext.commerce.options}
       >
-        <RootLayoutCommon siteDef={siteDef} >
+        <RootLayoutCommon siteDef={siteDef} header={false} >
+          <Header siteDef={siteDef}/>
           {children}
           <Toaster />
         </RootLayoutCommon>

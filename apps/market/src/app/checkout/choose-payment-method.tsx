@@ -7,8 +7,8 @@ import { cn } from '@hanzo/ui/util'
 
 import { useCommerce } from '@hanzo/cart/service'
 import { formatPrice } from '@hanzo/cart/util'
+import { Cart } from '@hanzo/cart/components'
 
-import CartLineItem from '../store/cart-line-item' // :aa todo
 
 const ChoosePaymentMethod: React.FC<{
   paymentMethod?: 'crypto' | 'bank',
@@ -24,12 +24,7 @@ const ChoosePaymentMethod: React.FC<{
 
   const cart = (
     <div className='border p-6 rounded-lg w-full max-w-[70rem] mx-auto'>
-      {c.cartItems.length === 0 ? (
-        <p>No items in cart</p>
-      ) : (<>
-        {c.cartItems.map((item, i) => (<CartLineItem item={item} key={item.product.sku} className='mb-2'/>))}
-        <p className='mt-6 text-right border-t pt-1'>TOTAL: {c.cartTotalValue === 0 ? '0' : formatPrice(c.cartTotalValue)}</p>
-      </>)}
+      <Cart className=''></Cart>
     </div>
   )
 

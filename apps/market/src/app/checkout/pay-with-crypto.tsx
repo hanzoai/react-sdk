@@ -74,7 +74,7 @@ const PayWithCrypto: React.FC<{
         .then(res => res.json())
         .then((exchangeRate) => {
           const oneUsdInWei = (10**18) / exchangeRate.data.amount
-          const usdAmountInWei = oneUsdInWei * c.cartTotalValue
+          const usdAmountInWei = oneUsdInWei * c.cartTotal 
           setAmount(usdAmountInWei)
           setLoadingPrice(false)
         })
@@ -87,7 +87,7 @@ const PayWithCrypto: React.FC<{
     const interval = setInterval(fetchPrice, 30000)
 
     return () => clearInterval(interval)
-  }, [c.cartTotalValue])
+  }, [c.cartTotal])
 
   const sendPayment = async (ether: number) => {
     // Check that we are on ethereum network
@@ -140,7 +140,7 @@ const PayWithCrypto: React.FC<{
     </div>
   ) : (
     <div className='flex flex-col gap-2 w-full mx-auto max-w-[20rem]'>
-      <div>Cart value: {formatPrice(c.cartTotalValue)}</div>
+      <div>Cart value: {formatPrice(c.cartTotal)}</div>
       <Select onValueChange={(token) => {/*ONLY ETH  setSelectedToken(token) */}} defaultValue='eth'>
         <SelectTrigger>
           <SelectValue defaultValue='eth' />

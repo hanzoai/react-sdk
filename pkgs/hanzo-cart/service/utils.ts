@@ -10,8 +10,8 @@ export default async function persistCart(cart: LineItem[], userEmail: string) {
     const ordersRef = collection(db, "orders");
 
     const cartAsObject = cart.reduce((acc, item) => {
-        acc[item.product.id] = {
-            product: item.product,
+        acc[item.id] = {
+            //product: item.product,
             quantity: item.quantity
         }
         return acc
