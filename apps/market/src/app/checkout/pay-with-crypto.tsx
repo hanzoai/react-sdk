@@ -32,8 +32,6 @@ import { Ethereum as EthIconFromAuth }  from '@hanzo/auth/icons'
 
 import { useCommerce } from '@hanzo/cart/service'
 import { formatPrice } from '@hanzo/cart/util'
-  // :aa TODO
-import { CRYPTO_PAYMENT_ADDRESS } from '@/settings/checkout'
 
 import Eth from './icons/eth'
 import Btc from './icons/btc'
@@ -72,11 +70,10 @@ const PayWithCrypto: React.FC<{
   useEffect(() => {
     const fetchPrice = () => {
       setLoadingPrice(true)
-                // :aa TODO setting or env
-      fetch('https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd')
+      fetch(process.env.NEXT_PUBLIC_ETH_EXCHANGE_RATE_API ?? '')
         .then(res => res.json())
         .then((exchangeRate) => {
-          const oneUsdInWei = (10**18) / exchangeRate.ethereum.usd
+          const oneUsdInWei = (10**18) / exchangeRate.data.amount
           const usdAmountInWei = oneUsdInWei * c.cartTotalValue
           setAmount(usdAmountInWei)
           setLoadingPrice(false)
@@ -93,24 +90,44 @@ const PayWithCrypto: React.FC<{
   }, [c.cartTotalValue])
 
   const sendPayment = async (ether: number) => {
+    // Check that we are on ethereum network
     try {
-      if (!provider)
-              // :aa TODO string table
+      await window.ethereum.request({
+        method: 'wallet_switchEthereumChain',
+        params: [{ chainId: "0x1"}],
+      })
+      const newProvider = new ethers.BrowserProvider(window.ethereum)
+      setProvider(newProvider)
+      if (auth.user?.walletAddress) {
+        newProvider.getBalance(auth.user?.walletAddress).then((balance) => {
+          setAvailableAmount(Number(balance)/(10**18))
+        })
+      }
+    } catch (err) {
+      toast({title: 'Please switch your wallet to the Ethereum network.'})
+      return
+    }
+
+    try {
+      if (!provider) {
+        // :aa TODO string table
         throw new Error('No crypto wallet found. Please install it.')
+      }
   
       await window.ethereum.send('eth_requestAccounts')
 
       const signer = await provider.getSigner()
-      ethers.getAddress(CRYPTO_PAYMENT_ADDRESS)
+      ethers.getAddress(process.env.NEXT_PUBLIC_ETH_PAYMENT_ADDRESS ?? '')
       const tx = await signer.sendTransaction({
-        to: CRYPTO_PAYMENT_ADDRESS,
+        to: process.env.NEXT_PUBLIC_ETH_PAYMENT_ADDRESS,
         value: ethers.parseEther(ether.toString())
       })
-      console.log({ ether, addr: CRYPTO_PAYMENT_ADDRESS })
+      console.log({ ether, addr: process.env.NEXT_PUBLIC_ETH_PAYMENT_ADDRESS })
       console.log('tx', tx)
       setStep(2)
     } catch (err) {
-        // :aa TODO string table
+      console.log(err)
+      // :aa TODO string table
       toast({title: 'Not enough funds in your wallet'})
     }
   }
