@@ -1,5 +1,6 @@
 import React from 'react'
 
+import { AuthWidget } from '@hanzo/auth/components'
 import type { SiteDef } from '../../types'
 import { NavItems } from '../../primitives'
 import { Icons, DrawerMenu, Logo } from '..'
@@ -19,7 +20,7 @@ const Header: React.FC<{
   const allElements = (featured) ? [...common, ...featured] : common
     // TODO move 13px into a size class and configure twMerge to recognize say, 'text-size-nav' 
     // (vs be beat out by 'text-color-nav')
-  const navItemClx = 'font-heading h-8 tracking-[-0.3px] !text-[13px]/[13px]'
+  const navItemClx = 'font-nav h-8 !text-[13px]/[13px]'
 
   return (
     <header className={cn('bg-background sticky z-10 top-0 ', className)} >
@@ -31,7 +32,7 @@ const Header: React.FC<{
         <Logo size='md' className='hidden lg:flex' key='two'/>
         <Logo size='sm' className='hidden md:flex lg:hidden' key='one'/>
         {/* md or larger */}
-        <div className='flex gap-2 items-center'>
+        <div className='flex gap-7 items-center'>
           <NavItems 
             currentAs={siteDef.currentAs}
             items={allElements} 
@@ -39,12 +40,16 @@ const Header: React.FC<{
             itemClx={navItemClx} 
             key='three'
           />
+          {siteDef.nav.auth && <AuthWidget/>}
+          {siteDef.nav.cart}
         </div>
       </div>
       {/* smaller than md: mobile style drawer menu */}
       <div className="flex md:hidden h-[44px] items-center justify-between px-2">
         <Logo size='sm' />
-        <div className='flex gap-2'>
+        <div className='flex gap-4'>
+          {siteDef.nav.cart}
+          {siteDef.nav.auth && <AuthWidget/>}
           <DrawerMenu 
             className='p-0 text-primary' // ui has 'text-inherit', so need this for close buttons to appear.
             trigger={<Icons.burger className='h-7 w-7'/>}

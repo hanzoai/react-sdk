@@ -11,6 +11,7 @@ import type { LineItem } from '../types'
 const AddToCartWidget: React.FC<{ 
   item: LineItem
   ghost?: boolean
+  disabled?: boolean
   className?: string
   isMobile?: boolean
   wide?: boolean
@@ -18,14 +19,22 @@ const AddToCartWidget: React.FC<{
 }> = observer(({
   item,
   ghost=false,
+  disabled=false,
   className='',
-  isMobile=false,
   size='xs'
 }) => {
 
-  const iconClx = ghost && !isMobile ? 'h-3 w-3 text-muted-3 hover:text-foreground' : 'h-5 w-5 mr-1'
-  const digitClx = ghost && !isMobile ? 'px-1' : 'px-2 font-bold '
-  
+  const iconClx = ghost ? 'h-3 w-3 text-muted-3 hover:text-foreground' : 'h-5 w-5 mr-1'
+  const digitClx = ghost ? 'px-1' : 'px-2 font-bold '
+
+  if (disabled) {
+    return (
+      <div className={cn('flex flex-row items-stretch ' + (ghost ? 'bg-transparent  rounded-xl' : 'bg-secondary rounded-xl'), className)}>
+        <div className={'text-sm flex items-center cursor-default ' + digitClx} >{item.quantity}</div>
+      </div>
+    )
+  }
+
   return ( item.isInCart ? (
     <div className={cn('flex flex-row items-stretch justify-center ' + (ghost ? 'bg-transparent  rounded-xl' : 'bg-secondary rounded-xl'), className)}>
       <Button
