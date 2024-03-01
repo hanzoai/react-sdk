@@ -11,8 +11,8 @@
   "license": "BSD-3-Clause",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/hanzoai/ui.git",
-    "directory": "pkgs/hanzo-cart"
+    "url": "git+https://github.com/hanzoai/react-sdk.git",
+    "directory": "packages/commerce"
   },
   "keywords": [
     "cart",
