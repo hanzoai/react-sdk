@@ -1,6 +1,6 @@
 {
   "name": "@hanzo/commerce",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "Library with shopping cart components.",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
