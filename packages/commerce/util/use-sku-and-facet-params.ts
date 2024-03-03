@@ -146,7 +146,7 @@ const useSkuAndFacetParams = (
     if (level1 && level2) {
       const categories = cmmc.setFacets(facets)
       if (categories && categories.length > 0) {
-        cmmc.setCurrentItem(categories?.[0].products[0].sku)
+        cmmc.setCurrentItem(categories[0].products[0].sku)
         setMessage(undefined)
       }
       else {

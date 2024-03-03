@@ -75,7 +75,7 @@ class StandaloneCommerceService
     this._categoryMap.forEach((cat) => {
       result = [...result, ...(cat.products as LineItem[]).filter((item) => (item.isInCart))]
     })
-    return result
+    return result.sort((it1, it2) => ((it1 as ObservableLineItem).time - (it2 as ObservableLineItem).time))
   }
   
   get cartTotal(): number {

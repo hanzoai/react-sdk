@@ -18,7 +18,8 @@ class ObsLineItem implements LineItem {
   categoryId: string  
   desc?: string
   price: number
-  img?: string  
+  img?: string 
+  time: number = 0 // timestamp of being added to cart
 
   constructor(prod: Product) {
     this.id = prod.id
@@ -32,6 +33,7 @@ class ObsLineItem implements LineItem {
 
     makeObservable(this, {
       qu: observable,
+      time: observable,
       canDecrement: computed,  
       isInCart: computed,
       
@@ -44,11 +46,20 @@ class ObsLineItem implements LineItem {
   get quantity(): number {return this.qu}
   get isInCart(): boolean {return this.qu > 0}
 
-  increment(): void { this.qu++ }
+  increment(): void { 
+    if (this.qu === 0) {
+      this.time = new Date().getTime()
+    }
+    this.qu++ 
+  }
+
 
   decrement(): void {
     if (this.canDecrement) {
       this.qu--
+      if (this.qu === 0) {
+        this.time = 0  
+      }
     }
   }
 
