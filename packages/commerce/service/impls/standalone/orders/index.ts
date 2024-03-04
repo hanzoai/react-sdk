@@ -23,12 +23,15 @@ const getDBInstance = (name: string): Firestore => {
  
 interface SavedOrder {
   email: string
+  paymentMethod: string
+  status: string
   timestamp: FieldValue
   items: ActualLineItemSnapshot[]
 }
 
 const createOrder = async (
   email: string,
+  paymentMethod: string,
   items: ActualLineItemSnapshot[],
   options: {
     dbName: string
@@ -45,6 +48,8 @@ const createOrder = async (
   try {
     await setDoc(doc(ordersRef, `${email}-${new Date().toISOString()}`), {
       email,
+      paymentMethod,
+      status: 'open',
       timestamp: serverTimestamp(),
       items,
     } satisfies SavedOrder)

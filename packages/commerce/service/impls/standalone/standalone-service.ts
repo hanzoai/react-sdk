@@ -84,9 +84,9 @@ class StandaloneService
     })
   }
 
-  async createOrder(email: string): Promise<void> {
+  async createOrder(email: string, paymentMethod: string): Promise<void> {
     const snapshot = this.takeSnapshot()
-    createOrderHelper(email, snapshot.items, this._options) // didn't want to have two levels of 'items'
+    createOrderHelper(email, paymentMethod, snapshot.items, this._options) // didn't want to have two levels of 'items'
   }
 
   takeSnapshot = (): StandaloneServiceSnapshot => ({
