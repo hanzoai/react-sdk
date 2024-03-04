@@ -41,7 +41,7 @@ const Cart: React.FC<PropsWithChildren & {
       </div>
       {cmmc.cartItems.length > 0 && !hideCheckout && (
         <>
-          {!auth.loggedIn ? (
+          {!(auth && auth.loggedIn) ? (
             <Button size='sm' variant='secondary' rounded='lg' className='mt-12 mx-auto' onClick={() => router.push('/login?redirectUrl=checkout')}>Login to checkout</Button>
           ) : (
             <Button size='lg' variant='secondary' rounded='lg' className='mt-12 mx-auto' onClick={() => router.push('/checkout')}>Checkout</Button>

@@ -136,13 +136,14 @@ class StandaloneService
           }
         }
       }
-      
-      let foundItem: ActualLineItem | undefined = undefined
-      this._categoryMap.forEach((category, categoryId) => {
-        if (foundItem) return
-        if (categoriesTried.includes(categoryId)) return
-        foundItem = category.products.find((p) => (p.sku === skuToFind)) as ActualLineItem | undefined
-      }) 
+      for( const [categoryId, category] of this._categoryMap.entries()) {
+        if (categoriesTried.includes(categoryId)) continue
+        const foundItem = category.products.find((p) => (p.sku === skuToFind)) as ActualLineItem | undefined
+        if (foundItem) {
+          return foundItem as ActualLineItem
+        }
+      }
+      return undefined
     })();
 
     return !!this._currentItem
