@@ -7,7 +7,7 @@ import { Button } from '@hanzo/ui/primitives'
 import { cn } from '@hanzo/ui/util'
 import { useAuth } from '@hanzo/auth/service'
 
-import { persistCart, useCommerce } from '../service'
+import { useCommerce } from '../service/context'
 import { formatPrice } from '../util'
 
 import CartLineItem from './cart-line-item'
@@ -30,7 +30,7 @@ const Cart: React.FC<PropsWithChildren & {
   const checkout = async () => {
     setLoadingCheckout(true)
     if (auth.user) {
-      await persistCart(cmmc.cartItems, auth.user.email)
+      await cmmc.createOrder(auth.user.email)
     }
     router.push('/checkout')
   }
@@ -50,7 +50,7 @@ const Cart: React.FC<PropsWithChildren & {
       {cmmc.cartItems.length > 0 && !hideCheckout && (
         <>
           {!auth.loggedIn ? (
-            <Button size='lg' variant='secondary' rounded='lg' className='mt-12 mx-auto' onClick={() => router.push('/login?redirectUrl=checkout')}>Login</Button>
+            <Button size='sm' variant='secondary' rounded='lg' className='mt-12 mx-auto' onClick={() => router.push('/login?redirectUrl=checkout')}>Login to checkout</Button>
           ) : (
             <Button size='lg' variant='secondary' rounded='lg' className='mt-12 mx-auto' onClick={checkout} disabled={loadingCheckout}>Checkout</Button>
           )}

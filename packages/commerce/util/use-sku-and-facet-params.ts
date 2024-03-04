@@ -11,8 +11,8 @@ import {
   parseAsBoolean,
 } from 'next-usequerystate'
 
-import type { Category, FacetsValue, StringMutator } from '../types'
-import { useCommerce } from '../service'
+import type { FacetsValue, StringMutator } from '../types'
+import { useCommerce } from '../service/context'
 
 const PLEASE_SELECT_FACETS = 'Please select an option from each group above.'
 
