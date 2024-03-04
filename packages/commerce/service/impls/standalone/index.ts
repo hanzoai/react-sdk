@@ -1,31 +1,54 @@
+import { enableStaticRendering } from 'mobx-react-lite'
+
 import type { CommerceService, Category, FacetsDesc } from '../../../types'
 import StandaloneService, {type StandaloneServiceOptions} from './standalone-service'
 
+import { readSnapshot, listenAndWriteSnapshots } from './localStorage'
+
+enableStaticRendering(typeof window === "undefined")
+
+const _log = (s: string) => {
+  const d = new Date()
+  console.log(`TIMESTAMPED: ${d.getUTCMinutes()}:${d.getUTCSeconds()}:${d.getUTCMilliseconds()}`)
+  console.log(s)
+}
 
 // https://dev.to/ivandotv/mobx-server-side-rendering-with-next-js-4m18
 
-let instance: CommerceService | undefined =  undefined
+let instance: StandaloneService | undefined =  undefined
 
-export const getInstance =  (categories: Category[], facets: FacetsDesc, options?: StandaloneServiceOptions): CommerceService => {
+export const getInstance = (
+  categories: Category[], 
+  facets: FacetsDesc, 
+  options?: StandaloneServiceOptions
+): CommerceService => {
 
   if (!options) {
-    throw new Error('Standalone Commerce Service require config options!')
+    throw new Error('cmmc getInstance(): Standalone Commerce Service requires config options!')
   }
 
-  const _instance = instance ?? 
-    new StandaloneService(
+   if (typeof window === "undefined") {
+    //_log("NEW INSTANCE FOR SERVER")
+    return new StandaloneService(
       categories, 
       facets, 
       options
     )
-      // For server side rendering always create a new store
-  if (typeof window === "undefined") return _instance
+  }
 
-    // Create the store once in the client
+    // Client side, create the store only once in the client
   if (!instance) {
-    instance = _instance
+    //_log("NEW INSTANCE FOR CLIENT")
+    const snapShot = readSnapshot()
+    instance = new StandaloneService(
+      categories, 
+      facets, 
+      options,
+      snapShot
+    )
+    listenAndWriteSnapshots(instance)
   }  
 
-  return _instance
+  return instance
 }
 

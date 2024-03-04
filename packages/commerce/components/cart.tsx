@@ -17,6 +17,7 @@ const Cart: React.FC<PropsWithChildren & {
   isMobile?: boolean,
   hideCheckout?: boolean
 }> = observer(({
+    /** Children is the heading area. */
   children,
   className='',
   isMobile=false,
@@ -39,12 +40,12 @@ const Cart: React.FC<PropsWithChildren & {
     <div className={cn('border p-6 rounded-lg', className)}>
       {children}
       <div className='mt-2'>
-        {!!children && <div className='h-[1px] w-pr-80 mx-auto bg-muted-3'/>}
+        {!!children && <div className='h-[1px] w-pr-80 mb-3 mx-auto bg-muted-3'/>}
       {cmmc.cartItems.length === 0 ? (
         <p className='text-center mt-4'>No items in cart</p>
       ) : (<>
         {cmmc.cartItems.map((item, i) => (<CartLineItem isMobile={isMobile} item={item} key={item.sku} className='mb-4 sm:mb-2'/>))}
-        <p className='mt-6 text-right border-t pt-1'>TOTAL: {cmmc.cartTotal === 0 ? '0' : formatPrice(cmmc.cartTotal)}</p>
+        <p className='mt-6 text-right border-t pt-1'>TOTAL: <span className='font-semibold'>{cmmc.cartTotal === 0 ? '0' : formatPrice(cmmc.cartTotal)}</span></p>
       </>)}
       </div>
       {cmmc.cartItems.length > 0 && !hideCheckout && (
