@@ -20,7 +20,7 @@ const BulletCardsBlockComponent: React.FC<BlockComponentProps> = ({
   const specified = (s: string) => (containsToken(b.specifiers, s))
   
   const noBorder = specified('no-card-border') ? 'border-0' : 'md:border'
-  const mobileTextXs = specified('mobile-text-xs') ? 'text-xs' : 'text-sm'
+  const mobileTextXs = specified('mobile-small-text') ? 'text-xs' : 'text-sm'
 
   const borderclx = specified('border-muted-3') ? 
     'md:border-muted-3' 

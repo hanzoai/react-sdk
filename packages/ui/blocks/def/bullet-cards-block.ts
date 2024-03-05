@@ -6,7 +6,7 @@ interface BulletCardsBlock extends Block {
   blockType: 'bullet-cards'
     /**
      * no-card-border
-     * mobile-text-xs
+     * mobile-small-text
      * borders-muted-1 / borders-muted-3 
      * default: 2 
      */

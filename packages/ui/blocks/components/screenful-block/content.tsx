@@ -70,6 +70,9 @@ const ContentColumn: React.FC<{
     modifiers += 'typography-headings:text-center '  
   }
 
+  /* ContentComponent's parent div needs h-full class in order for vertical alignment with flexbox to work.
+  *  This affects specifiers: bottom, vert-center, mobile-vert-center
+  */
   return (
     <div className={cn('flex flex-col justify-center h-full', modifiers, className)} >
       <ContentComponent blocks={blocks} agent={agent} />
