@@ -71,7 +71,7 @@ const ContentColumn: React.FC<{
   }
 
   return (
-    <div className={cn('flex flex-col justify-center ' + modifiers, className)} >
+    <div className={cn('flex flex-col justify-center h-full', modifiers, className)} >
       <ContentComponent blocks={blocks} agent={agent} />
     </div>
   )
