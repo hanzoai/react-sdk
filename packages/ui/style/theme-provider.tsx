@@ -9,8 +9,8 @@ const ThemeProvider: React.FC<ThemeProviderProps> = ({ children, ...props }) => 
     attribute="class" 
     {...props}
     value={{
-      light: 'lux-light-theme',
-      dark: 'lux-dark-theme'
+      light: 'hanzo-ui-light-theme',
+      dark: 'hanzo-ui-dark-theme'
     }}
   >
     {children}

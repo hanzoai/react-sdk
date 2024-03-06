@@ -1,22 +1,4 @@
-import luxTwFonts  from './lux-tw-fonts'
-import type TwFontDesc from './tw-font-desc'
-
-export const fontFamily = (ignoreTheme: any): {
-  [key: string]: string[] 
-} => {
-
-  let result: any = {}
-  luxTwFonts.forEach((font: TwFontDesc) => {
-    result[font.twName] = font.fontFamily
-    // eg: heading: ['var(--font-druk-text-wide)']
-  })
-
-  return result as {
-    [key: string]: string[] 
-  }
-}
-
-export const fontSize = {
+export default {
   xxs: ['0.65rem', { lineHeight: '0.8rem' }],    // very fine print               
   xs: ['0.8rem', { lineHeight: '1rem' }],       // fine print               
   sm: ['0.9rem', { lineHeight: '1.2rem' }],     // 'standard' some news article cards  (set manually when using typography-sm)

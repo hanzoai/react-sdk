@@ -6,7 +6,8 @@ import colors from './colors.tailwind'
 import safelist from './safelist.tailwind'
 import screens from './screens.tailwind'
 import spacing from './spacing.tailwind'
-import { fontFamily, fontSize} from './fonts.tailwind'
+import fontSize from './fontSize.tailwind'
+import fontFamily from './fontFamily.tailwind'
 import typographyPlugin from './typo-plugin'
 
 export default {
@@ -296,7 +297,7 @@ export default {
       0: '0',
       DEFAULT: '1',
     },
-    fontFamily,
+    fontFamily, 
     fontSize,
     fontWeight: {
       thin: '100',
