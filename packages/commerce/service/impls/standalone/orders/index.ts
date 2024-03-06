@@ -72,12 +72,12 @@ const updateOrder = async (
   email: string,
   paymentMethod: string,
   // TODO: add shippingInfo type
-  shippingInfo: any,
   items: ActualLineItemSnapshot[],
   options: {
     dbName: string
     ordersTable: string
-  }
+  },
+  shippingInfo?: any
 ): Promise<{
   success: boolean,
   error: any
