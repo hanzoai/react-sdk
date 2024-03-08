@@ -1,22 +1,23 @@
 'use client'
 
 import { useEffect, useState }  from 'react'
+import { ChevronLeft } from 'lucide-react'
+import { observer } from 'mobx-react-lite'
 
-import { Dialog, DialogContent, Main, Separator } from '@hanzo/ui/primitives'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
 import { useForm } from 'react-hook-form'
 
-import { EnhHeadingBlockComponent, type EnhHeadingBlock } from '@hanzo/ui/blocks'
+import { ApplyTypography, Button, Main, Separator } from '@hanzo/ui/primitives'
 import { cn } from '@hanzo/ui/util'
+import { useAuth } from '@hanzo/auth/service'
+import { LoginComponent } from '@hanzo/auth/components'
+
 import ShippingInfo from './shipping-info'
 import ThankYou from './thank-you'
-import { useAuth } from '@hanzo/auth/service'
 import PayWithCrypto from './pay-with-crypto'
 import PayByBankTransfer from './pay-by-bank-transfer'
 import ContactInfo from './contact-info'
-import { LoginComponent } from '@hanzo/auth/components'
-import { observer } from 'mobx-react-lite'
 import { Cart } from '..'
 import { useCommerce } from '../../service/context'
 
@@ -25,7 +26,7 @@ const contactFormSchema = z.object({
   email: z.string().email(),
 })
 
-const Checkout: React.FC<{isOpen: boolean, toogleCheckout: () => void}> = observer(({isOpen, toogleCheckout}) => {
+const Checkout: React.FC<{toggleCheckout: () => void}> = observer(({toggleCheckout}) => {
   const auth = useAuth()
   const cmmc = useCommerce()
   
@@ -85,37 +86,48 @@ const Checkout: React.FC<{isOpen: boolean, toogleCheckout: () => void}> = observ
   const steps = [step1, step2, step3, step4]
 
   return (
-    <Dialog open={isOpen} onOpenChange={toogleCheckout}>
-      <DialogContent className="absolute !max-w-none w-full h-full bg-background z-[51]">        
-        <Main className='grid grid-cols-5 justify-center gap-8 overflow-y-auto'>
-          <Cart hideCheckout className='col-span-2 hidden md:flex justify-center border-none w-full'/>
+    <div className="fixed top-0 left-0 !max-w-none w-full h-full min-h-screen bg-background z-[51]">        
+      <Main className='grid grid-cols-5 justify-center gap-8 overflow-y-auto h-full'>
+        <Button
+          variant='ghost'
+          size='icon'
+          className='absolute sm:ml-2 sm:mt-2'
+          onClick={() => {
+            setCurrentStep(0)
+            toggleCheckout()
+          }}
+        >
+          <ChevronLeft/>
+        </Button>
 
-          <div className='flex flex-col gap-8 sm:gap-14 col-span-5 md:col-span-3 max-w-[40rem] mx-auto'>
-            <EnhHeadingBlockComponent block={{blockType: 'enh-heading',
-              specifiers: 'center',
-              heading: { text: `FINALIZE PAYMENT`, level: 3 },
-            } as EnhHeadingBlock}/>
-            <div className='flex gap-2 mx-auto items-center text-xxs sm:text-base'>
-              <div className={cn('w-6 h-6 rounded-full border border-foreground flex flex-col justify-center items-center', currentStep === 1 ? 'bg-foreground text-muted-4' : '')}>
-                1
-                <div className='relative text-foreground top-2 h-0 whitespace-nowrap'>Contact info</div>
-              </div>
-              <Separator className='w-[4rem] sm:w-[6rem]'/>
-              <div className={cn('w-6 h-6 rounded-full border border-foreground flex flex-col justify-center items-center', currentStep === 2 ? 'bg-foreground text-muted-4' : '')}>
-                2
-                <div className='relative text-foreground top-2 h-0 whitespace-nowrap'>Payment</div>
-              </div>
-              <Separator className='w-[4rem] sm:w-[6rem]'/>
-              <div className={cn('w-6 h-6 rounded-full border border-foreground flex flex-col justify-center items-center', currentStep === 3 ? 'bg-foreground text-muted-4' : '')}>
-                3
-                <div className='relative text-foreground top-2 h-0 whitespace-nowrap'>Shipping info</div>
-              </div>
+        <div className='col-span-2 hidden md:flex'>
+          <Cart hideCheckout className='fixed justify-center border-none mt-10 w-1/3 max-w-[40rem]'/>
+        </div>
+
+        <div className='flex flex-col gap-8 sm:gap-14 col-span-5 md:col-span-3 max-w-[40rem] mx-auto'>
+          <ApplyTypography className='w-full'>
+            <h3 className='!text-center w-1/2 mx-auto sm:w-full sm:mt-5'>FINALIZE PAYMENT</h3>
+          </ApplyTypography>
+          <div className='flex gap-2 mx-auto items-center text-xxs sm:text-base'>
+            <div className={cn('w-6 h-6 rounded-full border border-foreground flex flex-col justify-center items-center', currentStep === 1 ? 'bg-foreground text-muted-4' : '')}>
+              1
+              <div className='relative text-foreground top-2 h-0 whitespace-nowrap'>Contact info</div>
             </div>
-            {steps[currentStep - 1]}
+            <Separator className='w-[4rem] sm:w-[6rem]'/>
+            <div className={cn('w-6 h-6 rounded-full border border-foreground flex flex-col justify-center items-center', currentStep === 2 ? 'bg-foreground text-muted-4' : '')}>
+              2
+              <div className='relative text-foreground top-2 h-0 whitespace-nowrap'>Payment</div>
+            </div>
+            <Separator className='w-[4rem] sm:w-[6rem]'/>
+            <div className={cn('w-6 h-6 rounded-full border border-foreground flex flex-col justify-center items-center', currentStep === 3 ? 'bg-foreground text-muted-4' : '')}>
+              3
+              <div className='relative text-foreground top-2 h-0 whitespace-nowrap'>Shipping info</div>
+            </div>
           </div>
-        </Main>
-      </DialogContent>
-    </Dialog>
+          {steps[currentStep - 1]}
+        </div>
+      </Main>
+    </div>
   )
 })
 

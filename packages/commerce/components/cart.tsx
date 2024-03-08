@@ -44,7 +44,7 @@ const Cart: React.FC<PropsWithChildren & {
           {cmmc.cartItems.length > 0 && (
             <Button size='lg' variant='secondary' rounded='lg' className='mt-12 mx-auto' onClick={() => setIsCheckoutOpen(!isCheckoutOpen)}>Checkout</Button>
           )}
-          <Checkout isOpen={isCheckoutOpen} toogleCheckout={() => setIsCheckoutOpen(!isCheckoutOpen)}/>
+          {isCheckoutOpen && <Checkout toggleCheckout={() => setIsCheckoutOpen(!isCheckoutOpen)}/>}
         </>
       )}
     </div>
