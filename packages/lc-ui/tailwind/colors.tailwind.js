@@ -1,3 +1,4 @@
+
 export default ({ colors }) => ({
   inherit: colors.inherit,
   current: colors.current,

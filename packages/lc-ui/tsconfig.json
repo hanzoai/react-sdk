@@ -2,7 +2,7 @@
   "extends": "../tsconfig.hanzo-modules.base.json",
   "include": [
     "**/*.ts",
-    "**/*.tsx",
+    "**/*.tsx", "tailwind/index.ts", "tailwind/index.ts",
   ],
   "exclude": [
     "node_modules",
