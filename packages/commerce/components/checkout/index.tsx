@@ -88,7 +88,7 @@ const Checkout: React.FC<{isOpen: boolean, toogleCheckout: () => void}> = observ
     <Dialog open={isOpen} onOpenChange={toogleCheckout}>
       <DialogContent className="absolute !max-w-none w-full h-full bg-background z-[51]">        
         <Main className='grid grid-cols-5 justify-center gap-8 overflow-y-auto'>
-          <Cart hideCheckout className='col-span-2 hidden md:flex justify-center border-none'/>
+          <Cart hideCheckout className='col-span-2 hidden md:flex justify-center border-none w-full'/>
 
           <div className='flex flex-col gap-8 sm:gap-14 col-span-5 md:col-span-3 max-w-[40rem] mx-auto'>
             <EnhHeadingBlockComponent block={{blockType: 'enh-heading',

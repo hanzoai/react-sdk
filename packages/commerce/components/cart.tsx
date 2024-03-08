@@ -28,16 +28,16 @@ const Cart: React.FC<PropsWithChildren & {
   return (
     <div className={cn('border p-4 rounded-lg', className)}>
       {children}
-      <div className='mt-2'>
+      <div className='mt-2 w-full'>
         {!!children && <div className='h-[1px] w-pr-80 mb-4 mx-auto bg-muted-3'/>}
-      {cmmc.cartItems.length === 0 ? (
-        <p className='text-center mt-4'>No items in cart</p>
-      ) : (<>
-        {cmmc.cartItems.map((item, i) => (
-          <CartLineItem isMobile={isMobile} item={item} key={item.sku} className='mb-2 md:mb-3'/>
-        ))}
-        <p className='mt-6 text-right border-t pt-1'>TOTAL: <span className='font-semibold'>{cmmc.cartTotal === 0 ? '0' : formatPrice(cmmc.cartTotal)}</span></p>
-      </>)}
+        {cmmc.cartItems.length === 0 ? (
+          <p className='text-center mt-4'>No items in cart</p>
+        ) : (<>
+          {cmmc.cartItems.map((item, i) => (
+            <CartLineItem isMobile={isMobile} item={item} key={item.sku} className='mb-2 md:mb-3'/>
+          ))}
+          <p className='mt-6 text-right border-t pt-1'>TOTAL: <span className='font-semibold'>{cmmc.cartTotal === 0 ? '0' : formatPrice(cmmc.cartTotal)}</span></p>
+        </>)}
       </div>
       {!hideCheckout && (
         <>

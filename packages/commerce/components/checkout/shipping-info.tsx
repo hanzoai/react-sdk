@@ -8,7 +8,7 @@ import {
   FormLabel,
   FormMessage,
 } from '@hanzo/ui/primitives/form'
-import { Input, Button } from '@hanzo/ui/primitives'
+import { Input, Button, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@hanzo/ui/primitives'
 import { BookUser } from 'lucide-react'
 import { EnhHeadingBlockComponent, type EnhHeadingBlock } from '@hanzo/ui/blocks'
 import { useAuth } from '@hanzo/auth/service'
@@ -16,6 +16,7 @@ import * as z from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useCommerce } from '../..'
+import { countries } from './countries'
 
 const shippingFormSchema = z.object({
   firstName: z.string().min(2, 'First name must be at least 2 characters.'),
@@ -155,7 +156,7 @@ const ShippingInfo: React.FC<{
               )}
             />
           </div>
-          <div className='flex gap-4 items-end'>
+          <div className='flex gap-4 items-start'>
             <FormField
               control={shippingForm.control}
               name='state'
@@ -175,10 +176,20 @@ const ShippingInfo: React.FC<{
               render={({ field }) => (
                 <FormItem className='space-y-1 w-full'>
                   <FormLabel>Country</FormLabel>
-                  <FormControl>
-                    <Input {...field} />
-                  </FormControl>
-                  <FormMessage />
+                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder='Select a verified email to display' />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {countries.map((country) => (
+                        <SelectItem key={country.id} value={country.name}>
+                          {country.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </FormItem>
               )}
             />
