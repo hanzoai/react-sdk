@@ -5,6 +5,7 @@ interface FacetValueDesc {
   label: string
   img? : string | ReactNode  // icon is required 
   imgAR? : number           // helps with svgs
+  sub?: FacetValueDesc[]
 }
 
 /* *** FOR EXAMPLE **

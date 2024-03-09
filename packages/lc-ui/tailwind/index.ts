@@ -1,2 +1,7 @@
+import type { Config } from 'tailwindcss'
+
 export type { default as TwFontDesc } from './tw-font-desc'
-export { default as preset } from './tailwind.config.hanzo-preset'
+
+// @ts-ignore
+import _preset from './tailwind.config.hanzo-preset'
+export const preset = _preset as unknown as Config
