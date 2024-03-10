@@ -3,7 +3,7 @@ import Image from 'next/image'
 
 import type { FacetValueDesc } from '../../types'
 
-const ICON_SIZE = 16
+const ICON_SIZE = 20
 const SVG_MULT = 1.5
 
 const FacetImage: React.FC<{
@@ -27,7 +27,7 @@ const FacetImage: React.FC<{
       <Image 
         src={img as string} 
         alt={`Toggle ${label}`} 
-        className={'block mr-1 rounded border border-muted-2 ' + (ar ? '' : 'aspect-square')} 
+        className={'block mr-1 ' + (ar ? '' : 'aspect-square')} // rounded border border-muted-2 
         width={ar ?  ar * ICON_SIZE : ICON_SIZE}
         height={ICON_SIZE}
       />
@@ -51,7 +51,7 @@ const FacetImage: React.FC<{
 
   return (
     <span 
-      className='block overflow-hidden ' 
+      className='flex justify-center items-center overflow-hidden ' 
       style={{
         color: 'inherit',
         width: ICON_SIZE * SVG_MULT, 

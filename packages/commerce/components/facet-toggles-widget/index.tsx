@@ -18,7 +18,7 @@ const FacetTogglesWidget: React.FC<{
 }> = ({
   facetValues,
   mutator,
-  multiple='',
+  multiple=false,
   buttonClx='',
   className='',
   isMobile=false,
@@ -73,7 +73,7 @@ const FacetTogglesWidget: React.FC<{
           {...roundedToSpread}
           className={buttonClx}
         >
-          <span className={cn('flex flex-row justify-center gap-1 h-4 items-center')} >
+          <span className={cn('flex flex-row justify-center gap-1 h-6 items-center')} >
             <FacetImage facetValueDesc={fv} />
             {(!isMobile || !fv.img) && (<span className='whitespace-nowrap'>{fv.label}</span>)}
           </span>

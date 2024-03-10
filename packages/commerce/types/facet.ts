@@ -26,13 +26,10 @@ interface FacetValueDesc {
   ]
 }
 */
-type FacetsDesc = Record<number, FacetValueDesc[]>
-
   // Which facets tokens are on at each level
 type FacetsValue = Record<number, string[]>
 
 export type {
   FacetValueDesc,
-  FacetsDesc,
   FacetsValue
 }

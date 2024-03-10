@@ -30,11 +30,11 @@ const SelectItemInCategoryView: React.FC<React.HTMLAttributes<HTMLDivElement> & 
   ...props
 }) => {
 
-  const waiting = (): boolean => (isLoading) // keep for convenience for now
+  const soleOption = category.products.length === 1
 
   const CategoryImage: React.FC<{ className?: string }> = ({ className = '' }) => {
 
-    if (waiting()) {
+    if (isLoading) {
       // deliberately not Skeleton to have a better overall pulse effect.
       return <div className={cn(
         'bg-level-1 rounded-xl aspect-square w-full min-h-1 ', // +
@@ -75,41 +75,38 @@ const SelectItemInCategoryView: React.FC<React.HTMLAttributes<HTMLDivElement> & 
 
   const AvailableAmounts: React.FC<{ className?: string }> = observer(({ className = '' }) => {
 
-    const soleOption = !waiting() && category.products.length === 1
-    const mobilePicker = !waiting() && (mobile && category.products.length > 8) 
+    if (soleOption) return null
+    const mobilePicker = (mobile && category.products.length > 8) 
 
-    return waiting() ? (
+    return isLoading ? (
       <Skeleton className={'min-h-[120px] w-pr-60 mx-auto ' + className} />
     ) : (
       <div /* id='CV_AVAIL_AMOUNTS' */ className={cn(
         'sm:w-pr-80 sm:mx-auto md:w-full  flex flex-col justify-start items-center',
-        (soleOption ? 'gap-2' : mobilePicker ? 'gap-4' : 'gap-8'),
+        (mobilePicker ? 'gap-4' : 'gap-8'),
         className
       )}>
         <div className='w-full flex flex-col justify-start items-center'>
-          <h6 className='text-center font-semibold'>{`Available size${soleOption ? '' : 's'}`}</h6>
-          <div className={'h-[1px] bg-muted-3 ' + (mobilePicker ?  'w-pr-55' :  'w-pr-80') } />
+          <h6 className='text-center font-semibold'>Available options</h6>
+          <div className={'h-[1px] bg-muted-3 ' + (mobilePicker ?  'w-pr-55' :  'w-pr-60') } />
         </div>
-        {soleOption ? (
-          <p>{category.products[0].titleAsOption}</p>
-        ) : ( mobilePicker ? (
-            <ProductSelectionMobilePicker
-              products={category.products}
-              selectedSku={lineItemRef.item?.sku ?? undefined}  
-              onValueChange={handleItemSelected}
-              height={180}
-              itemHeight={30}
-              outerClx='mb-4'
-            />
-          ) : (
-            <ProductSelectionRadioGroup 
-              products={category.products}
-              selectedSku={lineItemRef.item?.sku ?? undefined}  
-              onValueChange={handleItemSelected}
-              groupClx='grid grid-cols-2 gap-0 gap-y-3 gap-x-8 '
-              itemClx='flex flex-row gap-2 items-center'
-            />
-          )
+        {mobilePicker ? (
+          <ProductSelectionMobilePicker
+            products={category.products}
+            selectedSku={lineItemRef.item?.sku ?? undefined}  
+            onValueChange={handleItemSelected}
+            height={180}
+            itemHeight={30}
+            outerClx='mb-4'
+          />
+        ) : (
+          <ProductSelectionRadioGroup 
+            products={category.products}
+            selectedSku={lineItemRef.item?.sku ?? undefined}  
+            onValueChange={handleItemSelected}
+            groupClx='block columns-2 gap-4'
+            itemClx='flex flex-row gap-2 items-center mb-2.5'
+          />
         )}
       </div>
     )
@@ -124,11 +121,12 @@ const SelectItemInCategoryView: React.FC<React.HTMLAttributes<HTMLDivElement> & 
   ))
 
   const TitleArea: React.FC<{ className?: string }> = observer(({ className = '' }) => (
-    waiting() ? (<Skeleton className={'h-12 w-pr-80 mx-auto ' + className} />) : (
 
-      <div className={cn('flex flex-col justify-start items-center mb-6', className)}>
-        <h3 className='text-base md:text-lg lg:text-2xl md:mt-[2vw] font-nav text-center'>
-          <span className='xs:inline md:hidden'>
+    isLoading ? (<Skeleton className={'h-12 w-pr-80 mx-auto ' + className} />) : (
+
+      <div className={cn('flex flex-col justify-start items-center', className)}>
+        <h3 className='text-base md:text-lg lg:text-2xl font-nav text-center'>
+          <span className='xs:block md:hidden'>
             {category.title.split(', ').map((s, i) => (<p key={i}>{s}</p>))}
           </span>
           <span className='xs:hidden md:inline '>
@@ -137,14 +135,14 @@ const SelectItemInCategoryView: React.FC<React.HTMLAttributes<HTMLDivElement> & 
         </h3>
         {lineItemRef.item?.sku ? (
           <h6 className='text-center font-semibold'>
-            {lineItemRef.item.titleAsOption + ': ' + formatPrice(lineItemRef.item.price)}
+            {(soleOption ? '' : (lineItemRef.item.titleAsOption + ': ')) + formatPrice(lineItemRef.item.price)}
           </h6>
         ) : ''}
       </div>
   )))
 
   const Desc: React.FC<{ className?: string }> = ({ className = '' }) => (
-    waiting() ? (
+    isLoading ? (
       <Skeleton className={'min-h-20 w-full grow mx-auto ' + className} />
     ) : (
       <p className={cn('text-base lg:text-lg mb-6 xs:mb-0', className)}>{category.desc}</p>
@@ -161,7 +159,7 @@ const SelectItemInCategoryView: React.FC<React.HTMLAttributes<HTMLDivElement> & 
       {...props}
     >
       <div /* id='CV_TITLE_AND_IMAGE_ROW' */ className='flex flex-row justify-between items-start w-full'>
-      {waiting() ? ( <Skeleton className={'min-h-30 w-full '} /> ) : (<>
+      {isLoading ? ( <Skeleton className={'min-h-30 w-full '} /> ) : (<>
         <CategoryImage className='w-pr-33' />
         <TitleArea className='grow pt-3 mb-0' />
       </>)}
@@ -176,17 +174,17 @@ const SelectItemInCategoryView: React.FC<React.HTMLAttributes<HTMLDivElement> & 
         <div /* id='CV_IMAGE_COL_SEP' */ className={'relative ' + (!isLoading ? 'md:hidden sm:min-w-[185px] xl:flex xl:w-pr-40' : '')}>
           <CategoryImage className='w-full' />
         </div>
-        <div /* id='CV_CONTENT_COL */ className='flex flex-col gap-y-6 xl:w-pr-60'>
+        <div /* id='CV_CONTENT_COL */ className={'flex flex-col xl:w-pr-60 justify-center ' + (soleOption ? '' : 'gap-6') }>
           <div /* id='CV_MD_IMAGE_AND_TITLE */ className='hidden md:flex xl:hidden flex-row gap-x-3'>
             <CategoryImage className='min-w-pr-30' />
             <TitleArea className='grow' />
           </div>
-          
+         
           <div /*  id='CV_CONTENT' */ className={'flex flex-col gap-2.5 ' + (isLoading ? 'justify-between h-full' : '')}>
             <TitleArea className='md:hidden xl:flex' />
             <Desc className='' />
           </div>
-          <div /* id='CV_CTA_AREA_BIG' */ className='hidden lg:flex p-4 flex-col justify-start items-center gap-6'>
+          <div /* id='CV_CTA_AREA_BIG' */ className='hidden lg:flex flex-col justify-start items-center gap-6'>
             <AvailableAmounts />
             <AddToCartArea className='' />
           </div>

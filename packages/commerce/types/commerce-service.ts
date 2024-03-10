@@ -1,5 +1,5 @@
 import type { LineItem, ObsLineItemRef } from './line-item'
-import type { FacetsValue } from './facet'
+import type { FacetValueDesc, FacetsValue } from './facet'
 import type Category from './category'
 
 interface CommerceService extends ObsLineItemRef {
@@ -31,7 +31,16 @@ interface CommerceService extends ObsLineItemRef {
   get specifiedItems(): LineItem[]
   get specifiedCategories(): Category[] 
 
-    /**
+    /** Whether this path defines a Category, or if it has further levels */
+  getSubfacetsAtSkuPath(skuPath: string): FacetValueDesc[] | undefined 
+
+    /** Based on current value of 'level', what are the available subfacets? 
+     *  If more than one value is specified at 'level' returned FacetValueDesc[]
+     * may represent multiple sets. 
+     * */ 
+  getSpecifiedSubfacets(level: number): FacetValueDesc[] | undefined 
+
+      /**
      * For convenience, so widgets can share state.
      * "current" is unrelated to what is "specified",
      * ie, facets' values 

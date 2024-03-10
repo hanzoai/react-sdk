@@ -7,12 +7,14 @@ import {
   toJS
 } from 'mobx'
 
+import { computedFn } from 'mobx-utils'
+
 import type {
   CommerceService, 
   Category, 
   LineItem,
   FacetsValue, 
-  FacetsDesc
+  FacetValueDesc
 } from '../../../types'
 
 import {
@@ -21,6 +23,8 @@ import {
 } from './orders'
 
 import ActualLineItem, { type ActualLineItemSnapshot } from './actual-line-item'
+
+const SEP = '-'
 
 type StandaloneServiceOptions = {
   levelZeroPrefix?: string
@@ -36,7 +40,7 @@ class StandaloneService
   implements CommerceService
 {
   private _categoryMap = new Map<string, Category>()
-  private _facetsDesc: FacetsDesc 
+  private _rootFacet: FacetValueDesc 
   private _selectedFacets: FacetsValue = {}
 
   private _options : StandaloneServiceOptions
@@ -44,12 +48,12 @@ class StandaloneService
 
   constructor(
     categories: Category[],
-    facets: FacetsDesc,
+    rootFacet: FacetValueDesc,
     options: StandaloneServiceOptions,
     serviceSnapshot?: StandaloneServiceSnapshot,
   ) {
 
-    this._facetsDesc = facets
+    this._rootFacet = rootFacet
     this._options = options
 
     categories.forEach((c) => {
@@ -87,6 +91,49 @@ class StandaloneService
       /* NOT setFacets. It implements it's action mechanism */
     })
   }
+
+
+  getSubfacetsAtSkuPath(skuPath: string): FacetValueDesc[] | undefined {
+    const toks = skuPath.split(SEP)
+    let level = 1
+    let valuesAtLevel: FacetValueDesc[] | undefined  = this._rootFacet.sub
+    do {
+      const fvalue = valuesAtLevel!.find((vf) => (vf.value === toks[level])) 
+      valuesAtLevel = fvalue ? fvalue.sub : undefined
+      level++
+    }
+    while (valuesAtLevel && (level < toks.length))
+    return level === toks.length ? valuesAtLevel : undefined 
+  } 
+
+  getSpecifiedSubfacets = computedFn((level: number): FacetValueDesc[] | undefined => {
+
+    let lvl = 1
+    let valuesAtLevel: FacetValueDesc[] | undefined  = this._rootFacet.sub
+
+    do {
+      let selectedAtLevel: FacetValueDesc[] | undefined = undefined
+        // If not specified, assume all
+      if (lvl in this._selectedFacets) {
+        selectedAtLevel = valuesAtLevel!.filter((fv) => (this._selectedFacets[lvl].includes(fv.value))) 
+      }
+      else {
+        selectedAtLevel = valuesAtLevel 
+      }
+      let allSubsOfSelected: FacetValueDesc[] = []
+      selectedAtLevel?.forEach((fvd: FacetValueDesc) => {
+        if (fvd.sub) {
+          allSubsOfSelected = [...allSubsOfSelected, ...fvd.sub] 
+        }  
+      })
+
+      valuesAtLevel = allSubsOfSelected
+      lvl++
+    } while (valuesAtLevel.length > 0 && lvl <= level)
+
+    return (valuesAtLevel.length > 0 && ((lvl - 1) === level)) ? valuesAtLevel : undefined
+  })
+
 
   async createOrder(email: string, paymentMethod: string): Promise<string | undefined> {
     const snapshot = this.takeSnapshot()
@@ -158,7 +205,6 @@ class StandaloneService
     return !!this._currentItem
   }
 
-
   /* ObsLineItemRef */
   get item(): LineItem | undefined {
     return this._currentItem
@@ -170,10 +216,7 @@ class StandaloneService
 
   setFacets(sel: FacetsValue): Category[] {
     runInAction (() => {
-      const res = this._processAndValidate(sel) 
-      if (res) {
-        this._selectedFacets = res
-      }
+      this._selectedFacets = this._processAndValidate(sel) 
     })
     return this.specifiedCategories
   }
@@ -186,46 +229,72 @@ class StandaloneService
     return result
   }
 
+
   get specifiedCategories(): Category[] {
     if (Object.keys(toJS(this._selectedFacets)).length === 0) {
       // FacetsDesc have never been set or unset, so cannot evaluate them
       return []
     }
-    const keysStr = Object.keys(this._facetsDesc)
-      // 1-base, visiting two per iteration
-    let current: string[] = this._selectedFacets[1] 
-    for (let i = 2; i <= keysStr.length; i++) {
-      current = StandaloneService._visit(current, this._selectedFacets[i])
+
+    return this._rootFacet.sub!.reduce(
+      (acc: Category[], subFacet: FacetValueDesc) => (
+          // Pass the root token as a one member array
+        this._reduceNode([this._rootFacet.value], acc, subFacet)   
+      ), 
+      []
+    )
+  }
+
+  private _reduceNode(parentPath: string[], acc: Category[], node: FacetValueDesc): Category[] {
+    const path = [...parentPath, node.value] // Don't mutate original please :) 
+    const level = path.length - 1
+      // If there is no token array supplied for this level,
+      // assume all are specified.  Otherwise, see if the 
+      // current node is in the array
+    const specified = (
+      !this._selectedFacets[level] 
+      || 
+      this._selectedFacets[level].includes(node.value)
+    ) 
+    if (specified) {
+        // Process subnodes
+      if (node.sub && node.sub.length > 0) {
+        return node.sub.reduce((acc, n) => (
+          this._reduceNode(path, acc, n)
+        ) 
+        , acc)
+      }
+        // Process leaf
+      const cat = this._categoryMap.get(path.join(SEP))
+      if (!cat) {
+        throw new Error("specifiedCategories WTF?!" + path.join(SEP))
+      }
+      acc.push(cat)    
     }
-    const prefix = this._options.levelZeroPrefix ?? ''
-    return current.map((almostTheCatId) => (this._categoryMap.get(prefix + almostTheCatId)!))
+    return acc
   }
 
-  private static _visit(current: string[], next: string[]): string[] {
-    const result: string[] = []
-    current.forEach((c) => {
-      next.forEach((n) => {
-        result.push(`${c}-${n}`)
-      })
-    })
-    return result
-  }
+  private _processAndValidate(partial: FacetsValue): FacetsValue  {
 
-  private _processAndValidate(partial: FacetsValue): FacetsValue | undefined {
     const result: FacetsValue = {}
-    const keysStr = Object.keys(this._facetsDesc)
-    const keysNum = keysStr.map((key) => (parseInt(key)))
-    keysNum.forEach((key) => {
-      if (partial[key]) {
-          // If present, filter out the bad values (the one's that don't exist in the Desc)
-        const filtered = partial[key].filter((fv) => (this._facetsDesc[key].find((fvDesc) => (fvDesc.value === fv))))
-        result[key] = filtered
+
+    let level = 1
+    let currentSet = this._rootFacet.sub!
+    
+    while (true) {
+      let possibleCurrent = currentSet.map((el) => (el.value))
+      const validTokens = !partial[level] ? undefined : partial[level].filter((tok) => possibleCurrent.includes(tok))
+      if (!validTokens) {
+        break
       }
-        // if not present, assume the facet is "off" and allow all (include all in the set).
-      else {
-        result[key] = this._facetsDesc[key].map((fv) => (fv.value))
-      }
-    })
+      result[level] = validTokens
+      currentSet = validTokens.map((tok) => {
+        const fd = currentSet.find((node) => ( node.value === tok ))
+        return (fd && fd.sub && fd.sub.length > 0) ? fd.sub : []
+      }).flat()
+      level++
+    }
+    
     return result
   }
 

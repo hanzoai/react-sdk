@@ -1,7 +1,7 @@
 export { default as AddToCartWidget } from './add-to-cart-widget'
 export { default as Cart } from './cart'
 export { default as CartLineItem } from './cart-line-item'
-export { default as FacetsWidget } from './facets-widget'
+//export { default as FacetsWidget } from './facets-widget'
 export { default as FacetTogglesWidget } from './facet-toggles-widget'
 export { default as ProductCard } from './product-card'
 export { default as ProductSelectionMobilePicker } from './product-selection-mobile-picker'
