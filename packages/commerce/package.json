@@ -30,7 +30,6 @@
     "@hookform/resolvers": "^3.3.4",
     "ethers": "^6.11.1",
     "lucide-react": "^0.307.0",
-    "mobx-utils": "^6.0.8",
     "next-usequerystate": "^1.17.0",
     "react-hook-form": "7.50.1",
     "react-mobile-picker": "^1.0.0",
@@ -42,6 +41,7 @@
     "firebase": "^10.8.0",
     "mobx": "^6.12.0",
     "mobx-react-lite": "^4.0.5",
+    "mobx-utils": "^6.0.8",
     "next": "^14.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
