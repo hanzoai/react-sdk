@@ -70,8 +70,11 @@ const ContentColumn: React.FC<{
     modifiers += 'typography-headings:text-center '  
   }
 
+  /* ContentComponent's parent div needs h-full class in order for vertical alignment with flexbox to work.
+  *  This affects specifiers: bottom, vert-center, mobile-vert-center
+  */
   return (
-    <div className={cn('flex flex-col justify-center ' + modifiers, className)} >
+    <div className={cn('flex flex-col justify-center h-full', modifiers, className)} >
       <ContentComponent blocks={blocks} agent={agent} />
     </div>
   )
@@ -88,7 +91,7 @@ const Content: React.FC<{
 }) => {
 
 
-  const layoutClx = 'flex flex-col gap-6 ' + ((agent !== 'phone') ? ('md:grid md:gap-8 ' + `md:grid-cols-${b.contentColumns.length} `) : '')
+  const layoutClx = 'flex flex-col gap-2 sm:gap-4 ' + ((agent !== 'phone') ? ('md:grid md:gap-8 ' + `md:grid-cols-${b.contentColumns.length} `) : '')
 
   const orderclx = (columnIndex: number): string => {
     const orderIndex = b.mobileOrder?.indexOf(columnIndex)

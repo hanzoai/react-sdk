@@ -76,6 +76,7 @@ class StandaloneService
 
     makeObservable(this, {
       cartItems: computed,
+      cartQuantity: computed,
       cartTotal: computed, 
       specifiedItems: computed,
       specifiedCategories: computed, 
@@ -93,9 +94,10 @@ class StandaloneService
     return order.id
   }
 
-  async updateOrder(orderId: string, email: string, paymentMethod: string): Promise<void> {
+  // TODO: add shippingInfo type
+  async updateOrder(orderId: string, email: string, paymentMethod: string, shippingInfo?: any): Promise<void> {
     const snapshot = this.takeSnapshot()
-    updateOrderHelper(orderId, email, paymentMethod, snapshot.items, this._options) // didn't want to have two levels of 'items'
+    updateOrderHelper(orderId, email, paymentMethod, snapshot.items, this._options, shippingInfo) // didn't want to have two levels of 'items'
   }
 
   takeSnapshot = (): StandaloneServiceSnapshot => ({
@@ -113,6 +115,13 @@ class StandaloneService
   get cartTotal(): number {
     return this.cartItems.reduce(
       (total, item) => (total + item.price * item.quantity), 
+      0
+    )
+  }
+
+  get cartQuantity(): number {
+    return this.cartItems.reduce(
+      (total, item) => (total + item.quantity), 
       0
     )
   }

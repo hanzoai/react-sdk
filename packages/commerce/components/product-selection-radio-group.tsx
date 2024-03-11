@@ -10,25 +10,29 @@ const ProductSelectionRadioGroup: React.FC<{
   onValueChange: (v: string) => void
   groupClx?: string
   itemClx?: string
+  showPrice?: boolean
 }> = ({
   products,
   selectedSku,
   onValueChange,
   groupClx='',
-  itemClx=''
+  itemClx='',
+  showPrice=true
 }) => (
-  <RadioGroup
-    className={groupClx}
-    onValueChange={onValueChange}
-    value={selectedSku}
-  >
-  {products.map((prod) => (
-    <div className={itemClx} key={prod.sku}>
-      <RadioGroupItem value={prod.sku} id={prod.sku} />
-      <Label htmlFor={prod.sku}>{prod.titleAsOption + ', ' + formatPrice(prod.price)}</Label>
-    </div>
-  ))}
-  </RadioGroup>
+  products.length > 1 && (
+    <RadioGroup
+      className={groupClx}
+      onValueChange={onValueChange}
+      value={selectedSku}
+    >
+    {products.map((prod) => (
+      <div className={itemClx} key={prod.sku}>
+        <RadioGroupItem value={prod.sku} id={prod.sku} />
+        <Label htmlFor={prod.sku}>{prod.titleAsOption + (showPrice ? (', ' + formatPrice(prod.price)) : '')}</Label>
+      </div>
+    ))}
+    </RadioGroup>
+  )
 )
 
 export default ProductSelectionRadioGroup
