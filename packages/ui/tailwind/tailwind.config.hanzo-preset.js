@@ -13,6 +13,7 @@ import typographyPlugin from './typo-plugin'
 export default {
   presets: [],
   darkMode: ["class"],
+  content: [],
   safelist,
   plugins: [
     animatePlugin,

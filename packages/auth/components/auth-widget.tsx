@@ -30,7 +30,7 @@ const AuthWidget: React.FC<{
   if (!auth.loggedIn) {
     return (
       <LinkElement
-        def={{href: '/login', title: 'Login', variant: 'primary'} as LinkDef}
+        def={{href: '/login', title: 'Login', variant: 'primary'} satisfies LinkDef}
         className='h-8 !text-[13px]/[13px] w-fit !min-w-0'
       />
     )
