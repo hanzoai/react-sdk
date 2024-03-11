@@ -1,7 +1,7 @@
 import AccordianBlock from './accordian-block'
 import type BlockComponentProps from './block-component-props'
 import Blocks from './content'
-import CardBlock from './card-block'
+import CardBlock from './card-block/ index'
 import { default as ContentComponent, registerBlockType} from './content'
 import CTABlock from './cta-block'
 import EnhHeadingBlock from './enh-heading-block'
