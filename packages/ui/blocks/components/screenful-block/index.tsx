@@ -72,7 +72,13 @@ const ScreenfulComponent: React.FC<{
             initialInView={initialInView}
           />
         )}
-        <div className={cn(...cwclx, snapTile ? 'absolute left-0 right-0 top-0 bottom-0' : 'flex min-h-screen w-full', contentClx, vertCenter ? '!py-0 self-center' : '')} >
+        <div className={cn(
+            ...cwclx,
+            snapTile ? 'absolute left-0 right-0 top-0 bottom-0' : 'flex min-h-screen w-full',
+            contentClx,
+            vertCenter ? '!py-0 self-center' : ''
+          )}
+        >
           <Content block={b} agent={agent}  className='w-full'/>
           {b.footer}
         </div>
