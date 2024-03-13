@@ -27,7 +27,12 @@ const AuthWidget: React.FC<{
 
   const auth = useAuth()
   
-    // Weird next issue (?)
+    // This safegaurds against a crash in the rare case
+    // that multiple inistances of auth module are in play.
+    // We safegaurd agains this in the by loading peer Deps from
+    // the root in host mono repos, but this is another layer.
+    // If that is the case, the widget will always show the login 
+    // button regardless of status.
   if (!auth || !auth.loggedIn) {
     return (
       <LinkElement
