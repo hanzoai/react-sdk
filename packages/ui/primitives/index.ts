@@ -131,6 +131,14 @@ export {
   InputOTPSlot,
 } from './input-otp'
 
+export {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from './carousel'
+
 export { Toggle, toggleVariants } from './toggle'
 export { ToggleGroup, ToggleGroupItem } from './toggle-group'
 
@@ -157,3 +165,4 @@ export { default as NavItems} from './nav-items'
 export { default as Main } from './main'
 export { default as ListBox } from './list-box'
 
+export * as Icons from './icons'
