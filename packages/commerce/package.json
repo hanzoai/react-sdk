@@ -29,7 +29,8 @@
   "dependencies": {
     "ethers": "^6.11.1",
     "next-usequerystate": "^1.17.0",
-    "react-mobile-picker": "^1.0.0"
+    "react-mobile-picker": "^1.0.0",
+    "react-square-web-payments-sdk": "^3.2.1"
   },
   "peerDependencies": {
     "@hanzo/auth": "^2.0.0",

@@ -15,11 +15,9 @@ import { LoginComponent, AuthWidget } from '@hanzo/auth/components'
 
 import ShippingInfo from './shipping-info'
 import ThankYou from './thank-you'
-import PayWithCrypto from './pay-with-crypto'
-import PayByBankTransfer from './pay-by-bank-transfer'
 import ContactInfo from './contact-info'
 import { Cart } from '..'
-import { useCommerce } from '../../service/context'
+import Payment from './payment'
 
 const contactFormSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters.'),
@@ -28,10 +26,8 @@ const contactFormSchema = z.object({
 
 const Checkout: React.FC<{toggleCheckout: () => void}> = observer(({toggleCheckout}) => {
   const auth = useAuth()
-  const cmmc = useCommerce()
   
   const [currentStep, setCurrentStep] = useState(1)
-  const [paymentMethod, setPaymentMethod] = useState<'crypto' | 'bank' | undefined>()
   const [orderId, setOrderId] = useState<string>()
 
   const contactForm = useForm<z.infer<typeof contactFormSchema>>({
@@ -49,41 +45,22 @@ const Checkout: React.FC<{toggleCheckout: () => void}> = observer(({toggleChecko
     }
   }, [auth.loggedIn])
 
-  const selectPaymentMethod = async (method: 'crypto' | 'bank') => {
-    contactForm.handleSubmit(async () => {
-      if (auth.user) {
-        if (!!orderId) {
-          await cmmc.updateOrder(orderId, auth.user.email, method)
-        } else {
-          const id = await cmmc.createOrder(auth.user.email, method)
-          setOrderId(id)
-        }
-      }
-      setPaymentMethod(method)
-      setCurrentStep(2)
-    })()    
-  }
-
-
   const step1 = auth.loggedIn ? (
-    <ContactInfo form={contactForm} selectPaymentMethod={selectPaymentMethod}/>
+    <div className='flex flex-col gap-4'>
+      <ContactInfo form={contactForm}/>
+      <Payment orderId={orderId} setOrderId={setOrderId} setCurrentStep={setCurrentStep} contactForm={contactForm}/>
+    </div>
   ) : (
     <LoginComponent hideHeader className='max-w-[20rem] mx-auto'/>
   )
 
-  const step2 = paymentMethod === 'crypto' ? (
-    <PayWithCrypto setCurrentStep={setCurrentStep}/>
-  ) : (
-    <PayByBankTransfer setCurrentStep={setCurrentStep}/>
+  const step2 = (
+    <ShippingInfo orderId={orderId} setCurrentStep={setCurrentStep}/>
   )
 
-  const step3 = (
-    <ShippingInfo orderId={orderId} paymentMethod={paymentMethod} setCurrentStep={setCurrentStep}/>
-  )
+  const step3 = <ThankYou/>
 
-  const step4 = <ThankYou/>
-
-  const steps = [step1, step2, step3, step4]
+  const steps = [step1, step2, step3]
 
   return (
     <div className="fixed top-0 left-0 !max-w-none w-full h-full min-h-screen bg-background z-[51]">  
@@ -109,18 +86,18 @@ const Checkout: React.FC<{toggleCheckout: () => void}> = observer(({toggleChecko
             <Cart hideCheckout className='fixed justify-center border-none mt-10 w-1/3 max-w-[40rem]'/>
           </div>
 
-          <div className='flex flex-col gap-8 sm:gap-14 col-span-5 md:col-span-3 max-w-[30rem] w-full mx-auto overflow-y-auto h-[calc(100%-40px)] sm:h-[calc(100%-48px)] py-4'>
+          <div className='flex flex-col gap-8 sm:gap-14 col-span-5 md:col-span-3 max-w-[30rem] w-full mx-auto overflow-y-auto h-[calc(100%-40px)] sm:h-[calc(100%-48px)] py-4 px-1'>
             <div className='flex gap-2 mx-auto items-center text-xxs sm:text-base'>
               <div className={cn('w-6 h-6 rounded-full border border-foreground flex flex-col justify-center items-center', currentStep === 1 ? 'bg-foreground text-muted-4' : '')}>
-                <div className='relative text-foreground top-4 h-0 whitespace-nowrap'>Contact</div>
-              </div>
-              <Separator className='w-[4rem] sm:w-[6rem]'/>
-              <div className={cn('w-6 h-6 rounded-full border border-foreground flex flex-col justify-center items-center', currentStep === 2 ? 'bg-foreground text-muted-4' : '')}>
                 <div className='relative text-foreground top-4 h-0 whitespace-nowrap'>Payment</div>
               </div>
               <Separator className='w-[4rem] sm:w-[6rem]'/>
-              <div className={cn('w-6 h-6 rounded-full border border-foreground flex flex-col justify-center items-center', currentStep === 3 ? 'bg-foreground text-muted-4' : '')}>
+              <div className={cn('w-6 h-6 rounded-full border border-foreground flex flex-col justify-center items-center', currentStep === 2 ? 'bg-foreground text-muted-4' : '')}>
                 <div className='relative text-foreground top-4 h-0 whitespace-nowrap'>Delivery</div>
+              </div>
+              <Separator className='w-[4rem] sm:w-[6rem]'/>
+              <div className={cn('w-6 h-6 rounded-full border border-foreground flex flex-col justify-center items-center', currentStep === 3 ? 'bg-foreground text-muted-4' : '')}>
+                <div className='relative text-foreground top-4 h-0 whitespace-nowrap'>Done!</div>
               </div>
             </div>
             {steps[currentStep - 1]}

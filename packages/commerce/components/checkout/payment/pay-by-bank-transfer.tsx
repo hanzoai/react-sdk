@@ -4,7 +4,6 @@ import type { ReactNode } from 'react'
 import { Copy } from 'lucide-react'
 
 import { Button, Tabs, TabsContent, TabsList, TabsTrigger, toast } from '@hanzo/ui/primitives'
-import { EnhHeadingBlockComponent, type EnhHeadingBlock, type Block } from '@hanzo/ui/blocks'
 
 const InfoField: React.FC<{label: string, value: ReactNode, copyValue: string}> = ({label, value, copyValue}) => {
   const copyToClipboard = (label: string, text: string) => {
@@ -25,9 +24,20 @@ const InfoField: React.FC<{label: string, value: ReactNode, copyValue: string}> 
   )
 }
 
-const PayByBankTransfer: React.FC<{setCurrentStep: (step: number) => void}> = ({setCurrentStep}) => {
+const PayByBankTransfer: React.FC<{
+  setCurrentStep: (step: number) => void
+  storePaymentInfo: (paymentInfo: any) => Promise<void>
+}> = ({
+  setCurrentStep,
+  storePaymentInfo
+}) => {
+  const payByBankTransfer = async () => {
+    await storePaymentInfo({paymentMethod: 'bank-transfer'})
+    setCurrentStep(2)
+  }
+
   return (<>
-    <Tabs defaultValue="usd" className='w-full mx-auto max-w-[50rem]'>
+    <Tabs defaultValue="usd" className='w-full mx-auto max-w-[50rem] mt-6'>
       <TabsList className="grid w-full grid-cols-2 max-w-[15rem] mx-auto bg-level-2">
         <TabsTrigger value="usd">USD</TabsTrigger>
         <TabsTrigger value="eur">EUR/GBP</TabsTrigger>
@@ -66,10 +76,7 @@ const PayByBankTransfer: React.FC<{setCurrentStep: (step: number) => void}> = ({
         </div>
       </TabsContent>
     </Tabs>
-    <div className='flex gap-4 items-center mt-6'>
-      <Button variant='outline' onClick={() => setCurrentStep(1)} className='mx-auto w-full'>Back</Button>
-      <Button onClick={() => setCurrentStep(3)} className='mx-auto w-full'>Continue</Button>
-    </div>
+    <Button onClick={payByBankTransfer} className='mx-auto w-full mt-4'>Continue</Button>
   </>)
 }
 
