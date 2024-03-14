@@ -34,13 +34,13 @@ interface CommerceService extends ObsLineItemRef {
   get specifiedCategories(): Category[] 
 
     /** Whether this path defines a Category, or if it has further levels */
-  getSubfacetsAtSkuPath(skuPath: string): FacetValueDesc[] | undefined 
+  getFacetValuesAtSkuPath(skuPath: string): FacetValueDesc[] | undefined 
 
     /** Based on current value of 'level', what are the available subfacets? 
      *  If more than one value is specified at 'level' returned FacetValueDesc[]
      * may represent multiple sets. 
      * */ 
-  getSpecifiedSubfacets(level: number): FacetValueDesc[] | undefined 
+  getFacetValuesSpecified(level: number): FacetValueDesc[] | undefined 
 
       /**
      * For convenience, so widgets can share state.

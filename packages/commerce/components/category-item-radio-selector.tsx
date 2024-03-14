@@ -1,34 +1,55 @@
 'use client'
+import React from 'react'
+import { observer } from 'mobx-react-lite'
 
 import { Label, RadioGroup, RadioGroupItem } from '@hanzo/ui/primitives'
-import type { ItemSelector } from '../types'
+import type { ItemSelector, LineItem, Product } from '../types'
 import { formatPrice } from '../util'
+import { cn } from '@hanzo/ui/util'
 
 const CategoryItemRadioSelector: React.FC<ItemSelector & {
   groupClx?: string
   itemClx?: string
-}> = ({
+}> = observer(({
   category,
   selectedItemRef: itemRef,
   selectSku,
   groupClx='',
   itemClx='',
-  showPrice=true
-}) => (
-  category.products.length > 1 && (
-    <RadioGroup
-      className={groupClx}
-      onValueChange={selectSku}
-      value={itemRef.item ? itemRef.item.sku : ''}
-    >
-    {category.products.map((prod) => (
-      <div className={itemClx} key={prod.sku}>
-        <RadioGroupItem value={prod.sku} id={prod.sku} />
-        <Label htmlFor={prod.sku}>{prod.titleAsOption + (showPrice ? (', ' + formatPrice(prod.price)) : '')}</Label>
-      </div>
-    ))}
-    </RadioGroup>
+  showPrice=true,
+  showQuantity=true
+}) => {
+
+  const Choice: React.FC<{
+    item: Product
+    className?: string
+  }> = ({
+    item,
+    className=''
+  }) => (
+    <div className={cn(className, itemClx)} key={item.sku}>
+      <RadioGroupItem value={item.sku} id={item.sku} />
+      <Label htmlFor={item.sku}>{item.titleAsOption + (showPrice ? (', ' + formatPrice(item.price)) : '')}</Label>
+    </div>
   )
-)
+
+  return ( category.products.length > 1 ? (
+      <RadioGroup
+        className={cn(showQuantity ? 'table' : '', groupClx)}
+        onValueChange={selectSku}
+        value={itemRef.item ? itemRef.item.sku : ''}
+      >
+      {(category.products as LineItem[]).map((item) => (showQuantity ? (
+        <div className='table-row' style={{}}>
+          <Choice item={item} className='table-cell pr-2 align-text-top pb-2'/>
+          <div className='table-cell font-semibold text-sm leading-none align-text-top pb-2'>{ item.quantity > 0 ? `(${item.quantity})` : ' '}</div>
+        </div>
+      ) : (
+        <Choice item={item} className='mb-2'/>
+      )))}
+      </RadioGroup>
+    ) : (<p>TODO</p>)
+  )
+})
 
 export default CategoryItemRadioSelector

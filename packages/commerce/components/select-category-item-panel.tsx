@@ -20,11 +20,12 @@ const SelectCategoryItemPanel: React.FC<
     isLoading?: boolean
     mobile?: boolean
   }
-> = ({
+> = /* NOT observer */ ({
   category,
   selectedItemRef,
   selectSku, 
   className, 
+  showQuantity=true,
   isLoading = false, 
   mobile = false, 
   ...props
@@ -92,6 +93,7 @@ const SelectCategoryItemPanel: React.FC<
             category={category}
             selectedItemRef={selectedItemRef}  
             selectSku={selectSku}
+            showQuantity={showQuantity}
             height={180}
             itemHeight={30}
             outerClx='mb-4'
@@ -101,6 +103,7 @@ const SelectCategoryItemPanel: React.FC<
             category={category}
             selectedItemRef={selectedItemRef}  
             selectSku={selectSku}
+            showQuantity={showQuantity}
             groupClx='block columns-2 gap-4'
             itemClx='flex flex-row gap-2 items-center mb-2.5'
           />
@@ -123,12 +126,10 @@ const SelectCategoryItemPanel: React.FC<
 
       <div className={cn('flex flex-col justify-start items-center', className)}>
         <h3 className='text-base md:text-lg lg:text-2xl font-nav text-center'>
-          <span className='xs:block md:hidden'>
-            {category.title.split(', ').map((s, i) => (<p key={i}>{s}</p>))}
-          </span>
-          <span className='xs:hidden md:inline '>
-            {category.title}
-          </span>
+        {category.parentTitle && (
+          <span>{category.parentTitle}<br className='md:hidden' /><span className='xs:hidden md:inline '>,&nbsp;</span></span>
+        )}
+          <span>{category.title}</span>
         </h3>
         {selectedItemRef.item?.sku ? (
           <h6 className='text-center font-semibold'>

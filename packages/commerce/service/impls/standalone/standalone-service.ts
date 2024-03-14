@@ -98,7 +98,7 @@ class StandaloneService
     return this._categoryMap.get(id)
   }
 
-  getSubfacetsAtSkuPath(skuPath: string): FacetValueDesc[] | undefined {
+  getFacetValuesAtSkuPath(skuPath: string): FacetValueDesc[] | undefined {
     const toks = skuPath.split(SEP)
     let level = 1
     let valuesAtLevel: FacetValueDesc[] | undefined  = this._rootFacet.sub
@@ -111,7 +111,7 @@ class StandaloneService
     return level === toks.length ? valuesAtLevel : undefined 
   } 
 
-  getSpecifiedSubfacets = computedFn((level: number): FacetValueDesc[] | undefined => {
+  getFacetValuesSpecified = computedFn((level: number): FacetValueDesc[] | undefined => {
 
     let lvl = 1
     let valuesAtLevel: FacetValueDesc[] | undefined  = this._rootFacet.sub

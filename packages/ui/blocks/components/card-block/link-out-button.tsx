@@ -1,8 +1,7 @@
 import React from 'react'
 
 import type { LinkDef } from '../../../types'
-import { Icons } from '../../../util'
-import { LinkElement } from '../../../primitives'
+import { LinkElement, Icons } from '../../../primitives'
 
 const ArrowLinkElement: React.FC<{
   def: LinkDef,
