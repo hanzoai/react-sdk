@@ -5,7 +5,15 @@ import { Copy } from 'lucide-react'
 
 import { Button, Tabs, TabsContent, TabsList, TabsTrigger, toast } from '@hanzo/ui/primitives'
 
-const InfoField: React.FC<{label: string, value: ReactNode, copyValue: string}> = ({label, value, copyValue}) => {
+const InfoField: React.FC<{
+  label: string,
+  value: ReactNode,
+  copyValue: string
+}> = ({
+  label,
+  value,
+  copyValue
+}) => {
   const copyToClipboard = (label: string, text: string) => {
     navigator.clipboard.writeText(text)
     toast({title: `${label} copied to clipboard`})

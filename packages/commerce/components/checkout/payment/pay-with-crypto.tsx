@@ -157,7 +157,11 @@ const PayWithCrypto: React.FC<{
 
   const payWidget = !!!(auth.user?.walletAddress) ? (
     <div className='w-full mx-auto max-w-[20rem]'>
-      <Button variant='outline' className='w-full flex items-center gap-2' onClick={auth.associateWallet.bind(auth)}>
+      <Button
+        variant='outline'
+        className='w-full flex items-center gap-2'
+        onClick={auth.associateWallet.bind(auth)}
+      >
         <EthIconFromAuth height={20}/>Connect your wallet
       </Button>
     </div>
@@ -179,7 +183,10 @@ const PayWithCrypto: React.FC<{
       <div>Available funds in your wallet: {availableAmount} ETH</div>
       <div>
         <Input value={amount ? amount/(10**18) : amount} contentEditable={false}/>
-        <div className='relative flex items-center gap-2 -top-[32px] justify-end px-2 py-1 rounded-lg bg-muted-4 w-fit text-xs float-right mr-3'><Eth height={10}/>ETH</div>
+        <div className='relative flex items-center gap-2 -top-[32px] justify-end px-2 py-1 rounded-lg bg-muted-4 w-fit text-xs float-right mr-3'>
+          <Eth height={10}/>
+          ETH
+        </div>
       </div>
       {transactionStatus === 'error' ? (
         <h4 className='text-destructive'>There was an error while confirming the transaction.</h4>
@@ -195,7 +202,13 @@ const PayWithCrypto: React.FC<{
     <div className='flex flex-col gap-6 mt-6'>
       {payWidget}
       {transactionStatus === 'unpaid' ? (
-        <Button onClick={() => sendPayment(amount ? amount/(10**18) : 0)} className='mx-auto w-full' disabled={loadingPrice}>Pay</Button>
+        <Button
+          onClick={() => sendPayment(amount ? amount/(10**18) : 0)}
+          className='mx-auto w-full'
+          disabled={loadingPrice}
+        >
+          Pay
+        </Button>
       ) : (
         <Button onClick={nextStep} className='mx-auto w-full'>Continue</Button>
       )}

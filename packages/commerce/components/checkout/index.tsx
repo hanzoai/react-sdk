@@ -48,7 +48,12 @@ const Checkout: React.FC<{toggleCheckout: () => void}> = observer(({toggleChecko
   const step1 = auth.loggedIn ? (
     <div className='flex flex-col gap-4'>
       <ContactInfo form={contactForm}/>
-      <Payment orderId={orderId} setOrderId={setOrderId} setCurrentStep={setCurrentStep} contactForm={contactForm}/>
+      <Payment
+        orderId={orderId} 
+        setOrderId={setOrderId}
+        setCurrentStep={setCurrentStep}
+        contactForm={contactForm}
+      />
     </div>
   ) : (
     <LoginComponent hideHeader className='max-w-[20rem] mx-auto'/>

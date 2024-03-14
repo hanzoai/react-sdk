@@ -71,7 +71,8 @@ const PayWithCard: React.FC<{
           <>
             <PaymentMethods/>
 
-            {/* Imitates hanzo/ui Button and Input styles, I was unable to render the hanzo/ui button outright and keeping the submit form functionality*/}
+            {/* Imitates hanzo/ui Button and Input styles, I was unable to render the
+              hanzo/ui button outright and keeping the submit form functionality*/}
             <CreditCard
               style={{
                 '.input-container': {
