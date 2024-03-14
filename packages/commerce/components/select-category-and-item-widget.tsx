@@ -9,7 +9,7 @@ import type { FacetValueDesc, FacetsValue, LineItem } from '../types'
 import { useCommerce } from '../service/context'
 import { formatPrice } from '../util'
 
-import FacetTogglesWidget from './facet-toggles-widget'
+import FacetTogglesWidget from './facet-values-widget'
 
 const formatItem = (item: LineItem, withQuantity: boolean = false): string => (
   `${item.titleAsOption}, ${formatPrice(item.price)}${(withQuantity && item.quantity > 0) ? `  (${item.quantity})` : ''}`

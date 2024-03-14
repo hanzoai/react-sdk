@@ -6,24 +6,24 @@ import { observer } from 'mobx-react-lite'
 import { cn } from '@hanzo/ui/util'
 import { Skeleton } from '@hanzo/ui/primitives'
 
-import type { Category, ObsLineItemRef } from '../types'
+import type { ItemSelector } from '../types'
 import { formatPrice } from '../util'
 import { Icons } from './Icons'
 
 import AddToCartWidget from './add-to-cart-widget'
-import ProductSelectionRadioGroup from './product-selection-radio-group'
-import ProductSelectionMobilePicker from './product-selection-mobile-picker'
+import CategoryItemRadioSelector from './category-item-radio-selector'
+import CategoryItemIOSWheelSelector from './category-item-ios-wheel-selector'
 
-const SelectItemInCategoryView: React.FC<React.HTMLAttributes<HTMLDivElement> & {
-  category: Category
-  lineItemRef: ObsLineItemRef
-  handleItemSelected: (sku: string) => void 
-  isLoading?: boolean
-  mobile?: boolean
-}> = ({
+const SelectCategoryItemPanel: React.FC<
+  React.HTMLAttributes<HTMLDivElement> & ItemSelector &   
+  {
+    isLoading?: boolean
+    mobile?: boolean
+  }
+> = ({
   category,
-  lineItemRef,
-  handleItemSelected, 
+  selectedItemRef,
+  selectSku, 
   className, 
   isLoading = false, 
   mobile = false, 
@@ -42,25 +42,13 @@ const SelectItemInCategoryView: React.FC<React.HTMLAttributes<HTMLDivElement> & 
         className)} />
     }
 
-    if (!category.img) {
-      return (
-        <div
-          aria-label='Placeholder'
-          role='img'
-          aria-roledescription='placeholder'
-          className={cn('w-full flex items-center justify-center aspect-square' , className)}
-        >
-          <Icons.barcode className='h-9 w-9 text-muted' aria-hidden='true' />
-        </div>
-      )
-    }
-
-    return (
+    return category.img ? (
+      // TODO: Why so many div's?
       <div className={cn('flex flex-col justify-start', className)}>
         <div className={cn('w-full border rounded-xl p-6 ')}>
           <div className={cn('w-full aspect-square  relative')}>
             <Image
-              src={category.img!}
+              src={category.img}
               fill
               sizes="(max-width: 480px) 100vw, (max-width: 768px) 50vw, (max-width: 1200px) 50vw, 20vw"
               alt={category.title}
@@ -69,6 +57,15 @@ const SelectItemInCategoryView: React.FC<React.HTMLAttributes<HTMLDivElement> & 
               style={{ objectFit: 'contain' }} />
           </div>
         </div>
+      </div>
+    ) : (
+      <div
+        aria-label='Placeholder'
+        role='img'
+        aria-roledescription='placeholder'
+        className={cn('w-full flex items-center justify-center aspect-square' , className)}
+      >
+        <Icons.barcode className='h-9 w-9 text-muted' aria-hidden='true' />
       </div>
     )
   }
@@ -91,19 +88,19 @@ const SelectItemInCategoryView: React.FC<React.HTMLAttributes<HTMLDivElement> & 
           <div className={'h-[1px] bg-muted-3 ' + (mobilePicker ?  'w-pr-55' :  'w-pr-60') } />
         </div>
         {mobilePicker ? (
-          <ProductSelectionMobilePicker
-            products={category.products}
-            selectedSku={lineItemRef.item?.sku ?? undefined}  
-            onValueChange={handleItemSelected}
+          <CategoryItemIOSWheelSelector
+            category={category}
+            selectedItemRef={selectedItemRef}  
+            selectSku={selectSku}
             height={180}
             itemHeight={30}
             outerClx='mb-4'
           />
         ) : (
-          <ProductSelectionRadioGroup 
-            products={category.products}
-            selectedSku={lineItemRef.item?.sku ?? undefined}  
-            onValueChange={handleItemSelected}
+          <CategoryItemRadioSelector 
+            category={category}
+            selectedItemRef={selectedItemRef}  
+            selectSku={selectSku}
             groupClx='block columns-2 gap-4'
             itemClx='flex flex-row gap-2 items-center mb-2.5'
           />
@@ -113,8 +110,8 @@ const SelectItemInCategoryView: React.FC<React.HTMLAttributes<HTMLDivElement> & 
   })
 
   const AddToCartArea: React.FC<{ className?: string }> = observer(({ className = '' }) => (
-    (lineItemRef.item && !isLoading) ? (
-      <AddToCartWidget size='default' item={lineItemRef.item} className={className}/>
+    (selectedItemRef.item && !isLoading) ? (
+      <AddToCartWidget size='default' item={selectedItemRef.item} className={className}/>
     ) : (
       <div className={cn('h-6 w-12 invisible', className)} />
     )
@@ -133,9 +130,9 @@ const SelectItemInCategoryView: React.FC<React.HTMLAttributes<HTMLDivElement> & 
             {category.title}
           </span>
         </h3>
-        {lineItemRef.item?.sku ? (
+        {selectedItemRef.item?.sku ? (
           <h6 className='text-center font-semibold'>
-            {(soleOption ? '' : (lineItemRef.item.titleAsOption + ': ')) + formatPrice(lineItemRef.item.price)}
+            {(soleOption ? '' : (selectedItemRef.item.titleAsOption + ': ')) + formatPrice(selectedItemRef.item.price)}
           </h6>
         ) : ''}
       </div>
@@ -199,4 +196,4 @@ const SelectItemInCategoryView: React.FC<React.HTMLAttributes<HTMLDivElement> & 
 }
 
 
-export default SelectItemInCategoryView
+export default SelectCategoryItemPanel

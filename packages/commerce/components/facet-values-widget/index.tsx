@@ -7,7 +7,7 @@ import { cn } from '@hanzo/ui/util'
 import type { FacetValueDesc, StringMutator, StringArrayMutator } from '../../types'
 import FacetImage from './facet-image'
 
-const FacetTogglesWidget: React.FC<{
+const FacetValuesWidget: React.FC<{
   facetValues: FacetValueDesc[]
   mutator: StringMutator | StringArrayMutator
   multiple?: boolean
@@ -85,4 +85,4 @@ const FacetTogglesWidget: React.FC<{
 }
 // hidden md:block 
 
-export default FacetTogglesWidget
+export default FacetValuesWidget

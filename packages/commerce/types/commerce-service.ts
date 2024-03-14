@@ -6,10 +6,12 @@ interface CommerceService extends ObsLineItemRef {
 
     /** Items in cart */
   get cartItems(): LineItem[]
-    /** Total of all quantities of items in cart */
+    /** Total of all quantities of all products in cart */
   get cartQuantity(): number
-    /** Total of all prices X quantities of items in cart */
+    /** Total of all prices * quantities of products in cart */
   get cartTotal(): number
+
+  get cartEmpty(): boolean
    
   getCartCategorySubtotal(categoryId: string): number
 
@@ -56,6 +58,8 @@ interface CommerceService extends ObsLineItemRef {
      * which simply delegates to this function
      *  */ 
   get currentItem(): LineItem | undefined
+
+  getCategory(id: string): Category | undefined
 
 }
 

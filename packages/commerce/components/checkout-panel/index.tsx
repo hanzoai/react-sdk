@@ -18,7 +18,7 @@ import ThankYou from './thank-you'
 import PayWithCrypto from './pay-with-crypto'
 import PayByBankTransfer from './pay-by-bank-transfer'
 import ContactInfo from './contact-info'
-import { Cart } from '..'
+import { CartPanel } from '..'
 import { useCommerce } from '../../service/context'
 
 const contactFormSchema = z.object({
@@ -26,7 +26,12 @@ const contactFormSchema = z.object({
   email: z.string().email(),
 })
 
-const Checkout: React.FC<{toggleCheckout: () => void}> = observer(({toggleCheckout}) => {
+const CheckoutPanel: React.FC<{
+  close: () => void
+}> = observer(({
+  close
+}) => {
+
   const auth = useAuth()
   const cmmc = useCommerce()
   
@@ -96,7 +101,7 @@ const Checkout: React.FC<{toggleCheckout: () => void}> = observer(({toggleChecko
             className='sm:ml-2 sm:mt-2'
             onClick={() => {
               setCurrentStep(0)
-              toggleCheckout()
+              close()
             }}
           >
             <ChevronLeft/>
@@ -106,7 +111,7 @@ const Checkout: React.FC<{toggleCheckout: () => void}> = observer(({toggleChecko
 
         <div className='grid grid-cols-5 justify-center gap-8 h-full'>
           <div className='col-span-2 hidden md:flex'>
-            <Cart hideCheckout className='fixed justify-center border-none mt-10 w-1/3 max-w-[40rem]'/>
+            <CartPanel noCheckout className='fixed justify-center border-none mt-10 w-1/3 max-w-[40rem]'/>
           </div>
 
           <div className='flex flex-col gap-8 sm:gap-14 col-span-5 md:col-span-3 max-w-[30rem] w-full mx-auto overflow-y-auto h-[calc(100%-40px)] sm:h-[calc(100%-48px)] py-4'>
@@ -131,4 +136,4 @@ const Checkout: React.FC<{toggleCheckout: () => void}> = observer(({toggleChecko
   )
 })
 
-export default Checkout
+export default CheckoutPanel

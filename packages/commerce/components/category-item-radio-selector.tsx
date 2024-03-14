@@ -1,31 +1,27 @@
 'use client'
 
 import { Label, RadioGroup, RadioGroupItem } from '@hanzo/ui/primitives'
-import type { Product } from '../types'
+import type { ItemSelector } from '../types'
 import { formatPrice } from '../util'
 
-const ProductSelectionRadioGroup: React.FC<{
-  products: Product[]
-  selectedSku: string | undefined
-  onValueChange: (v: string) => void
+const CategoryItemRadioSelector: React.FC<ItemSelector & {
   groupClx?: string
   itemClx?: string
-  showPrice?: boolean
 }> = ({
-  products,
-  selectedSku,
-  onValueChange,
+  category,
+  selectedItemRef: itemRef,
+  selectSku,
   groupClx='',
   itemClx='',
   showPrice=true
 }) => (
-  products.length > 1 && (
+  category.products.length > 1 && (
     <RadioGroup
       className={groupClx}
-      onValueChange={onValueChange}
-      value={selectedSku}
+      onValueChange={selectSku}
+      value={itemRef.item ? itemRef.item.sku : ''}
     >
-    {products.map((prod) => (
+    {category.products.map((prod) => (
       <div className={itemClx} key={prod.sku}>
         <RadioGroupItem value={prod.sku} id={prod.sku} />
         <Label htmlFor={prod.sku}>{prod.titleAsOption + (showPrice ? (', ' + formatPrice(prod.price)) : '')}</Label>
@@ -35,4 +31,4 @@ const ProductSelectionRadioGroup: React.FC<{
   )
 )
 
-export default ProductSelectionRadioGroup
+export default CategoryItemRadioSelector

@@ -82,6 +82,7 @@ class StandaloneService
       cartItems: computed,
       cartQuantity: computed,
       cartTotal: computed, 
+      cartEmpty: computed,
       specifiedItems: computed,
       specifiedCategories: computed, 
       setCurrentItem: action,
@@ -92,6 +93,10 @@ class StandaloneService
     })
   }
 
+
+  getCategory(id: string): Category | undefined {
+    return this._categoryMap.get(id)
+  }
 
   getSubfacetsAtSkuPath(skuPath: string): FacetValueDesc[] | undefined {
     const toks = skuPath.split(SEP)
@@ -159,6 +164,10 @@ class StandaloneService
     return result.sort((it1, it2) => ((it1 as ActualLineItem).timeAdded - (it2 as ActualLineItem).timeAdded))
   }
   
+  get cartEmpty(): boolean {
+    return this.cartItems.length === 0    
+  }
+
   get cartTotal(): number {
     return this.cartItems.reduce(
       (total, item) => (total + item.price * item.quantity), 
