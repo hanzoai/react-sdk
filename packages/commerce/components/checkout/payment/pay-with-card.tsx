@@ -5,6 +5,7 @@ import { CreditCard, PaymentForm } from 'react-square-web-payments-sdk'
 import { useCommerce, type TransactionStatus } from '../../..'
 import PaymentMethods from './payment-methods'
 import { ApplyTypography, Button } from '@hanzo/ui/primitives'
+import processPayment from './process-payment'
 
 const PayWithCard: React.FC<{
   setCurrentStep: (currentStep: number) => void
@@ -32,19 +33,9 @@ const PayWithCard: React.FC<{
        */
       cardTokenizeResponseReceived={async (token: { token: any }, verifiedBuyer: any) => {
         setTransactionStatus('paid')
-        const response = await fetch("/api/pay", {
-          method: "POST",
-          headers: {
-            "Content-type": "application/json",
-          },
-          body: JSON.stringify({
-            sourceId: token.token,
-            amount: c.cartTotal
-          }),
-        });
-        const res = await response.json();
-        if (res.success) {
-          await storePaymentInfo(res.data)
+        const res = await processPayment(token.token, c.cartTotal)
+        if (res) {
+          await storePaymentInfo(res)
           setTransactionStatus('confirmed')
         } else {
           setTransactionStatus('error')
