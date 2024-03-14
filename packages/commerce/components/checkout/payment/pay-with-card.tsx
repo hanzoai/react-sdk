@@ -1,5 +1,6 @@
 'use client'
 
+// @ts-ignore
 import { CreditCard, PaymentForm } from 'react-square-web-payments-sdk'
 import { useCommerce, type TransactionStatus } from '../../..'
 import PaymentMethods from './payment-methods'
