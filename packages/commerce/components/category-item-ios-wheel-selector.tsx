@@ -1,3 +1,4 @@
+'use client'
 import React from 'react'
 import Picker from 'react-mobile-picker'
 

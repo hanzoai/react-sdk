@@ -1,7 +1,7 @@
 'use client'
 import React, { useState } from 'react'
 
-import { ToggleGroup, ToggleGroupItem, type toggleVariants} from "@hanzo/ui/primitives"
+import { ToggleGroup, ToggleGroupItem} from "@hanzo/ui/primitives"
 import { cn } from '@hanzo/ui/util'
 
 import type { FacetValueDesc, StringMutator, StringArrayMutator } from '../../types'

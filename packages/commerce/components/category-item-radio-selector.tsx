@@ -27,7 +27,7 @@ const CategoryItemRadioSelector: React.FC<ItemSelector & {
     item,
     className=''
   }) => (
-    <div className={cn(className, itemClx)} key={item.sku}>
+    <div className={cn(className, itemClx)}>
       <RadioGroupItem value={item.sku} id={item.sku} />
       <Label htmlFor={item.sku}>{item.titleAsOption + (showPrice ? (', ' + formatPrice(item.price)) : '')}</Label>
     </div>
@@ -40,12 +40,12 @@ const CategoryItemRadioSelector: React.FC<ItemSelector & {
         value={itemRef.item ? itemRef.item.sku : ''}
       >
       {(category.products as LineItem[]).map((item) => (showQuantity ? (
-        <div className='table-row' style={{}}>
+        <div className='table-row' key={item.sku}>
           <Choice item={item} className='table-cell pr-2 align-text-top pb-2'/>
           <div className='table-cell font-semibold text-sm leading-none align-text-top pb-2'>{ item.quantity > 0 ? `(${item.quantity})` : ' '}</div>
         </div>
       ) : (
-        <Choice item={item} className='mb-2'/>
+        <Choice item={item} className='mb-2'  key={item.sku}/>
       )))}
       </RadioGroup>
     ) : (<p>TODO</p>)

@@ -26,6 +26,10 @@
     "tc": "tsc",
     "clean": "rm -rf dist && rm -rf node_modules"
   },
+  "exports": {
+    ".": "./index.ts",
+    "./types": "./types/index.ts"
+  },
   "dependencies": {
     "ethers": "^6.11.1",
     "next-usequerystate": "^1.17.0",
