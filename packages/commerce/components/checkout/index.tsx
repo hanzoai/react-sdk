@@ -39,14 +39,13 @@ const Checkout: React.FC<{toggleCheckout: () => void}> = observer(({toggleChecko
   const steps = [step1, step2, step3]
 
   return (
-    <div className="fixed top-0 left-0 !max-w-none w-full h-full min-h-screen bg-background z-[51]">  
+    <div className="fixed top-0 left-0 !max-w-none w-full h-full min-h-screen bg-background z-50">  
       <Toaster/>  
       <Main className='flex flex-col gap-1 h-full'>
-        <div className='flex justify-between'>
+        <div className='flex justify-between items-center'>
           <Button
             variant='ghost'
             size='icon'
-            className='sm:ml-2 sm:mt-2'
             onClick={() => {
               setCurrentStep(0)
               toggleCheckout()

@@ -122,7 +122,7 @@ const PayWithCard: React.FC<{
             <GooglePay/>
             <ApplePay/>
             
-            <p className='flex gap-2 whitespace-nowrap items-center my-6 text-sm text-foreground/60'>
+            <p className='flex gap-2 whitespace-nowrap items-center my-6 sm:my-10 text-sm text-foreground/60'>
               <hr className='bg-foreground/60 w-full border'/> or pay with card <hr className='bg-foreground/60 w-full border'/>
             </p>
 
