@@ -20,7 +20,8 @@ import { Cart } from '..'
 import Payment from './payment'
 
 const contactFormSchema = z.object({
-  name: z.string().min(2, 'Name must be at least 2 characters.'),
+  firstName: z.string().min(1, 'Enter your first name.'),
+  lastName: z.string().min(1, 'Enter your last name.'),
   email: z.string().email(),
 })
 
@@ -33,14 +34,15 @@ const Checkout: React.FC<{toggleCheckout: () => void}> = observer(({toggleChecko
   const contactForm = useForm<z.infer<typeof contactFormSchema>>({
     resolver: zodResolver(contactFormSchema),  
     defaultValues: {
-      name: auth.user?.displayName ?? '',
+      firstName: auth.user?.displayName ?? '',
+      lastName: '',
       email: auth.user?.email ?? '',
     },
   })
 
   useEffect(() => {
     if (auth.loggedIn) {
-      contactForm.setValue('name', auth.user?.displayName ?? '')
+      contactForm.setValue('firstName', auth.user?.displayName ?? '')
       contactForm.setValue('email', auth.user?.email ?? '')
     }
   }, [auth.loggedIn])

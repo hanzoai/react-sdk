@@ -2,9 +2,10 @@
 
 // @ts-ignore
 import { CreditCard, PaymentForm } from 'react-square-web-payments-sdk'
+import type { UseFormReturn } from 'react-hook-form'
+import { ApplyTypography, Button } from '@hanzo/ui/primitives'
 import { useCommerce, type TransactionStatus } from '../../..'
 import PaymentMethods from './payment-methods'
-import { ApplyTypography, Button } from '@hanzo/ui/primitives'
 import { processSquareCardPayment } from '../../../util'
 
 const PayWithCard: React.FC<{
@@ -12,13 +13,53 @@ const PayWithCard: React.FC<{
   transactionStatus: TransactionStatus
   setTransactionStatus: (status: TransactionStatus) => void
   storePaymentInfo: (paymentInfo: any) => Promise<void>
+  contactForm: UseFormReturn<{
+    firstName: string
+    lastName: string
+    email: string
+  }, any, {
+    firstName: string
+    lastName: string
+    email: string
+  }>
 }> = ({
   setCurrentStep,
   transactionStatus,
   setTransactionStatus,
-  storePaymentInfo
+  storePaymentInfo,
+  contactForm,
 }) => {
-  const c = useCommerce()
+  const cmmc = useCommerce()
+
+  const cardTokenizeResponseReceived = async (
+    token: { token: any },
+    verifiedBuyer: { token: string }
+  ) => {
+    contactForm.handleSubmit(async () => {
+      setTransactionStatus('paid')
+      const res = await processSquareCardPayment(token.token, cmmc.cartTotal, verifiedBuyer.token)
+      if (res) {
+        await storePaymentInfo(res)
+        setTransactionStatus('confirmed')
+      } else {
+        setTransactionStatus('error')
+      }  
+    })() 
+  }
+
+  const createVerificationDetails = () => {
+    const {firstName, lastName, email} = contactForm.getValues()
+    return {
+      amount: cmmc.cartTotal.toFixed(2),
+      billingContact: {
+        givenName: firstName,
+        familyName: lastName,
+        email,
+      },
+      currencyCode: 'USD',
+      intent: 'CHARGE',
+    }
+  }
 
   return (
     <PaymentForm
@@ -31,16 +72,14 @@ const PayWithCard: React.FC<{
        * Invoked when payment form receives the result of a tokenize generation
        * request. The result will be a valid credit card or wallet token, or an error.
        */
-      cardTokenizeResponseReceived={async (token: { token: any }, verifiedBuyer: any) => {
-        setTransactionStatus('paid')
-        const res = await processSquareCardPayment(token.token, c.cartTotal)
-        if (res) {
-          await storePaymentInfo(res)
-          setTransactionStatus('confirmed')
-        } else {
-          setTransactionStatus('error')
-        }
-      }}
+      cardTokenizeResponseReceived={cardTokenizeResponseReceived}
+      /**
+        * This function enable the Strong Customer Authentication (SCA) flow
+        *
+        * We strongly recommend use this function to verify the buyer and reduce
+        * the chance of fraudulent transactions.
+        */
+      createVerificationDetails={createVerificationDetails}
       /**
        * Identifies the location of the merchant that is taking the payment.
        * Obtained from the Square Application Dashboard - Locations tab.
@@ -111,6 +150,11 @@ const PayWithCard: React.FC<{
                 },
               }}
             />
+            {transactionStatus === 'error' && (
+              <ApplyTypography>
+                <p className='mx-auto text-destructive'>There was an error processing your payment.</p>
+              </ApplyTypography>
+            )}
           </>
         )}
       </div>

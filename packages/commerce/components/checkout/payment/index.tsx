@@ -16,11 +16,13 @@ const Payment: React.FC<{
   orderId?: string
   setOrderId: (orderId?: string) => void
   contactForm: UseFormReturn<{
-    name: string;
-    email: string;
+    firstName: string
+    lastName: string
+    email: string
   }, any, {
-    name: string;
-    email: string;
+    firstName: string
+    lastName: string
+    email: string
   }>,
 }> = observer(({
   setCurrentStep,
@@ -34,10 +36,10 @@ const Payment: React.FC<{
 
   const storePaymentInfo = async (paymentInfo: any) => {
     if (auth.user) {
-      const {name, email} = contactForm.getValues()
+      const {firstName, lastName, email} = contactForm.getValues()
       let id
       if (!orderId) {
-        id = await cmmc.createOrder(email ? email : auth.user.email, name)
+        id = await cmmc.createOrder(email ? email : auth.user.email, `${firstName} ${lastName}`)
         setOrderId(id)
       }
       if (id) {
@@ -77,6 +79,7 @@ const Payment: React.FC<{
           transactionStatus={transactionStatus}
           setTransactionStatus={setTransactionStatus}
           storePaymentInfo={storePaymentInfo}
+          contactForm={contactForm}
         />
       </TabsContent>
       <TabsContent value='crypto'>

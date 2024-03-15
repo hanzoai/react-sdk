@@ -17,7 +17,7 @@ const { paymentsApi } = new Client({
   environment: process.env.SQUARE_ENVIRONMENT as Environment
 })
 
-const processPayment = async (sourceId: string, amount: number) => {
+const processPayment = async (sourceId: string, amount: number, verificationToken: string) => {
   // Square API accepts amount in cents
   const amountInCents = amount * 100
 
@@ -28,7 +28,8 @@ const processPayment = async (sourceId: string, amount: number) => {
       amountMoney: {
         currency: 'USD',
         amount: BigInt(amountInCents)
-      }
+      },
+      verificationToken
     })
     return result
   } catch (error) {

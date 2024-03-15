@@ -13,11 +13,13 @@ import type { UseFormReturn } from 'react-hook-form'
  
 const ContactInfo: React.FC<{
   form: UseFormReturn<{
-    name: string;
-    email: string;
+    firstName: string
+    lastName: string
+    email: string
   }, any, {
-    name: string;
-    email: string;
+    firstName: string
+    lastName: string
+    email: string
   }>,
 }> = ({
   form,
@@ -25,20 +27,35 @@ const ContactInfo: React.FC<{
   return (
     <Form {...form}>
       <form className='text-left'>
-        <div className='flex flex-col sm:flex-row gap-4'>
-          <FormField
-            control={form.control}
-            name='name'
-            render={({ field }) => (
-              <FormItem className='space-y-1 w-full'>
-                <FormLabel>Name</FormLabel>
-                <FormControl>
-                  <Input {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+        <div className='flex flex-col gap-4'>
+          <div className='flex flex-col sm:flex-row gap-4'>
+            <FormField
+              control={form.control}
+              name='firstName'
+              render={({ field }) => (
+                <FormItem className='space-y-1 w-full'>
+                  <FormLabel>First name</FormLabel>
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name='lastName'
+              render={({ field }) => (
+                <FormItem className='space-y-1 w-full'>
+                  <FormLabel>Last name</FormLabel>
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
           <FormField
             control={form.control}
             name='email'
