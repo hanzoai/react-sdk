@@ -2,9 +2,9 @@
 
 import type { ReactNode } from 'react'
 import { Copy } from 'lucide-react'
+import type { UseFormReturn } from 'react-hook-form'
 
 import { Button, Tabs, TabsContent, TabsList, TabsTrigger, toast } from '@hanzo/ui/primitives'
-import type { UseFormReturn } from 'react-hook-form'
 import ContactInfo from './contact-info'
 
 const InfoField: React.FC<{

@@ -1,5 +1,3 @@
-'use client'
- 
 import {
   Form,
   FormControl,
@@ -25,7 +23,7 @@ const ContactInfo: React.FC<{
   return (
     <Form {...form}>
       <form className='text-left'>
-        <div className='flex flex-col sm:flex-row gap-4'>
+        <div className='flex flex-col sm:flex-row gap-2'>
           <FormField
             control={form.control}
             name='name'

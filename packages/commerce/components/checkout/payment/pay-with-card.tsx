@@ -70,7 +70,6 @@ const PayWithCard: React.FC<{
     })),
     requestBillingContact: false,
     requestShippingContact: false,
-    // pending is only required if it's true.
     total: {
       amount: cmmc.cartTotal.toFixed(2),
       label: "Total",

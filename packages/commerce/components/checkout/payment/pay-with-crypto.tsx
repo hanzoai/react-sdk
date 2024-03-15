@@ -155,7 +155,7 @@ const PayWithCrypto: React.FC<{
     setCurrentStep(2)
   }
 
-  const payWidget = !!!(auth.user?.walletAddress) ? (
+  const cryptoPriceWidget = !!!(auth.user?.walletAddress) ? (
     <div className='w-full mx-auto max-w-[20rem]'>
       <Button
         variant='outline'
@@ -200,7 +200,7 @@ const PayWithCrypto: React.FC<{
 
   return (
     <div className='flex flex-col gap-6 mt-6'>
-      {payWidget}
+      {cryptoPriceWidget}
       {transactionStatus === 'unpaid' ? (
         <Button
           onClick={() => sendPayment(amount ? amount/(10**18) : 0)}
