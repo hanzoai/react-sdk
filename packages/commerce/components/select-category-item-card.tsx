@@ -6,7 +6,6 @@ import { cn } from '@hanzo/ui/util'
 import { Skeleton } from '@hanzo/ui/primitives'
 
 import type { ItemSelector } from '../types'
-import { formatPrice } from '../util'
 
 import AddToCartWidget from './add-to-cart-widget'
 import CategoryItemRadioSelector from './category-item-radio-selector'
@@ -100,6 +99,5 @@ const SelectCategoryItemCard: React.FC<React.HTMLAttributes<HTMLDivElement> & It
     </div>
   )
 }
-
 
 export default SelectCategoryItemCard

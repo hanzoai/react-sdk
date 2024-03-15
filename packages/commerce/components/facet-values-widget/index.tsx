@@ -13,6 +13,7 @@ const FacetValuesWidget: React.FC<{
   multiple?: boolean
   className?: string
   buttonClx?: string
+  itemClx?: string
   isMobile?: boolean
   tabSize?: string
 }> = ({
@@ -20,6 +21,7 @@ const FacetValuesWidget: React.FC<{
   mutator,
   multiple=false,
   buttonClx='',
+  itemClx='',
   className='',
   isMobile=false,
   tabSize
@@ -73,7 +75,7 @@ const FacetValuesWidget: React.FC<{
           {...roundedToSpread}
           className={buttonClx}
         >
-          <span className={cn('flex flex-row justify-center gap-1 h-6 items-center')} >
+          <span className={cn('flex flex-row justify-center gap-1 h-6 items-center', itemClx)} >
             <FacetImage facetValueDesc={fv} />
             {(!isMobile || !fv.img) && (<span className='whitespace-nowrap'>{fv.label}</span>)}
           </span>
