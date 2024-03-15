@@ -1,45 +1,58 @@
 'use client'
 
+import { useEffect, useState } from 'react'
 import { observer } from 'mobx-react-lite'
 
+import { zodResolver } from '@hookform/resolvers/zod'
+import * as z from 'zod'
+import { useForm } from 'react-hook-form'
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@hanzo/ui/primitives'
-import PayWithCrypto from './pay-with-crypto'
-import PayByBankTransfer from './pay-by-bank-transfer'
-import PayWithCard from './pay-with-card'
-import { useState } from 'react'
-import { useCommerce, type TransactionStatus } from '../../..'
 import { useAuth } from '@hanzo/auth/service'
-import type { UseFormReturn } from 'react-hook-form'
+import PayWithCrypto from './pay-with-crypto'
+import PayWithBankTransfer from './pay-with-bank-transfer'
+import PayWithCard from './pay-with-card'
+import { useCommerce, type TransactionStatus } from '../../..'
+
+const contactFormSchema = z.object({
+  name: z.string().min(1, 'Enter your full name.'),
+  email: z.string().email(),
+})
 
 const Payment: React.FC<{
   setCurrentStep: (currentStep: number) => void
   orderId?: string
   setOrderId: (orderId?: string) => void
-  contactForm: UseFormReturn<{
-    firstName: string
-    lastName: string
-    email: string
-  }, any, {
-    firstName: string
-    lastName: string
-    email: string
-  }>,
 }> = observer(({
   setCurrentStep,
   orderId,
-  setOrderId,
-  contactForm
+  setOrderId
 }) => {
   const cmmc = useCommerce()
   const auth = useAuth()
   const [transactionStatus, setTransactionStatus] = useState<TransactionStatus>('unpaid')
 
+  const contactForm = useForm<z.infer<typeof contactFormSchema>>({
+    resolver: zodResolver(contactFormSchema),  
+    defaultValues: {
+      name: auth.user?.displayName ?? '',
+      email: auth.user?.email ?? '',
+    },
+  })
+
+  useEffect(() => {
+    if (auth.loggedIn) {
+      contactForm.setValue('name', auth.user?.displayName ?? '')
+      contactForm.setValue('email', auth.user?.email ?? '')
+    }
+  }, [auth.loggedIn])
+
   const storePaymentInfo = async (paymentInfo: any) => {
     if (auth.user) {
-      const {firstName, lastName, email} = contactForm.getValues()
+      const {name, email} = contactForm.getValues()
       let id
       if (!orderId) {
-        id = await cmmc.createOrder(email ? email : auth.user.email, `${firstName} ${lastName}`)
+        id = await cmmc.createOrder(email ? email : auth.user.email, name)
         setOrderId(id)
       }
       if (id) {
@@ -91,9 +104,10 @@ const Payment: React.FC<{
         />
       </TabsContent>
       <TabsContent value='bank'>
-        <PayByBankTransfer
+        <PayWithBankTransfer
           setCurrentStep={setCurrentStep}
           storePaymentInfo={storePaymentInfo}
+          contactForm={contactForm}
         />
       </TabsContent>
     </Tabs>

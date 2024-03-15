@@ -1,12 +1,8 @@
 'use client'
 
-import { useEffect, useState }  from 'react'
+import { useState }  from 'react'
 import { ChevronLeft } from 'lucide-react'
 import { observer } from 'mobx-react-lite'
-
-import { zodResolver } from '@hookform/resolvers/zod'
-import * as z from 'zod'
-import { useForm } from 'react-hook-form'
 
 import { Button, Main, Separator, Toaster } from '@hanzo/ui/primitives'
 import { cn } from '@hanzo/ui/util'
@@ -15,15 +11,8 @@ import { LoginComponent, AuthWidget } from '@hanzo/auth/components'
 
 import ShippingInfo from './shipping-info'
 import ThankYou from './thank-you'
-import ContactInfo from './contact-info'
 import { Cart } from '..'
 import Payment from './payment'
-
-const contactFormSchema = z.object({
-  firstName: z.string().min(1, 'Enter your first name.'),
-  lastName: z.string().min(1, 'Enter your last name.'),
-  email: z.string().email(),
-})
 
 const Checkout: React.FC<{toggleCheckout: () => void}> = observer(({toggleCheckout}) => {
   const auth = useAuth()
@@ -31,32 +20,12 @@ const Checkout: React.FC<{toggleCheckout: () => void}> = observer(({toggleChecko
   const [currentStep, setCurrentStep] = useState(1)
   const [orderId, setOrderId] = useState<string>()
 
-  const contactForm = useForm<z.infer<typeof contactFormSchema>>({
-    resolver: zodResolver(contactFormSchema),  
-    defaultValues: {
-      firstName: auth.user?.displayName ?? '',
-      lastName: '',
-      email: auth.user?.email ?? '',
-    },
-  })
-
-  useEffect(() => {
-    if (auth.loggedIn) {
-      contactForm.setValue('firstName', auth.user?.displayName ?? '')
-      contactForm.setValue('email', auth.user?.email ?? '')
-    }
-  }, [auth.loggedIn])
-
   const step1 = auth.loggedIn ? (
-    <div className='flex flex-col gap-4'>
-      <ContactInfo form={contactForm}/>
-      <Payment
-        orderId={orderId} 
-        setOrderId={setOrderId}
-        setCurrentStep={setCurrentStep}
-        contactForm={contactForm}
-      />
-    </div>
+    <Payment
+      orderId={orderId} 
+      setOrderId={setOrderId}
+      setCurrentStep={setCurrentStep}
+    />
   ) : (
     <LoginComponent hideHeader className='max-w-[20rem] mx-auto'/>
   )

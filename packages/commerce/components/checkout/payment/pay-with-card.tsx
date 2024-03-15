@@ -1,12 +1,13 @@
 'use client'
 
 // @ts-ignore
-import { CreditCard, PaymentForm } from 'react-square-web-payments-sdk'
+import { ApplePay, GooglePay, CreditCard, PaymentForm } from 'react-square-web-payments-sdk'
 import type { UseFormReturn } from 'react-hook-form'
 import { ApplyTypography, Button } from '@hanzo/ui/primitives'
 import { useCommerce, type TransactionStatus } from '../../..'
 import PaymentMethods from './payment-methods'
 import { processSquareCardPayment } from '../../../util'
+import ContactInfo from './contact-info'
 
 const PayWithCard: React.FC<{
   setCurrentStep: (currentStep: number) => void
@@ -14,12 +15,10 @@ const PayWithCard: React.FC<{
   setTransactionStatus: (status: TransactionStatus) => void
   storePaymentInfo: (paymentInfo: any) => Promise<void>
   contactForm: UseFormReturn<{
-    firstName: string
-    lastName: string
+    name: string
     email: string
   }, any, {
-    firstName: string
-    lastName: string
+    name: string
     email: string
   }>
 }> = ({
@@ -32,14 +31,15 @@ const PayWithCard: React.FC<{
   const cmmc = useCommerce()
 
   const cardTokenizeResponseReceived = async (
-    token: { token: any },
-    verifiedBuyer: { token: string }
+    token: any,
+    verifiedBuyer: any
   ) => {
     contactForm.handleSubmit(async () => {
       setTransactionStatus('paid')
       const res = await processSquareCardPayment(token.token, cmmc.cartTotal, verifiedBuyer.token)
       if (res) {
-        await storePaymentInfo(res)
+        console.log(token)
+        await storePaymentInfo({paymentMethod: token.details.method ?? null, processed: res})
         setTransactionStatus('confirmed')
       } else {
         setTransactionStatus('error')
@@ -48,18 +48,34 @@ const PayWithCard: React.FC<{
   }
 
   const createVerificationDetails = () => {
-    const {firstName, lastName, email} = contactForm.getValues()
+    const {name, email} = contactForm.getValues()
     return {
       amount: cmmc.cartTotal.toFixed(2),
       billingContact: {
-        givenName: firstName,
-        familyName: lastName,
+        givenName: name,
         email,
       },
       currencyCode: 'USD',
       intent: 'CHARGE',
     }
   }
+
+  const createPaymentRequest= () => ({
+    countryCode: "US",
+    currencyCode: "USD",
+    lineItems: cmmc.cartItems.map(item => ({
+      amount: item.price.toFixed(2),
+      label: item.title,
+      id: item.sku,
+    })),
+    requestBillingContact: false,
+    requestShippingContact: false,
+    // pending is only required if it's true.
+    total: {
+      amount: cmmc.cartTotal.toFixed(2),
+      label: "Total",
+    },
+  })
 
   return (
     <PaymentForm
@@ -81,6 +97,10 @@ const PayWithCard: React.FC<{
         */
       createVerificationDetails={createVerificationDetails}
       /**
+        * This function is required for digital wallets (Apple Pay, Google Pay)
+        */
+      createPaymentRequest={createPaymentRequest}
+      /**
        * Identifies the location of the merchant that is taking the payment.
        * Obtained from the Square Application Dashboard - Locations tab.
        */
@@ -99,6 +119,15 @@ const PayWithCard: React.FC<{
           </ApplyTypography>
         ) : (
           <>
+            <GooglePay/>
+            <ApplePay/>
+            
+            <p className='flex gap-2 whitespace-nowrap items-center my-6 text-sm text-foreground/60'>
+              <hr className='bg-foreground/60 w-full border'/> or pay with card <hr className='bg-foreground/60 w-full border'/>
+            </p>
+
+            <ContactInfo form={contactForm}/>
+            
             <PaymentMethods/>
 
             {/* Imitates hanzo/ui Button and Input styles, I was unable to render the
