@@ -34,9 +34,12 @@ const FacetImage: React.FC<{
     )
   }
 
+  return img as React.ReactNode
+
     // Otherwise, assume it's a ReactNode of an imported SVG
 
     // If it's not square, center it in the appropriate dimension
+    /*
   const svgStyle: any = { position: 'relative' }
   if (ar) {
     if (ar < 1) {
@@ -65,6 +68,7 @@ const FacetImage: React.FC<{
       })}
     </span>
   )
+  */
 } 
 
 export default FacetImage

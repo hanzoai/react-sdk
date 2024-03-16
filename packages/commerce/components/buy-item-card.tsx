@@ -59,16 +59,17 @@ const BuyItemCard: React.FC<{
     <div className={className} >
     {facets && levelRef.current > 0 && (
       <FacetValuesWidget
-        className={cn('grid gap-0 ' + `grid-cols-${facets.length}` + ' self-start ', '')} 
+        className={cn('grid gap-0 ' + `grid-cols-${facets.length}` + ' self-start ', 'border-b mb-2 -mr-2 -ml-2')} 
         isMobile={false}
         mutator={getFacetValuesMutator(levelRef.current + 1, cmmc)} 
-        itemClx='flex-col h-auto'
-        buttonClx='h-auto'
+        itemClx='flex-col h-auto gap-0 pb-1 pt-3 px-3'
+        buttonClx='h-auto !rounded-bl-none !rounded-br-none !rounded-tl-lg !rounded-tr-lg '
         facetValues={facets}
       />
     )}
     {cmmc.specifiedCategories[0] && (
       <SelectCategoryItemCard 
+        noTitle
         category={cmmc.specifiedCategories[0]}
         selectedItemRef={cmmc /* ...conveniently. :) */ }
         selectSku={cmmc.setCurrentItem.bind(cmmc)}

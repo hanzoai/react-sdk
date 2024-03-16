@@ -5,15 +5,17 @@ import { observer } from 'mobx-react-lite'
 import { cn } from '@hanzo/ui/util'
 import { Skeleton } from '@hanzo/ui/primitives'
 
-import type { ItemSelector } from '../types'
+import type { ItemSelector, LineItem } from '../types'
 
 import AddToCartWidget from './add-to-cart-widget'
 import CategoryItemRadioSelector from './category-item-radio-selector'
 import CategoryItemIOSWheelSelector from './category-item-ios-wheel-selector'
+import { formatPrice } from '../util'
 
 const SelectCategoryItemCard: React.FC<React.HTMLAttributes<HTMLDivElement> & ItemSelector & {
   isLoading?: boolean
   mobile?: boolean
+  noTitle?: boolean
 }> = /* NOT observer */({
   category,
   selectedItemRef: selItemRef,
@@ -21,6 +23,7 @@ const SelectCategoryItemCard: React.FC<React.HTMLAttributes<HTMLDivElement> & It
   className, 
   isLoading = false, 
   mobile = false, 
+  noTitle = false,
   ...props
 }) => {
 
@@ -28,7 +31,12 @@ const SelectCategoryItemCard: React.FC<React.HTMLAttributes<HTMLDivElement> & It
 
   const SelectProductComp: React.FC<{ className?: string }> = ({ className = '' }) => {
 
-    if (soleOption) return null
+    if (soleOption) {
+      const item = category.products[0] as LineItem
+      return (
+        <p >{item.titleAsOption + ', ' + formatPrice(item.price) + (item.quantity > 0 ? `(${item.quantity})` : '')}</p>
+      )
+    }
     const mobilePicker = (mobile && category.products.length > 6) 
 
     return (
@@ -36,7 +44,7 @@ const SelectCategoryItemCard: React.FC<React.HTMLAttributes<HTMLDivElement> & It
         'sm:w-pr-80 sm:mx-auto md:w-full  flex flex-col justify-start items-center',
         className
       )}>
-        <div className={'h-[1px] bg-muted-3 ' + (mobilePicker ?  'w-pr-55' :  'w-pr-60') } />
+        {!noTitle && (<div className={'h-[1px] bg-muted-3 ' + (mobilePicker ?  'w-pr-55' :  'w-pr-60') } /> )}
         {mobilePicker ? (
           <CategoryItemIOSWheelSelector
             category={category}
@@ -85,13 +93,13 @@ const SelectCategoryItemCard: React.FC<React.HTMLAttributes<HTMLDivElement> & It
       )} 
       {...props}
     >
-      <TitleArea className='grow pt-3 mb-0' />
+      {!noTitle && (<TitleArea className='grow pt-3 mb-0' />)}
       <SelectProductComp className='mb-[3vh]' />
       <AddToCartComp className='w-pr-70 mx-auto' />
     </div>
   ) : (
     <div className={cn('', className)} {...props}>
-      <TitleArea className='' />
+      {!noTitle && (<TitleArea className='' />)}
       <div className='flex flex-col justify-start items-center gap-4'>
         <SelectProductComp />
         <AddToCartComp className='' />
