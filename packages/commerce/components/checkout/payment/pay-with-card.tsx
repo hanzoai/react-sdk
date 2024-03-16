@@ -134,7 +134,7 @@ const PayWithCard: React.FC<{
             <CreditCard
               style={{
                 '.input-container': {
-                  borderColor: '#2D2D2D',
+                  borderColor: '#404040',
                   borderRadius: '6px',
                 },
                 '.input-container.is-focus': {
@@ -156,7 +156,7 @@ const PayWithCard: React.FC<{
                   color: '#ff1600',
                 },
                 input: {
-                  backgroundColor: '#000000',
+                  backgroundColor: '#1f1f1f',
                   color: '#FFFFFF',
                 },
                 'input::placeholder': {
