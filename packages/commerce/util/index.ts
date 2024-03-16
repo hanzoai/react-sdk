@@ -58,3 +58,4 @@ export const getFacetValuesMutator = (level: number, cmmc: CommerceService): Str
 
 
 export { default as useSyncSkuParamWithCurrentItem } from './use-sync-sku-param-w-current-item'
+export { default as processSquareCardPayment } from './square-payment'
