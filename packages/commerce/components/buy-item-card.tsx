@@ -62,6 +62,8 @@ const BuyItemCard: React.FC<{
         className={cn('grid gap-0 ' + `grid-cols-${facets.length}` + ' self-start ', '')} 
         isMobile={false}
         mutator={getFacetValuesMutator(levelRef.current + 1, cmmc)} 
+        itemClx='flex-col h-auto'
+        buttonClx='h-auto'
         facetValues={facets}
       />
     )}

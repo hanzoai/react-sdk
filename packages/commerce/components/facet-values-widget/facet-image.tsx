@@ -27,7 +27,7 @@ const FacetImage: React.FC<{
       <Image 
         src={img as string} 
         alt={`Toggle ${label}`} 
-        className={'block mr-1 ' + (ar ? '' : 'aspect-square')} // rounded border border-muted-2 
+        className={'block mr-1 '} 
         width={ar ?  ar * ICON_SIZE : ICON_SIZE}
         height={ICON_SIZE}
       />
