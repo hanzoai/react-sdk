@@ -5,10 +5,10 @@ import { observer } from 'mobx-react-lite'
 
 import { cn } from '@hanzo/ui/util'
 
-import type { FacetsValue } from '../types'
-import { useCommerce } from '../service/context'
-import { getFacetValuesMutator } from '../util'
-import FacetValuesWidget from './facet-values-widget'
+import type { FacetsValue } from '../../types'
+import { useCommerce } from '../../service/context'
+import { getFacetValuesMutator } from '../../util'
+import FacetValuesWidget from '../facet-values-widget'
 import SelectCategoryItemCard from './select-category-item-card'
 
 

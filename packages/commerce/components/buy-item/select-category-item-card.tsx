@@ -5,12 +5,12 @@ import { observer } from 'mobx-react-lite'
 import { cn } from '@hanzo/ui/util'
 import { Skeleton } from '@hanzo/ui/primitives'
 
-import type { ItemSelector, LineItem } from '../types'
+import type { ItemSelector, LineItem } from '../../types'
 
-import AddToCartWidget from './add-to-cart-widget'
-import CategoryItemRadioSelector from './category-item-radio-selector'
-import CategoryItemIOSWheelSelector from './category-item-ios-wheel-selector'
-import { formatPrice } from '../util'
+import AddToCartWidget from '../add-to-cart-widget'
+import CategoryItemRadioSelector from '../category-item-radio-selector'
+import CategoryItemIOSWheelSelector from '../category-item-ios-wheel-selector'
+import { formatPrice } from '../../util'
 
 const SelectCategoryItemCard: React.FC<React.HTMLAttributes<HTMLDivElement> & ItemSelector & {
   isLoading?: boolean
