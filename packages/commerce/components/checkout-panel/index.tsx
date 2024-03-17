@@ -11,10 +11,15 @@ import { LoginComponent, AuthWidget } from '@hanzo/auth/components'
 
 import ShippingInfo from './shipping-info'
 import ThankYou from './thank-you'
-import { Cart } from '..'
+import CartPanel from '../cart-panel'
 import Payment from './payment'
 
-const Checkout: React.FC<{toggleCheckout: () => void}> = observer(({toggleCheckout}) => {
+const CheckoutPanel: React.FC<{
+  close: () => void
+}> = observer(({
+  close
+}) => {
+
   const auth = useAuth()
   
   const [currentStep, setCurrentStep] = useState(1)
@@ -47,18 +52,18 @@ const Checkout: React.FC<{toggleCheckout: () => void}> = observer(({toggleChecko
           size='icon'
           onClick={() => {
             setCurrentStep(0)
-            toggleCheckout()
+            close()
           }}
           className='w-auto h-auto rounded-full bg-level-1 p-2 md:p-4'
         >
           <ChevronLeft className='w-5 h-5'/>
-        </Button>
+        </Button>    
         <AuthWidget/>
-      </div>    
+      </div>
 
       <div className='grid grid-cols-1 md:grid-cols-2 justify-center h-full overflow-y-auto md:overflow-y-hidden'>
         <div className='flex items-center justify-center py-2'>
-          <Cart hideCheckout className='border-none mt-10 w-full lg:w-1/2'/>
+          <CartPanel noCheckout className='border-none mt-10 w-full lg:w-1/2'/>
         </div>
 
         <div className='bg-level-1'>
@@ -84,4 +89,4 @@ const Checkout: React.FC<{toggleCheckout: () => void}> = observer(({toggleChecko
   )
 })
 
-export default Checkout
+export default CheckoutPanel

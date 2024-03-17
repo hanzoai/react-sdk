@@ -65,7 +65,7 @@ export {
   TableCaption,
 } from './table'
 
-export { default as TailwindIndicator } from './tailwind-indicator'
+export { default as BreakpointIndicator } from './breakpoint-indicator'
 
 export {
   type ToastProps,
@@ -94,9 +94,11 @@ export {
 
 export { 
   Popover, 
-  PopoverTrigger, 
+  PopoverAnchor, 
+  PopoverArrow, 
+  PopoverClose, 
   PopoverContent, 
-  PopoverAnchor 
+  PopoverTrigger, 
 } from './popover'
 
 export {

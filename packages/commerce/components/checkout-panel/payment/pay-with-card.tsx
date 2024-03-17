@@ -1,12 +1,17 @@
 'use client'
+import React from 'react'
 
+import type { UseFormReturn } from 'react-hook-form'
 // @ts-ignore
 import { ApplePay, GooglePay, CreditCard, PaymentForm } from 'react-square-web-payments-sdk'
-import type { UseFormReturn } from 'react-hook-form'
+
 import { ApplyTypography, Button } from '@hanzo/ui/primitives'
-import { useCommerce, type TransactionStatus } from '../../..'
-import PaymentMethods from './payment-methods'
+
 import { processSquareCardPayment } from '../../../util'
+import { useCommerce } from '../../../service/context'
+import type { TransactionStatus } from '../../../types'
+
+import PaymentMethods from './payment-methods'
 import ContactInfo from './contact-info'
 
 const PayWithCard: React.FC<{
@@ -105,17 +110,15 @@ const PayWithCard: React.FC<{
        */
       locationId={process.env.NEXT_PUBLIC_SQUARE_LOCATION_ID}
     >
-      <div className='flex flex-col gap-2 mt-6'>
-        {transactionStatus === 'confirmed' ? (
-          <ApplyTypography className='flex flex-col gap-4'>
+      <ApplyTypography className='flex flex-col gap-2 mt-6'>
+        {transactionStatus === 'paid' ? (
+          <div className='flex flex-col gap-4'>
             <h5 className='mx-auto font-nav'>Payment confirmed!</h5>
             <p className='mx-auto'>Thank you for your purchase.</p>
             <Button onClick={() => setCurrentStep(2)}>Continue</Button>
-          </ApplyTypography>
-        ) : transactionStatus === 'paid' ? (
-          <ApplyTypography className='flex flex-col gap-4'>
-            <h5 className='mx-auto font-nav'>Processing your payment...</h5>
-          </ApplyTypography>
+          </div>
+        ) : transactionStatus === 'confirmed' ? (
+            <h6 className='mx-auto font-nav'>Processing your payment...</h6>
         ) : (
           <>
             <GooglePay/>
@@ -179,13 +182,11 @@ const PayWithCard: React.FC<{
               }}
             />
             {transactionStatus === 'error' && (
-              <ApplyTypography>
-                <p className='mx-auto text-destructive'>There was an error processing your payment.</p>
-              </ApplyTypography>
+              <p className='mx-auto text-destructive'>There was an error processing your payment.</p>
             )}
           </>
         )}
-      </div>
+      </ApplyTypography>
     </PaymentForm>
   )
 }
