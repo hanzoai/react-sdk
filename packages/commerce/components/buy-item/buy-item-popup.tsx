@@ -16,16 +16,18 @@ import BuyItemCard from './buy-item-card'
 
 const BuyItemPopup: React.FC<PropsWithChildren & {
   skuPath: string
+  triggerClx?: string  
   popupClx?: string
   cardClx?: string
 }> = ({
   skuPath,
   children,
+  triggerClx='',
   popupClx='',
   cardClx='',
 }) => (
   <Popover>
-    <PopoverTrigger asChild>
+    <PopoverTrigger asChild className={triggerClx}>
       {children}
     </PopoverTrigger>
     <PopoverContent className={cn('relative flex flex-col p-0 px-4 pb-4 pt-2', popupClx)}>

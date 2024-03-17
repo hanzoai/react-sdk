@@ -14,9 +14,11 @@ import SelectCategoryItemCard from './select-category-item-card'
 
 const BuyItemCard: React.FC<{
   skuPath: string
+  mobile?: boolean
   className?: string
 }> = observer(({
   skuPath,
+  mobile=false,
   className=''
 }) => {
 
@@ -59,17 +61,19 @@ const BuyItemCard: React.FC<{
     <div className={className} >
     {facets && levelRef.current > 0 && (
       <FacetValuesWidget
-        className={cn('grid gap-0 ' + `grid-cols-${facets.length}` + ' self-start ', 'border-b mb-2 -mr-2 -ml-2')} 
+        className={cn('grid gap-0 ' + `grid-cols-${facets.length}` + ' self-start ', 'border-b-2 border-level-3 mb-2 -mr-2 -ml-2')} 
         isMobile={false}
         mutator={getFacetValuesMutator(levelRef.current + 1, cmmc)} 
         itemClx='flex-col h-auto gap-0 pb-1 pt-3 px-3'
-        buttonClx='h-auto !rounded-bl-none !rounded-br-none !rounded-tl-lg !rounded-tr-lg '
+        buttonClx={'h-full !rounded-bl-none !rounded-br-none !rounded-tl-lg !rounded-tr-lg ' +
+        '!border-r !border-t !border-level-3'}
         facetValues={facets}
       />
     )}
     {cmmc.specifiedCategories[0] && (
       <SelectCategoryItemCard 
         noTitle
+        mobile={mobile}
         category={cmmc.specifiedCategories[0]}
         selectedItemRef={cmmc /* ...conveniently. :) */ }
         selectSku={cmmc.setCurrentItem.bind(cmmc)}
