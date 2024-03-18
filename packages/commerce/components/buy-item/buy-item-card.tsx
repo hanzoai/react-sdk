@@ -16,10 +16,12 @@ const BuyItemCard: React.FC<{
   skuPath: string
   mobile?: boolean
   className?: string
+  onQuantityChanged?: (sku: string, oldV: number, newV: number) => void
 }> = observer(({
   skuPath,
   mobile=false,
-  className=''
+  className='',
+  onQuantityChanged
 }) => {
 
   const cmmc = useCommerce()
@@ -30,17 +32,17 @@ const BuyItemCard: React.FC<{
 
   useEffect(() => {
 
+    const toks = skuPath.split('-')
+    levelRef.current = toks.length - 1
+    const fsv: FacetsValue = {}
+    for (let level = 1; level <= levelRef.current; level++ ) {
+      fsv[level] = [toks[level]]   
+    } 
     if (facets) {
-      const toks = skuPath.split('-')
-      const levelSpecified = toks.length - 1
-      const fsv: FacetsValue = {}
-      for (let level = 1; level <= levelSpecified; level++ ) {
-        fsv[level] = [toks[level]]   
-      } 
-      fsv[levelSpecified + 1] = [facets[0].value]
-      levelRef.current = levelSpecified
-      cmmc.setFacets(fsv)
+      fsv[levelRef.current + 1] = [facets[0].value]
     }
+    cmmc.setFacets(fsv)
+
     return autorun(() => {
       const cats = cmmc.specifiedCategories
         // Original cat was legit
@@ -57,9 +59,11 @@ const BuyItemCard: React.FC<{
     })
   }, [cat, facets])
 
+  const renderFacetTabs = facets && levelRef.current > 0
+
   return (
     <div className={className} >
-    {facets && levelRef.current > 0 && (
+    {renderFacetTabs && (
       <FacetValuesWidget
         className={cn('grid gap-0 ' + `grid-cols-${facets.length}` + ' self-start ', 'border-b-2 border-level-3 mb-2 -mr-2 -ml-2')} 
         isMobile={false}
@@ -77,6 +81,8 @@ const BuyItemCard: React.FC<{
         category={cmmc.specifiedCategories[0]}
         selectedItemRef={cmmc /* ...conveniently. :) */ }
         selectSku={cmmc.setCurrentItem.bind(cmmc)}
+        className={!renderFacetTabs ? 'border-t-2 ' : ''}
+        onQuantityChanged={onQuantityChanged}
       />  
     )}
     </div >

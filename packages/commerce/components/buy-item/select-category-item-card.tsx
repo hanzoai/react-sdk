@@ -16,6 +16,7 @@ const SelectCategoryItemCard: React.FC<React.HTMLAttributes<HTMLDivElement> & It
   isLoading?: boolean
   mobile?: boolean
   noTitle?: boolean
+  onQuantityChanged?: (sku: string, oldV: number, newV: number) => void
 }> = /* NOT observer */({
   category,
   selectedItemRef: selItemRef,
@@ -24,6 +25,7 @@ const SelectCategoryItemCard: React.FC<React.HTMLAttributes<HTMLDivElement> & It
   isLoading = false, 
   mobile = false, 
   noTitle = false,
+  onQuantityChanged,
   ...props
 }) => {
 
@@ -75,7 +77,12 @@ const SelectCategoryItemCard: React.FC<React.HTMLAttributes<HTMLDivElement> & It
   const AddToCartComp: React.FC<{ className?: string }> = observer(({ className = '' }) => (
       // TODO disable if nothing selected
     (selItemRef.item && !isLoading) && (
-      <AddToCartWidget size='default' item={selItemRef.item} className={cn('lg:min-w-[160px] lg:mx-auto', className)}/>
+      <AddToCartWidget 
+        size='default' 
+        item={selItemRef.item}
+        onQuantityChanged={onQuantityChanged} 
+        className={cn('lg:min-w-[160px] lg:mx-auto', className)}
+      />
     ) 
   ))
 

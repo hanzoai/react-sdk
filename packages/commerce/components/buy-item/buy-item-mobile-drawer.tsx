@@ -1,5 +1,5 @@
 'use client'
-import React, { type ReactNode } from 'react'
+import React, { useState, type ReactNode } from 'react'
 
 import { X as LucideX} from 'lucide-react'
 import { Sheet, SheetContent, SheetTrigger } from '@hanzo/ui/primitives'
@@ -22,16 +22,24 @@ const BuyItemMobileDrawer: React.FC<{
   cardClx=''
 }) => {
 
+  const [open, setOpen] = useState<boolean>(false)
+
+  const onQuantityChanged = (sku: string, oldV: number, newV: number) => {
+    if (oldV === 0 && newV === 1) {
+      setTimeout(() => {setOpen(false)}, 150)
+    }
+  }
+
   return (
-    <Sheet  >
-      <SheetTrigger className={triggerClx}>
+    <Sheet open={open} onOpenChange={setOpen} >
+      <SheetTrigger asChild className={triggerClx}>
         {trigger}
       </SheetTrigger>
       <SheetContent 
         className={cn('rounded-tl-xl rounded-tr-xl p-0 overflow-hidden border-none', drawerClx)}
         side="bottom" 
       >
-        <BuyItemCard skuPath={skuPath} mobile className={cn("w-full relative ", cardClx)}/>
+        <BuyItemCard skuPath={skuPath} mobile onQuantityChanged={onQuantityChanged} className={cn("w-full relative ", cardClx)}/>
       </SheetContent>
     </Sheet>
   )
