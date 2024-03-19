@@ -24,6 +24,9 @@ import { Ethereum as EthIconFromAuth }  from '@hanzo/auth/icons'
 import Eth from '../icons/eth'
 import { useCommerce } from '../../../service/context'
 import type { TransactionStatus } from '../../../types'
+import ContactInfo from './contact-info'
+import type { UseFormReturn } from 'react-hook-form'
+import { LoginComponent } from '@hanzo/auth/components'
 
 declare global {
   interface Window{
@@ -36,11 +39,19 @@ const PayWithCrypto: React.FC<{
   transactionStatus: TransactionStatus
   setTransactionStatus: (status: TransactionStatus) => void
   storePaymentInfo: (paymentInfo: any) => Promise<void>
+  contactForm: UseFormReturn<{
+    name: string
+    email: string
+  }, any, {
+    name: string
+    email: string
+  }>
 }> = observer(({
   setStep,
   transactionStatus,
   setTransactionStatus,
-  storePaymentInfo
+  storePaymentInfo,
+  contactForm
 }) => {
   const c = useCommerce()
   const auth = useAuth()
@@ -125,6 +136,12 @@ const PayWithCrypto: React.FC<{
       console.log({ ether, addr: process.env.NEXT_PUBLIC_ETH_PAYMENT_ADDRESS })
       console.log('tx', tx)
       setTransactionStatus('paid')
+      await storePaymentInfo({
+        ether,
+        transactionHash: tx.hash,
+        to: process.env.NEXT_PUBLIC_ETH_PAYMENT_ADDRESS,
+        paymentMethod: 'crypto'
+      })
 
       provider.waitForTransaction(tx.hash)
         .then(async (receipt) => {
@@ -156,16 +173,23 @@ const PayWithCrypto: React.FC<{
 
   const cryptoPriceWidget = !!!(auth.user?.walletAddress) ? (
     <div className='w-full mx-auto max-w-[20rem]'>
-      <Button
-        variant='outline'
-        className='w-full flex items-center gap-2'
-        onClick={auth.associateWallet.bind(auth)}
-      >
-        <EthIconFromAuth height={20}/>Connect your wallet
-      </Button>
+      {!auth.loggedIn ? (
+        <LoginComponent hideHeader className='max-w-[20rem] mx-auto' inputClassName='border-muted-4'>
+          <h6 className='font-nav'>Login and connect your wallet</h6>
+        </LoginComponent >
+      ) : (
+        <Button
+          variant='outline'
+          className='w-full flex items-center gap-2'
+          onClick={auth.associateWallet.bind(auth)}
+        >
+          <EthIconFromAuth height={20}/>Connect your wallet
+        </Button>
+      )}
     </div>
   ) : (
     <div className='flex flex-col gap-2 w-full'>
+      <ContactInfo form={contactForm}/>
       <div className='flex gap-2 grid grid-cols-3'>
         <Select onValueChange={(token) => {/*ONLY ETH  setSelectedToken(token) */}} defaultValue='eth'>
           <SelectTrigger>
@@ -200,12 +224,7 @@ const PayWithCrypto: React.FC<{
       ) : transactionStatus === 'confirmed' ? (
         <h4>Transaction confirmed!</h4>
       ) : null}
-    </div>
-  )
 
-  return (
-    <div className='flex flex-col gap-6 mt-6'>
-      {cryptoPriceWidget}
       {transactionStatus === 'unpaid' ? (
         <Button
           onClick={() => sendPayment(amount ? amount/(10**18) : 0)}
@@ -217,6 +236,12 @@ const PayWithCrypto: React.FC<{
       ) : (
         <Button onClick={nextStep} className='mx-auto w-full'>Continue</Button>
       )}
+    </div>
+  )
+
+  return (
+    <div className='flex flex-col gap-6 mt-6'>
+      {cryptoPriceWidget}
     </div>
   )
 })

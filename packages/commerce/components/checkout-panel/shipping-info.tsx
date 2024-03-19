@@ -73,62 +73,32 @@ const ShippingInfo: React.FC<{
     <Form {...shippingForm}>
       <form onSubmit={shippingForm.handleSubmit(onSubmit)} className='text-left'>
         <div className='flex flex-col gap-4'>
-          <div className='flex gap-4 items-end'>
-            <FormField
-              control={shippingForm.control}
-              name='firstName'
-              render={({ field }) => (
-                <FormItem className='space-y-1 w-full'>
-                  <FormLabel>First name</FormLabel>
-                  <FormControl>
-                    <Input {...field} className='border-muted-4'/>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={shippingForm.control}
-              name='lastName'
-              render={({ field }) => (
-                <FormItem className='space-y-1 w-full'>
-                  <FormLabel>Last name</FormLabel>
-                  <FormControl>
-                    <Input {...field} className='border-muted-4'/>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-          <div className='flex gap-4 items-end'>
-            <FormField
-              control={shippingForm.control}
-              name='addressLine1'
-              render={({ field }) => (
-                <FormItem className='space-y-1 w-full'>
-                  <FormLabel>Address line 1</FormLabel>
-                  <FormControl>
-                    <Input {...field} className='border-muted-4'/>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={shippingForm.control}
-              name='addressLine2'
-              render={({ field }) => (
-                <FormItem className='space-y-1 w-full'>
-                  <FormLabel>Address line 2 (optional)</FormLabel>
-                  <FormControl>
-                    <Input {...field} className='border-muted-4'/>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
+          <FormField
+            control={shippingForm.control}
+            name='addressLine1'
+            render={({ field }) => (
+              <FormItem className='space-y-1 w-full'>
+                <FormLabel>Address line 1</FormLabel>
+                <FormControl>
+                  <Input {...field} className='border-muted-4'/>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={shippingForm.control}
+            name='addressLine2'
+            render={({ field }) => (
+              <FormItem className='space-y-1 w-full'>
+                <FormLabel>Address line 2 (optional)</FormLabel>
+                <FormControl>
+                  <Input {...field} className='border-muted-4'/>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
           <div className='flex gap-4 items-end'>
             <FormField
               control={shippingForm.control}
