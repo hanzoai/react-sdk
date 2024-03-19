@@ -13,8 +13,7 @@ import {
   Toaster
 } from '@hanzo/ui/primitives'
 import { cn } from '@hanzo/ui/util'
-import { useAuth } from '@hanzo/auth/service'
-import { LoginComponent, AuthWidget } from '@hanzo/auth/components'
+import { AuthWidget } from '@hanzo/auth/components'
 
 import ShippingInfo from './shipping-info'
 import ThankYou from './thank-you'
@@ -33,7 +32,6 @@ const CheckoutPanel: React.FC<{
   setOpen
 }) => {
 
-  const auth = useAuth()
   const cmmc = useCommerce()
   
   const [step, setStep] = useState<number>(1)
@@ -43,17 +41,11 @@ const CheckoutPanel: React.FC<{
     1: {
       label: 'Payment',
       element: (
-        auth.loggedIn ? (
-          <Payment
-            orderId={orderId} 
-            setOrderId={setOrderId}
-            setStep={setStep}
-          />
-        ) : (
-          <LoginComponent hideHeader className='max-w-[20rem] mx-auto' inputClassName='border-muted-4'>
-            <h6 className='font-nav'>Please login to proceed</h6>
-          </LoginComponent >
-        )
+        <Payment
+          orderId={orderId} 
+          setOrderId={setOrderId}
+          setStep={setStep}
+        />
     )}
     , 
     2: {
@@ -78,7 +70,7 @@ const CheckoutPanel: React.FC<{
       <DialogPortal>
         <div id='PORTAL_OUTER'
           className={cn(
-            'fixed top-0 pt-[44px] md:pt-[80px] shadow-lg ',
+            'fixed top-0 shadow-lg ',
             'animate-in data-[state=open]:fade-in-90 data-[state=open]:slide-in-from-bottom-10',
             'sm:zoom-in-90 data-[state=open]:sm:slide-in-from-bottom-0',
             '!max-w-none w-full h-full min-h-screen bg-transparent backdrop-blur-sm z-50'
