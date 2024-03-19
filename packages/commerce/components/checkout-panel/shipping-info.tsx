@@ -28,8 +28,6 @@ import { useCommerce } from '../..'
 import { countries } from './countries'
 
 const shippingFormSchema = z.object({
-  firstName: z.string().min(2, 'First name must be at least 2 characters.'),
-  lastName: z.string().min(2, 'Last name must be at least 2 characters.'),
   addressLine1: z.string().min(2, 'Address must be at least 2 characters.'),
   addressLine2: z.string().optional(),
   zipCode: z.string().min(2, 'Zip code is invalid.'),
@@ -51,8 +49,6 @@ const ShippingInfo: React.FC<{
   const shippingForm = useForm<z.infer<typeof shippingFormSchema>>({
     resolver: zodResolver(shippingFormSchema),
     defaultValues: {
-      firstName: '',
-      lastName: '',
       addressLine1: '',
       addressLine2: '',
       zipCode: '',
