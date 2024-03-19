@@ -59,7 +59,7 @@ const ShippingInfo: React.FC<{
   })
 
   const onSubmit = async (values: z.infer<typeof shippingFormSchema>) => {
-    if (auth.user && orderId) {
+    if (orderId) {
       await cmmc.updateOrderShippingInfo(orderId, values)
     }
     setStep(3)
