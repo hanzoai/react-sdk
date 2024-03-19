@@ -149,8 +149,7 @@ export { ToggleGroup, ToggleGroupItem } from './toggle-group'
 
 export { ScrollArea, ScrollBar } from './scroll-area' 
 
-export { Toaster } from './toaster'
-export { useToast, toast } from './use-toast'
+export { Toaster, toast } from './sonner'
 export { RadioGroup, RadioGroupItem } from './radio-group'
 
 export { default as AspectRatio } from './aspect-ratio'

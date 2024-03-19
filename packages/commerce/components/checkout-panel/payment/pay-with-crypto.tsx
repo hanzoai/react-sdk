@@ -104,7 +104,7 @@ const PayWithCrypto: React.FC<{
         })
       }
     } catch (err) {
-      toast({title: 'Please switch your wallet to the Ethereum network.'})
+      toast('Please switch your wallet to the Ethereum network.')
       return
     }
 
@@ -143,7 +143,7 @@ const PayWithCrypto: React.FC<{
     } catch (err) {
       console.log(err)
       // :aa TODO string table
-      toast({title: 'Not enough funds in your wallet'})
+      toast('Not enough funds in your wallet.')
     }
   }
 
