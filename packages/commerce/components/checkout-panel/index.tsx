@@ -26,10 +26,10 @@ import { formatPrice, useCommerce } from '../..'
 
 const CheckoutPanel: React.FC<{
   open: boolean
-  setOpen: (open: boolean) => void
+  onCheckoutClose: () => void
 }> = observer(({
   open,
-  setOpen
+  onCheckoutClose
 }) => {
 
   const cmmc = useCommerce()
@@ -62,7 +62,7 @@ const CheckoutPanel: React.FC<{
 
   const onClose = () => {
     setStep(1)
-    setOpen(false)
+    onCheckoutClose()
   }
 
   return (
