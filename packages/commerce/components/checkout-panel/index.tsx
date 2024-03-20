@@ -32,6 +32,11 @@ const CheckoutPanel: React.FC<{
 }) => {
 
   const cmmc = useCommerce()
+    
+    // For sites that don't initialize cmmc
+  if (!cmmc) {
+    return <></>
+  }
   
   const [step, setStep] = useState<number>(1)
   const [orderId, setOrderId] = useState<string>()
