@@ -10,7 +10,6 @@ import {
   AccordionTrigger,
   Dialog,
   DialogPortal,
-  Toaster
 } from '@hanzo/ui/primitives'
 import { cn } from '@hanzo/ui/util'
 import { AuthWidget } from '@hanzo/auth/components'
@@ -100,7 +99,6 @@ const CheckoutPanel: React.FC<{
             </div>
             <div className='bg-level-1 flex flex-row items-start justify-start md:overflow-y-auto'>
               <div className='h-full w-full max-w-[750px] relative flex flex-col gap-8 sm:gap-14 px-8 pb-6 pt-6 md:pt-14'>
-                <Toaster/>  
                 <AuthWidget hideLogin className='hidden md:flex absolute top-4 right-4 '/>
                 <StepIndicator steps={steps} currentStep={step} className='flex gap-2 mx-auto items-center text-xxs sm:text-base' />
                 {steps[step].element}
