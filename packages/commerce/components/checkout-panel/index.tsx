@@ -86,7 +86,11 @@ const CheckoutPanel: React.FC<{
               <div className='h-full w-full max-w-[750px] relative flex flex-col items-center justify-start px-6 pt-12 pb-0 md:pb-9'>
                 <CloseButton onClose={onClose} className='absolute top-3 left-3 w-auto h-auto rounded-full bg-level-1 hover:bg-level-2 hover:border-muted p-2' />
                 <AuthWidget hideLogin className='flex md:hidden absolute top-3 right-3'/>
-                <CartPanel noCheckout className='border border-muted-2 mt-10 w-full max-w-[550px] hidden md:flex'/>
+                <CartPanel
+                  className='border-none mt-10 w-full max-w-[550px] hidden md:flex flex-col'
+                  noCheckout
+                  showProductsCarousel
+                />
 
                 <Accordion type="single" collapsible className='flex items-center justify-center py-2 w-full md:hidden'>
                   <AccordionItem value="cart" className='w-full border-b-0'>

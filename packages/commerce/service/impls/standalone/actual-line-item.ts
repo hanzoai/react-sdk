@@ -30,6 +30,7 @@ class ActualLineItem
   desc?: string
   price: number
   img?: string 
+  video?: string 
   timeAdded: number = 0 // timeAdded of being added to cart
 
   constructor(prod: Product, snap?: ActualLineItemSnapshot) {
@@ -41,6 +42,7 @@ class ActualLineItem
     this.desc = prod.desc
     this.price = prod.price
     this.img = prod.img
+    this.video = prod.video
 
     if (snap) {
       this.qu = snap.quantity
