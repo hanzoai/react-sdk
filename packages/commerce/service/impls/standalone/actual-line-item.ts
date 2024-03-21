@@ -50,7 +50,7 @@ class ActualLineItem
 
     if (snap) {
       this.qu = snap.quantity
-      this.timeAdded = snap.quantity
+      this.timeAdded = snap.timeAdded
     }
 
     makeObservable(this, {

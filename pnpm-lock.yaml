@@ -271,7 +271,7 @@ importers:
   packages/auth:
     dependencies:
       '@hanzo/ui':
-        specifier: ^3.0.6
+        specifier: ^3.0.9
         version: link:../ui
       '@hookform/resolvers':
         specifier: ^3.3.4
@@ -317,10 +317,10 @@ importers:
   packages/commerce:
     dependencies:
       '@hanzo/auth':
-        specifier: ^2.3.0
+        specifier: ^2.3.1
         version: link:../auth
       '@hanzo/ui':
-        specifier: ^3.0.7
+        specifier: ^3.0.9
         version: link:../ui
       '@hookform/resolvers':
         specifier: ^3.3.4

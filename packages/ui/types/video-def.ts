@@ -1,4 +1,4 @@
-import type { TShirtDimensions } from '.'
+import type { TShirtDimensions } from './dimensions'
 
 interface VideoDef {
   videoProps?: any   // For example,
