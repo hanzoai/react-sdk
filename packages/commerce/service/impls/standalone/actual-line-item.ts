@@ -5,6 +5,8 @@ import {
   observable, 
 } from 'mobx'
 
+import type { VideoBlock } from '@hanzo/ui/blocks'
+
 import type { Product, LineItem } from '../../../types'
 
 interface ActualLineItemSnapshot {
@@ -30,7 +32,8 @@ class ActualLineItem
   desc?: string
   price: number
   img?: string 
-  video?: string 
+  video?: VideoBlock 
+  animation?: string 
   timeAdded: number = 0 // timeAdded of being added to cart
 
   constructor(prod: Product, snap?: ActualLineItemSnapshot) {
@@ -43,6 +46,7 @@ class ActualLineItem
     this.price = prod.price
     this.img = prod.img
     this.video = prod.video
+    this.animation = prod.animation
 
     if (snap) {
       this.qu = snap.quantity
