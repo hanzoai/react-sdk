@@ -10,7 +10,7 @@ interface Product {
   desc?: string
   price: number
   img?: string  // if undefined: (category's img exists) ? (use it) : (use generic placeholder)
-  animation?: string
+  animation?: string  // spline scene url
   video?: VideoDef
 }
 
