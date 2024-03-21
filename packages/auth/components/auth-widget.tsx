@@ -62,7 +62,7 @@ const AuthWidget: React.FC<{
           />
         )
       ) : (
-        <div/>
+        null
       )
     )
   }
