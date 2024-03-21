@@ -1,4 +1,4 @@
-import type { VideoBlock } from '@hanzo/ui/blocks'
+import type { VideoDef } from '@hanzo/ui/types'
 
 interface Product {
   id: string    // DB index // not a logical aspect of our domain.  may not be necessary at all
@@ -11,7 +11,7 @@ interface Product {
   price: number
   img?: string  // if undefined: (category's img exists) ? (use it) : (use generic placeholder)
   animation?: string
-  video?: VideoBlock
+  video?: VideoDef
 }
 
 export {

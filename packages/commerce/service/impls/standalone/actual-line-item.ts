@@ -5,7 +5,7 @@ import {
   observable, 
 } from 'mobx'
 
-import type { VideoBlock } from '@hanzo/ui/blocks'
+import type { VideoDef } from '@hanzo/ui/types'
 
 import type { Product, LineItem } from '../../../types'
 
@@ -32,7 +32,7 @@ class ActualLineItem
   desc?: string
   price: number
   img?: string 
-  video?: VideoBlock 
+  video?: VideoDef 
   animation?: string 
   timeAdded: number = 0 // timeAdded of being added to cart
 

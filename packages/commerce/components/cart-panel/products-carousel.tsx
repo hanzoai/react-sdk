@@ -11,7 +11,8 @@ import {
   VideoBlockComponent,
   ImageBlockComponent,
   type ImageBlock,
-  type Block
+  type Block,
+  type VideoBlock
 } from '@hanzo/ui/blocks'
 
 import type { LineItem } from '../../types'
@@ -39,7 +40,9 @@ const ProductsCarousel: React.FC<{
                   className='!aspect-[12/10] pointer-events-none !w-auto !h-auto'
                 />
               ) : video ? (
-                <VideoBlockComponent block={video}/>
+                <VideoBlockComponent
+                  block={{blockType: 'video', ...video} satisfies VideoBlock as Block}
+                />
               ) : (
                 <ImageBlockComponent
                   block={{
