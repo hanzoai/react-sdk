@@ -5,16 +5,27 @@ import type { UseFormReturn } from 'react-hook-form'
 // @ts-ignore
 import { ApplePay, GooglePay, CreditCard, PaymentForm } from 'react-square-web-payments-sdk'
 
-import { ApplyTypography, Button } from '@hanzo/ui/primitives'
+import { ChevronRight } from 'lucide-react'
+
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+  ApplyTypography, 
+  Button, 
+  buttonVariants
+} from '@hanzo/ui/primitives'
+
 import { cn } from '@hanzo/ui/util'
 
 import { processSquareCardPayment } from '../../../util'
 import { useCommerce } from '../../../service/context'
 import type { TransactionStatus } from '../../../types'
 
-import PaymentMethods from './payment-methods'
 import ContactInfo from './contact-info'
 import { sendFBEvent, sendGAEvent } from '../../../util/analytics'
+import PaymentMethods from './payment-methods'
 
 const PayWithCard: React.FC<{
   setStep: (currentStep: number) => void
@@ -134,7 +145,7 @@ const PayWithCard: React.FC<{
        */
       locationId={process.env.NEXT_PUBLIC_SQUARE_LOCATION_ID}
     >
-      <ApplyTypography className='flex flex-col mt-6'>
+      <ApplyTypography className='flex flex-col mt-6 gap-1'>
         {transactionStatus === 'paid' ? (
           <h6 className='mx-auto font-nav'>Processing your payment...</h6>
         ) : transactionStatus === 'confirmed' ? (
@@ -148,70 +159,83 @@ const PayWithCard: React.FC<{
             <GooglePay/>
             <ApplePay/>
             
-            <div className='flex gap-2 whitespace-nowrap items-center my-1 sm:my-2 text-xs text-foreground/60'>
-              <hr className='bg-foreground/60 w-full border'/> or pay with card <hr className='bg-foreground/60 w-full border'/>
+            <div className='flex gap-2 whitespace-nowrap items-center my-0.5 sm:my-1 text-xs text-muted'>
+              <hr className='grow border'/><div className='shrink-0 mx-1'>or</div><hr className='grow border'/>
             </div>
 
-            <ContactInfo form={contactForm}/>
-
-            {/* Imitates hanzo/ui Button and Input styles, I was unable to render the
-              hanzo/ui button outright and keeping the submit form functionality*/}
-            <CreditCard
-              style={{
-                '.input-container': {
-                  borderColor: '#404040',
-                  borderRadius: '6px',
-                },
-                '.input-container.is-focus': {
-                  borderColor: '#ffffff',
-                },
-                '.input-container.is-error': {
-                  borderColor: '#ff1600',
-                },
-                '.message-text': {
-                  color: '#999999',
-                },
-                '.message-icon': {
-                  color: '#999999',
-                },
-                '.message-text.is-error': {
-                  color: '#ff1600',
-                },
-                '.message-icon.is-error': {
-                  color: '#ff1600',
-                },
-                input: {
-                  backgroundColor: '#1f1f1f',
-                  color: '#FFFFFF',
-                  fontSize: '15px',
-                  fontFamily: 'helvetica neue, sans-serif',
-                },
-                'input::placeholder': {
-                  color: '#999999',
-                },
-                'input.is-error': {
-                  color: '#ff1600',
-                },
-              }}
-              render={(Button: any) => (<>
-                <PaymentMethods/>
-                <Button className={cn(
-                    'items-center justify-center font-medium transition-colors focus-visible:outline-none focus-visible:ring-2',
-                    'focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background',
-                    '!bg-primary !text-primary-fg hover:!bg-primary-hover font-nav whitespace-nowrap not-typography h-10 py-2 px-4',
-                    '!text-sm rounded-md lg:min-w-[220px] sm:min-w-[220px] flex'
+            <Accordion type="single" collapsible className={''}>
+              <AccordionItem value="cart" className='w-full border-b-0 data-[state=open]:border data-[state=open]:px-3 rounded '>
+                <AccordionTrigger className={cn(
+                  buttonVariants({variant: 'outline', size: 'lg'}),
+                  '!no-underline group flex justify-between ',
+                  'bg-transparent hover:bg-transparent border-muted-2 hover:border-muted-2',
+                  'data-[state=open]:border-none data-[state=open]:py-0 px-4 data-[state=open]:px-1'
+                )}>
+                  <div className='font-sans text-base mr-2 text-muted'>CC</div>
+                  <PaymentMethods />
+                  <div>
+                    <ChevronRight className="h-5 w-5 -mr-2 text-muted shrink-0 transition-transform duration-200 group-data-[state=open]:rotate-90 hidden group-data-[state=open]:block" />
+                  </div>
+                </AccordionTrigger>
+                <AccordionContent className='data-[state=open]:mb-4 data-[state=open]:mt-1'>
+                  <ContactInfo form={contactForm}/>
+                  {/* Imitates hanzo/ui Button and Input styles, I was unable to render the
+                    hanzo/ui button outright and keeping the submit form functionality*/}
+                  <CreditCard
+                    style={{
+                      '.input-container': {
+                        borderColor: '#404040',
+                        borderRadius: '6px',
+                      },
+                      '.input-container.is-focus': {
+                        borderColor: '#ffffff',
+                      },
+                      '.input-container.is-error': {
+                        borderColor: '#ff1600',
+                      },
+                      '.message-text': {
+                        color: '#999999',
+                      },
+                      '.message-icon': {
+                        color: '#999999',
+                      },
+                      '.message-text.is-error': {
+                        color: '#ff1600',
+                      },
+                      '.message-icon.is-error': {
+                        color: '#ff1600',
+                      },
+                      input: {
+                        backgroundColor: '#1f1f1f',
+                        color: '#FFFFFF',
+                        fontSize: '15px',
+                        fontFamily: 'helvetica neue, sans-serif',
+                      },
+                      'input::placeholder': {
+                        color: '#999999',
+                      },
+                      'input.is-error': {
+                        color: '#ff1600',
+                      },
+                    }}
+                    render={(Button: any) => (
+                      <Button className={cn(
+                        'items-center justify-center font-medium transition-colors focus-visible:outline-none focus-visible:ring-2',
+                        'focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background',
+                        '!bg-primary !text-primary-fg hover:!bg-primary-hover font-nav whitespace-nowrap not-typography h-10 py-2 px-4',
+                        '!text-sm rounded-md lg:min-w-[220px] sm:min-w-[220px] flex'
+                      )}>
+                        Pay
+                      </Button>
+                    )}
+                  />
+                  {transactionStatus === 'error' && (
+                    <p className='mx-auto text-destructive'>There was an error processing your payment.</p>
                   )}
-                >
-                  Pay
-                </Button>
-              </>)}
-            >
-              
-            </CreditCard>
-            
-            {transactionStatus === 'error' && (
-              <p className='mx-auto text-destructive'>There was an error processing your payment.</p>
-            )}
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
+
           </>
         )}
       </ApplyTypography>

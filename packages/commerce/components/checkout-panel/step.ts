@@ -3,9 +3,6 @@ interface CheckoutStep {
   element: JSX.Element
 }
 
-type CheckoutSteps = Record<number, CheckoutStep>
-
 export {
-  type CheckoutStep,
-  type CheckoutSteps
+  type CheckoutStep as default 
 }

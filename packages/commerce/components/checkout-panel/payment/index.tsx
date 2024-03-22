@@ -81,29 +81,36 @@ const Payment: React.FC<{
     }
   }
 
+  const groupClx = 'grid w-full grid-cols-3 mx-auto ' + 
+    'p-0 h-auto overflow-hidden ' + 
+    'border-2 bg-background border-level-2 md:bg-level-1 md:border-level-3 ' 
+
+  const tabClx = 'whitespace-normal h-full text-xs sm:text-base px-1 text-muted ' + 
+    'data-[state=active]:text-accent data-[state=active]:bg-level-2 md:data-[state=active]:bg-level-3'
+
   return (
-    <Tabs defaultValue='card' className='w-full mx-auto max-w-[50rem]'>
-      <TabsList className='grid w-full grid-cols-3 mx-auto bg-level-2 h-auto'>
+    <Tabs defaultValue='card' className='w-full sm:max-w-[500px] sm:mx-auto'>
+      <TabsList className={groupClx}>
         <TabsTrigger
           value='card'
-          className='whitespace-normal h-full text-xs sm:text-base px-1'
+          className={tabClx}
           disabled={transactionStatus === 'paid' || transactionStatus === 'confirmed'}
         >
-          Pay with card
+          Card
         </TabsTrigger>
         <TabsTrigger
           value='crypto'
-          className='whitespace-normal h-full text-xs sm:text-base px-1'
+          className={tabClx}
           disabled={transactionStatus === 'paid' || transactionStatus === 'confirmed'}
         >
-          Pay with Wallet
+          Wallet
         </TabsTrigger>
         <TabsTrigger
           value='bank'
-          className='whitespace-normal h-full text-xs sm:text-base px-1'
+          className={tabClx}
           disabled={transactionStatus === 'paid' || transactionStatus === 'confirmed'}
         >
-          Pay with Wire
+          Bank Wire
         </TabsTrigger>
       </TabsList>
       <TabsContent value='card'>

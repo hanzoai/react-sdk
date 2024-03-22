@@ -79,7 +79,7 @@ const CartPanel: React.FC<PropsWithChildren & {
           <Button 
             variant='primary' 
             rounded='lg' 
-            className='mt-12 mx-auto w-full' 
+            className='mt-12 mx-auto w-full sm:max-w-[220px]' 
             onClick={showCheckout}
           >
             Checkout
