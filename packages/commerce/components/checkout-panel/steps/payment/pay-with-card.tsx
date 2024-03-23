@@ -19,16 +19,16 @@ import {
 
 import { cn } from '@hanzo/ui/util'
 
-import { processSquareCardPayment } from '../../../util'
-import { useCommerce } from '../../../service/context'
-import type { TransactionStatus } from '../../../types'
+import { processSquareCardPayment } from '../../../../util'
+import { useCommerce } from '../../../../service/context'
+import type { TransactionStatus } from '../../../../types'
 
 import ContactInfo from './contact-info'
-import { sendFBEvent, sendGAEvent } from '../../../util/analytics'
-import PaymentMethods from './payment-methods'
+import { sendFBEvent, sendGAEvent } from '../../../../util/analytics'
+import PaymentMethods from './cards'
 
 const PayWithCard: React.FC<{
-  setStep: (currentStep: number) => void
+  onDone: () => void
   transactionStatus: TransactionStatus
   setTransactionStatus: (status: TransactionStatus) => void
   storePaymentInfo: (paymentInfo: any) => Promise<void>
@@ -40,7 +40,7 @@ const PayWithCard: React.FC<{
     email: string
   }>
 }> = ({
-  setStep,
+  onDone,
   transactionStatus,
   setTransactionStatus,
   storePaymentInfo,
@@ -152,7 +152,7 @@ const PayWithCard: React.FC<{
           <div className='flex flex-col gap-4'>
             <h5 className='mx-auto font-nav'>Payment confirmed!</h5>
             <p className='mx-auto'>Thank you for your purchase.</p>
-            <Button onClick={() => setStep(2)}>Continue</Button>
+            <Button onClick={onDone}>Continue</Button>
           </div>
         ) : (
           <>

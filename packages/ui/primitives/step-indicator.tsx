@@ -18,8 +18,6 @@ const StepIndicator: React.FC<{
 
   const pX = `calc(${1 / (steps.length * 2) * 100}% - ${dotSizeRem / 2}rem)`
 
-
-
   return ( 
     <div className={cn('flex flex-col', className)}>
       <div 

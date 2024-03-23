@@ -35,7 +35,7 @@ const InfoField: React.FC<{
 }
 
 const PayWithBankTransfer: React.FC<{
-  setStep: (step: number) => void
+  onDone: () => void
   storePaymentInfo: (paymentInfo: any) => Promise<void>
   contactForm: UseFormReturn<{
     name: string
@@ -45,14 +45,15 @@ const PayWithBankTransfer: React.FC<{
     email: string
   }>
 }> = ({
-  setStep,
+  onDone,
   storePaymentInfo,
   contactForm
 }) => {
+
   const payByBankTransfer = async () => {
-    contactForm.handleSubmit(async () => {
+    contactForm.handleSubmit( async () => {
       await storePaymentInfo({paymentMethod: 'bank-transfer'})
-      setStep(2)
+      onDone()
     })()
   }
 

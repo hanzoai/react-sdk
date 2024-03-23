@@ -12,21 +12,20 @@ import { useAuth } from '@hanzo/auth/service'
 import PayWithCrypto from './pay-with-crypto'
 import PayWithBankTransfer from './pay-with-bank-transfer'
 import PayWithCard from './pay-with-card'
-import { useCommerce } from '../../../service/context'
-import type { TransactionStatus } from '../../../types'
-import { sendFBEvent, sendGAEvent } from '../../../util/analytics'
+
+import { useCommerce } from '../../../../service/context'
+import type { TransactionStatus } from '../../../../types'
+import { sendFBEvent, sendGAEvent } from '../../../../util/analytics'
+
+import type { StepComponentProps } from '../types'
 
 const contactFormSchema = z.object({
   name: z.string().min(1, 'Enter your full name.'),
   email: z.string().email(),
 })
 
-const Payment: React.FC<{
-  setStep: (s: number) => void
-  orderId?: string
-  setOrderId: (orderId?: string) => void
-}> = observer(({
-  setStep,
+const Payment: React.FC<StepComponentProps> = observer(({
+  onDone,
   orderId,
   setOrderId
 }) => {
@@ -51,10 +50,12 @@ const Payment: React.FC<{
 
   const storePaymentInfo = async (paymentInfo: any) => {
     const {name, email} = contactForm.getValues()
-    let id
+    let id: string | undefined = undefined
     if (!orderId) {
       id = await cmmc.createOrder(email, name)
-      setOrderId(id)
+      if (id) {
+        setOrderId(id)
+      }
     }
     if (id) {
       sendGAEvent('add_payment_info', {
@@ -115,7 +116,7 @@ const Payment: React.FC<{
       </TabsList>
       <TabsContent value='card'>
         <PayWithCard
-          setStep={setStep}
+          onDone={onDone}
           transactionStatus={transactionStatus}
           setTransactionStatus={setTransactionStatus}
           storePaymentInfo={storePaymentInfo}
@@ -124,7 +125,7 @@ const Payment: React.FC<{
       </TabsContent>
       <TabsContent value='crypto'>
         <PayWithCrypto
-          setStep={setStep}
+          onDone={onDone}
           transactionStatus={transactionStatus}
           setTransactionStatus={setTransactionStatus}
           storePaymentInfo={storePaymentInfo}
@@ -133,7 +134,7 @@ const Payment: React.FC<{
       </TabsContent>
       <TabsContent value='bank'>
         <PayWithBankTransfer
-          setStep={setStep}
+          onDone={onDone}
           storePaymentInfo={storePaymentInfo}
           contactForm={contactForm}
         />

@@ -3,15 +3,33 @@
 import { useState }  from 'react'
 
 import { Dialog, DialogPortal } from '@hanzo/ui/primitives'
-import { cn } from '@hanzo/ui/util'
+import { cn, capitalize } from '@hanzo/ui/util'
 
 import { useCommerce } from '../..'
 
-import type CheckoutStep from './step'
+import type { CheckoutStep } from './steps/types'
 
-import ShippingInfo from './shipping-info'
-import ThankYou from './thank-you'
-import Payment from './payment'
+import ShippingInfo from './steps/shipping-info'
+import ThankYou from './steps/thank-you'
+import Payment from './steps/payment'
+
+const STEPS = [
+  {
+    name: 'payment',
+    Comp: Payment
+  }, 
+  {
+    name: 'delivery',
+    Comp: ShippingInfo
+  }, 
+  {
+    name: 'done',
+    label: 'Done!',
+    Comp: ThankYou
+  }
+] satisfies CheckoutStep[]
+
+const STEP_NAMES = STEPS.map((s) => (s.label ? s.label : capitalize(s.name)))
 
 import DesktopCP from './desktop'
 import MobileCP from './mobile'
@@ -30,35 +48,43 @@ const CheckoutPanel: React.FC<{
   if (!cmmc) {
     return <></>
   }
-    // one based
-  const [step, setStep] = useState<number>(1)
+  const [stepIndex, setStepIndex] = useState<number>(0)
   const [orderId, setOrderId] = useState<string>()
 
-  const steps = [
-    {
-      label: 'Payment',
-      element: (
-        <Payment
-          orderId={orderId} 
-          setOrderId={setOrderId}
-          setStep={setStep}
-        />
-      )
-    }, 
-    {
-      label: 'Delivery',
-      element: (<ShippingInfo orderId={orderId} setStep={setStep}/>)
-    }, 
-    {
-      label: 'Done!',
-      element: (<ThankYou/> )
+    // Step.name or 'first' or 'next' or 'last' 
+  const setStep = (name: string): void => {
+
+    if (name === 'first') {
+      setStepIndex(0)
     }
-  ] satisfies CheckoutStep[]
+    else if (name === 'last') {
+      setStepIndex(STEPS.length - 1)
+    } 
+    else if (name === 'next') {
+      if (stepIndex < STEPS.length - 2) {
+        setStepIndex(stepIndex + 1)
+      }
+      else {
+        throw new Error('CheckoutPanel.setStep(): Attempting to advance past last step!')
+      }
+    } 
+    else {
+      const indexFound = STEPS.findIndex((el) => (el.name === name))
+      if (indexFound !== -1) {
+        setStepIndex(indexFound)
+      }
+      else {
+        throw new Error('CheckoutPanel.setStep(): Step named ' + name + ' not found!')
+      }
+    }
+  } 
 
   const onClose = () => {
-    setStep(1)
+    setStep('first')
     onCheckoutClose()
   }
+
+  const StepToRender = STEPS[stepIndex].Comp  
 
   return (
     <Dialog open={open}>
@@ -72,15 +98,19 @@ const CheckoutPanel: React.FC<{
         <DesktopCP 
           className='hidden md:flex h-full flex-row justify-center overflow-y-hidden' 
           onClose={onClose}
-          index={step - 1}
-          steps={steps}
-        />
+          index={stepIndex}
+          stepNames={STEP_NAMES}
+        >
+          <StepToRender onDone={() => {setStep('next')}} orderId={orderId} setOrderId={setOrderId}/>
+        </DesktopCP>
         <MobileCP 
           className='md:hidden h-full overflow-y-auto' 
           onClose={onClose}
-          index={step - 1}
-          steps={steps}
-        />
+          index={stepIndex}
+          stepNames={STEP_NAMES}
+        >
+          <StepToRender onDone={() => {setStep('next')}} orderId={orderId} setOrderId={setOrderId}/>
+        </MobileCP>
       </div>
     </DialogPortal>
     </Dialog>
