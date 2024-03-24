@@ -37,7 +37,7 @@ const CartAccordian: React.FC<{className?: string}> = observer(({
           </div>
         </AccordionTrigger>
         <AccordionContent className='data-[state=open]:mb-4'>
-          <CartPanel noCheckout className='w-full'/>
+          <CartPanel className='w-full'/>
         </AccordionContent>
       </AccordionItem>
     </Accordion>

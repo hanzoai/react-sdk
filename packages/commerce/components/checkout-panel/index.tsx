@@ -1,14 +1,11 @@
 'use client'
+import React, { useState }  from 'react'
 
-import { useState }  from 'react'
-
-import { Dialog, DialogPortal } from '@hanzo/ui/primitives'
-import { cn, capitalize } from '@hanzo/ui/util'
+import { capitalize } from '@hanzo/ui/util'
 
 import { useCommerce } from '../..'
 
 import type { CheckoutStep } from './steps/types'
-
 import ShippingInfo from './steps/shipping-info'
 import ThankYou from './steps/thank-you'
 import Payment from './steps/payment'
@@ -35,11 +32,11 @@ import DesktopCP from './desktop'
 import MobileCP from './mobile'
 
 const CheckoutPanel: React.FC<{
-  open: boolean
-  onCheckoutClose: () => void
+  close: () => void
+  className?: string
 }> = ({
-  open,
-  onCheckoutClose
+  close,
+  className=''
 }) => {
 
   const cmmc = useCommerce()
@@ -49,7 +46,7 @@ const CheckoutPanel: React.FC<{
     return <></>
   }
   const [stepIndex, setStepIndex] = useState<number>(0)
-  const [orderId, setOrderId] = useState<string>()
+  const [orderId, setOrderId] = useState<string | undefined>(undefined)
 
     // Step.name or 'first' or 'next' or 'last' 
   const setStep = (name: string): void => {
@@ -79,41 +76,32 @@ const CheckoutPanel: React.FC<{
     }
   } 
 
-  const onClose = () => {
+  const _close = () => {
     setStep('first')
-    onCheckoutClose()
+    close()
   }
 
   const StepToRender = STEPS[stepIndex].Comp  
 
   return (
-    <Dialog open={open}>
-    <DialogPortal>
-      <div id='PORTAL_OUTER'  className={cn(
-        'fixed w-full h-[100vh] top-0 !max-w-none',
-        'animate-in data-[state=open]:fade-in-90 data-[state=open]:slide-in-from-bottom-10',
-        'sm:zoom-in-90 data-[state=open]:sm:slide-in-from-bottom-0',
-        'shadow-lg bg-transparent backdrop-blur-sm z-50'
-      )}>
-        <DesktopCP 
-          className='hidden md:flex h-full flex-row justify-center overflow-y-hidden' 
-          onClose={onClose}
-          index={stepIndex}
-          stepNames={STEP_NAMES}
-        >
-          <StepToRender onDone={() => {setStep('next')}} orderId={orderId} setOrderId={setOrderId}/>
-        </DesktopCP>
-        <MobileCP 
-          className='md:hidden h-full overflow-y-auto' 
-          onClose={onClose}
-          index={stepIndex}
-          stepNames={STEP_NAMES}
-        >
-          <StepToRender onDone={() => {setStep('next')}} orderId={orderId} setOrderId={setOrderId}/>
-        </MobileCP>
-      </div>
-    </DialogPortal>
-    </Dialog>
+    <div /* id='CHECKOUT_PANEL' */  className={className} >
+      <DesktopCP 
+        className='hidden md:flex h-full flex-row justify-center overflow-y-hidden' 
+        close={_close}
+        index={stepIndex}
+        stepNames={STEP_NAMES}
+      >
+        <StepToRender onDone={() => {setStep('next')}} orderId={orderId} setOrderId={setOrderId}/>
+      </DesktopCP>
+      <MobileCP 
+        className='md:hidden h-full overflow-y-auto' 
+        close={_close}
+        index={stepIndex}
+        stepNames={STEP_NAMES}
+      >
+        <StepToRender onDone={() => {setStep('next')}} orderId={orderId} setOrderId={setOrderId}/>
+      </MobileCP>
+    </div>
   )
 }
 

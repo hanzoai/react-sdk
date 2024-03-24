@@ -21,10 +21,13 @@ import Ethereum from '../icons/ethereum'
 const AuthWidget: React.FC<{
   hideLogin?: boolean
   className?: string
-  triggerLogin?: () => void
+    /** Overrides default of navigating to '/login' route. 
+     * eg, if client code provides it's own login form
+     *  */
+  login?: () => void
 }> = observer(({
   hideLogin=false,
-  triggerLogin,
+  login,
   className
 }) => {
 
@@ -45,11 +48,11 @@ const AuthWidget: React.FC<{
   if (!auth.loggedIn) {
 
     return (hideLogin ? null : (
-      (triggerLogin) ? (
+      (login) ? (
         <Button 
           variant='primary' 
           className='h-8 !text-[13px]/[13px] w-fit !min-w-0'
-          onClick={triggerLogin} 
+          onClick={login} 
         >
           Login
         </Button>

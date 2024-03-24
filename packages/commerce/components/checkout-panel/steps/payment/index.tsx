@@ -53,9 +53,7 @@ const Payment: React.FC<StepComponentProps> = observer(({
     let id: string | undefined = undefined
     if (!orderId) {
       id = await cmmc.createOrder(email, name)
-      if (id) {
-        setOrderId(id)
-      }
+      setOrderId(id)
     }
     if (id) {
       sendGAEvent('add_payment_info', {

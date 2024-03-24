@@ -11,19 +11,19 @@ import CartAccordian from './cart-accordian'
 const MobilePanel: React.FC<PropsWithChildren & {
   index: number
   stepNames: string[]
-  onClose:() => void
+  close:() => void
   className?: string
 }> = ({
   index,
   stepNames,
-  onClose,
+  close,
   className='',
   children
 }) => (
 
   <div /* id='MOBILE_GRID' */ className={cn('bg-background flex flex-col justify-start px-4', className)}>
-    <div className='sticky top-0 w-full flex flex-row justify-between items-start'>
-      <CloseButton onClose={onClose} className='rounded-full bg-level-1 hover:bg-level-2 hover:border-muted p-1 -ml-1' />
+    <div className='sticky top-0 w-full flex flex-row justify-between items-start bg-background'>
+      <CloseButton close={close} className='rounded-full bg-background hover:bg-background p-1 -ml-3' />
       <StepIndicator 
         dotSizeRem={1} 
         steps={stepNames} 
