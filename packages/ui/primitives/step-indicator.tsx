@@ -27,9 +27,9 @@ const StepIndicator: React.FC<{
         style={{ paddingLeft: pX, paddingRight: pX }}
       >
         {steps.map((ignore, index) => (<>
-          {index !== 0 && (<div className={'h-[1px] grow ' + (muted ? 'bg-muted' : 'bg-foreground')}/>)}
+          {index !== 0 && (<div key={`sep-${index}`} className={'h-[1px] grow ' + (muted ? 'bg-muted' : 'bg-foreground')}/>)}
           <div 
-            key={index} 
+            key={`circle-${index}`} 
             style={{width: `${dotSizeRem}rem`, height: `${dotSizeRem}rem`}} 
             className={cn(
               'shrink-0 rounded-full border-[1.5px] ' + (muted ? 'border-muted' : 'border-foreground') , 
