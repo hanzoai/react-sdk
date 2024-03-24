@@ -30,8 +30,8 @@ const MobilePanel: React.FC<PropsWithChildren & {
         currentStep={index} 
         className='text-xs font-semibold w-pr-70 mt-3' 
       />
-      {/* Need wrapper div since 'hideLogin' returns null if no logged in user */}
-      <div className='w-10 h-10 flex items-center justify-center'><AuthWidget hideLogin className=''/></div>
+      {/* Need wrapper div since 'noLogin' returns null if no logged in user */}
+      <div className='w-10 h-10 flex items-center justify-center'><AuthWidget noLogin className=''/></div>
     </div>
     <CartAccordian className='flex items-center justify-center py-2 mt-2 w-full' />
     {children}

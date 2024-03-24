@@ -28,7 +28,7 @@ const DesktopPanel: React.FC<PropsWithChildren & {
     </div>
     <ScrollArea className='w-full h-full bg-level-1 flex flex-row items-start justify-start overflow-y-auto'>
       <div className='h-full w-full max-w-[750px] relative flex flex-col items-center gap-6 px-8 pb-6 pt-0'>
-        <AuthWidget hideLogin className='hidden md:flex absolute top-4 right-4 '/>
+        <AuthWidget noLogin className='hidden md:flex absolute top-4 right-4 '/>
         <div className='bg-level-1 sticky h-[90px] pb-2 w-full top-0 flex justify-center items-end'>
           <StepIndicator 
             dotSizeRem={1.5} 
