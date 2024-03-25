@@ -7,23 +7,18 @@ import { cn } from '@hanzo/ui/util'
 
 import { useCommerce } from '../../service/context'
 import { formatPrice } from '../../util'
+import { sendFBEvent, sendGAEvent } from '../../util/analytics'
 
 import CartLineItem from './cart-line-item'
-import { sendFBEvent, sendGAEvent } from '../../util/analytics'
-import ProductsCarousel from './products-carousel'
 
 const CartPanel: React.FC<PropsWithChildren & {
   className?: string
-  isMobile?: boolean,
-  showCarousel?: boolean
-    /** if not provided, checkout button will not be shown */
+    /** if not provided, 'checkout' button will be rendered */
   handleCheckout?: () => void
 }> = observer(({
-    /** Children is the heading area. */
+    /** If provided, 'children' is rendered above the items. eg, a heading. */
   children,
   className='',
-  isMobile=false,
-  showCarousel=false,
   handleCheckout,
 }) => {
 
@@ -60,29 +55,22 @@ const CartPanel: React.FC<PropsWithChildren & {
   return (
     <div className={cn('border p-4 rounded-lg', className)}>
       {children}
-      {showCarousel && <ProductsCarousel items={cmmc.cartItems}/>}
       <div className='mt-2 w-full'>
-        {cmmc.cartEmpty ? (
-          <p className='text-center mt-4'>No items in cart</p>
-        ) : (<>
-          {cmmc.cartItems.map((item, i) => (
-            <CartLineItem isMobile={isMobile} item={item} key={item.sku} className='mb-2 md:mb-3'/>
-          ))}
-          <p className='mt-6 text-right border-t pt-1'>TOTAL: <span className='font-semibold'>{cmmc.cartTotal === 0 ? '0' : formatPrice(cmmc.cartTotal)}</span></p>
-        </>)}
-      </div>
-      {handleCheckout && (<>
-        {!cmmc.cartEmpty && (
-          <Button 
-            variant='primary' 
-            rounded='lg' 
-            className='mt-12 mx-auto w-full sm:max-w-[220px]' 
-            onClick={_handleCheckout}
-          >
-            Checkout
-          </Button>
-        )}
+      {cmmc.cartEmpty ? (
+        <p className='text-center mt-4'>No items in cart</p>
+      ) : (<>
+        {cmmc.cartItems.map((item) => (<>
+          <CartLineItem imgSizePx={26} item={item} key={`mobile-${item.sku}`} className='md:hidden mb-2'/>
+          <CartLineItem imgSizePx={40} item={item} key={`non-mobile-${item.sku}`} className='hidden md:flex mb-3'/>
+        </>))}
+        <p className='mt-6 text-right border-t pt-1'>TOTAL: <span className='font-semibold'>{cmmc.cartTotal === 0 ? '0' : formatPrice(cmmc.cartTotal)}</span></p>
       </>)}
+      </div>
+      {handleCheckout && !cmmc.cartEmpty && (
+        <Button onClick={_handleCheckout} variant='primary' rounded='lg' className='mt-12 mx-auto w-full sm:max-w-[220px]' >
+          Checkout
+        </Button>
+      )}
     </div>
   )
 })
