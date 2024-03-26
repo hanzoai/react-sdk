@@ -22,10 +22,12 @@ import {
 } from '@hanzo/ui/blocks'
 
 import type { LineItem } from '../types'
+import type { Dimensions } from '@hanzo/ui/types'
 
   // Order of precedence of visuals: 3D > MP4 > Image
 const ItemCarousel: React.FC<{
   items: LineItem[]
+  constrainTo: Dimensions
   options?: CarouselOptionsType 
   className?: string
   itemClx?: string  
@@ -33,6 +35,7 @@ const ItemCarousel: React.FC<{
   items,
   options,
   className='',
+  constrainTo,
   itemClx=''
 }) => ( 
   // className: 'w-full max-w-sm mx-auto 
@@ -40,14 +43,19 @@ const ItemCarousel: React.FC<{
   <Carousel options={options} className={cn('px-2', className)} >
     <CarouselContent>
     {items.map(({title, img, video, animation}, index) => (
-      <CarouselItem key={index} className={cn('p-2', itemClx)}>
+      <CarouselItem key={index} className={cn('p-2 flex flex-row justify-center items-center', itemClx)}>
       {animation ? (
         <Spline
           scene={animation}
-          className='!aspect-[12/10] pointer-events-none !w-auto !h-auto'
+          className='pointer-events-none' // !aspect-[12/10] 
+          style={{
+            width: (6/5 * (typeof constrainTo.h === 'number' ? constrainTo.h as number : parseInt(constrainTo.h as string)) ),
+            height: constrainTo.h
+          }}
         />
       ) : video ? (
         <VideoBlockComponent
+          constraint={constrainTo}
           block={{blockType: 'video', ...video} satisfies VideoBlock as Block}
         />
       ) : (
@@ -56,7 +64,7 @@ const ItemCarousel: React.FC<{
             blockType: 'image',
             src: img ?? '',
             alt: title + ' image',
-            dim: { w: 250, h: 250 }
+            dim: constrainTo
           } satisfies ImageBlock as Block} 
           className='m-auto'
         />
@@ -64,8 +72,8 @@ const ItemCarousel: React.FC<{
       </CarouselItem>
     ))}
     </CarouselContent>
-    <CarouselPrevious />
-    <CarouselNext />
+    <CarouselPrevious className='left-1'/>
+    <CarouselNext className='right-1'/>
   </Carousel>
 )
 
