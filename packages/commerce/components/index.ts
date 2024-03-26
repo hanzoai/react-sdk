@@ -3,6 +3,7 @@ export { default as BuyItemButtonWrapper } from './buy-item/buy-item-button-wrap
 export { default as BuyItemButton } from './buy-item/buy-item-button'
 export { default as BuyItemCard } from './buy-item/buy-item-card'
 export { default as BuyItemPopup } from './buy-item/buy-item-popup'
+export { default as CartAccordian } from './cart-accordian'
 export { default as CartPanel } from './cart-panel'
 export { default as CategoryItemIOSWheelSelector } from './category-item-scroll-selector'
 export { default as CategoryItemRadioSelector } from './category-item-radio-selector'

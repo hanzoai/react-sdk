@@ -16,14 +16,15 @@ import { formatPrice, useCommerce } from '..'
 import CartPanel from './cart-panel'
 
 const CartAccordian: React.FC<{
-  Icon?: React.ReactNode
+  icon?: React.ReactNode
   className?: string
 }> = observer(({
-  Icon,
+  icon: Icon,
   className=''
-}) => { // <BagIcon className='w-4 h-4 relative -top-0.5 sm:w-6 shrink-0 sm:h-6'/>
+}) => { 
 
   const cmmc = useCommerce()
+  
   return (
     <Accordion type="single" collapsible className={className}>
       <AccordionItem value="cart" className='w-full border-b-0'>
