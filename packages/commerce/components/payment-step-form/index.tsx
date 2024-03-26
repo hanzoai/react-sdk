@@ -86,7 +86,7 @@ const PaymentStepForm: React.FC<CheckoutStepComponentProps> = observer(({
   const disabled = transactionStatus === 'paid' || transactionStatus === 'confirmed'
 
   return (
-    <Tabs defaultValue='card' className='w-full sm:max-w-[500px] sm:mx-auto'>
+    <Tabs defaultValue='card' className='w-full'>
       <TabsList className={groupClx}>
       {METHODS.map(({ label, value }) => (
         <TabsTrigger
