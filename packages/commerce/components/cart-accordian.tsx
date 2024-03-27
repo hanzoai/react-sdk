@@ -19,18 +19,16 @@ const CartAccordian: React.FC<{
   icon?: React.ReactNode
   className?: string
 }> = observer(({
-  icon: Icon,
+  icon,
   className=''
 }) => { 
-
   const cmmc = useCommerce()
-  
   return (
     <Accordion type="single" collapsible className={className}>
       <AccordionItem value="cart" className='w-full border-b-0'>
         <AccordionTrigger className='!no-underline group flex justify-between'>
-          <div className='flex gap-1 items-center'>
-            {Icon}
+          <div className='flex gap-0 items-center'>
+            {icon}
             <h5 className='text-sm sm:text-xl grow'>
               <span className='group-data-[state=open]:hidden' >Order Total:</span>
               <span className='group-data-[state=closed]:hidden' >Your Order</span>
@@ -42,7 +40,13 @@ const CartAccordian: React.FC<{
           </div>
         </AccordionTrigger>
         <AccordionContent className='data-[state=open]:mb-4'>
-          <CartPanel className='w-full'/>
+          <CartPanel 
+            className='w-full '
+            scrollAfter={4}
+            scrollHeightClx='h-[350px]'
+            itemClx='mt-2'
+            totalClx='sticky px-1 pr-2 border-t -bottom-[1px] bg-background'
+          />
         </AccordionContent>
       </AccordionItem>
     </Accordion>

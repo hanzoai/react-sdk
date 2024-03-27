@@ -2,7 +2,7 @@
 import React, { type PropsWithChildren } from 'react'
 import { observer } from 'mobx-react-lite'
 
-import { Button } from '@hanzo/ui/primitives'
+import { Button, ScrollArea } from '@hanzo/ui/primitives'
 import { cn } from '@hanzo/ui/util'
 
 import { useCommerce } from '../../service/context'
@@ -12,19 +12,30 @@ import { sendFBEvent, sendGAEvent } from '../../util/analytics'
 import CartLineItem from './cart-line-item'
 
 const CartPanel: React.FC<PropsWithChildren & {
+    /** fix size and scroll after 'scrollAfter items in teh cart. */
+  scrollAfter?: number
+  scrollHeightClx?: string
+  imgSizePx?: number
   className?: string
   itemClx?: string
   listClx?: string
+  noItemsClx?: string
   totalClx?: string
+  buttonClx?: string
     /** if not provided, 'checkout' button will be rendered */
   handleCheckout?: () => void
 }> = observer(({
     /** If provided, 'children' is rendered above the items. eg, a heading. */
   children,
+  scrollAfter=5,
+  scrollHeightClx='h-[70vh]',
+  imgSizePx=40,
   className='',
   itemClx='',
   listClx='',
+  noItemsClx='',
   totalClx='',
+  buttonClx='',
   handleCheckout,
 }) => {
 
@@ -33,7 +44,6 @@ const CartPanel: React.FC<PropsWithChildren & {
     return <div />
   }
 
-    // TODO: this should be called in the client code
   const _handleCheckout = () => {
     sendGAEvent('begin_checkout', {
       currency: 'USD',
@@ -59,25 +69,41 @@ const CartPanel: React.FC<PropsWithChildren & {
     handleCheckout && handleCheckout()
   }
 
+  const Main: React.FC = () => (<>
+    {cmmc.cartEmpty ? (
+      <p className={cn('text-center mt-4', noItemsClx)}>No items in cart</p>
+    ) : (<>
+    {cmmc.cartItems.map((item) => (
+      <CartLineItem imgSizePx={imgSizePx} item={item} key={`mobile-${item.sku}`} className={cn('mb-2', itemClx)}/>
+    ))}
+    </>)}
+    <p className={cn('mt-6 text-right border-t pt-1', totalClx)}>
+      <span>TOTAL:&nbsp;</span>
+      <span className='font-semibold'>{cmmc.cartTotal === 0 ? '0' : formatPrice(cmmc.cartTotal)}</span>
+    </p>
+  </>)
+
+  const scrolling = (): boolean => (cmmc.cartItems.length > scrollAfter)
+
   return (
-    <div className={cn('border p-4 rounded-lg', className)}>
+    <div className={cn('border p-4 rounded-lg flex flex-col', className, scrolling() ? scrollHeightClx : 'h-auto')}>
       {children}
-      <div className={cn('mt-2 w-full', listClx)}>
-      {cmmc.cartEmpty ? (
-        <p className='text-center mt-4'>No items in cart</p>
-      ) : (<>
-        {cmmc.cartItems.map((item) => (<>
-          <CartLineItem imgSizePx={26} item={item} key={`mobile-${item.sku}`} className={cn('md:hidden mb-2', itemClx)}/>
-          <CartLineItem imgSizePx={40} item={item} key={`non-mobile-${item.sku}`} className={cn('hidden md:flex mb-3', itemClx)}/>
-        </>))}
-      </>)}
-      </div>
-      <p className={cn('mt-6 text-right border-t pt-1', totalClx)}>
-        <span>TOTAL:&nbsp;</span>
-        <span className='font-semibold'>{cmmc.cartTotal === 0 ? '0' : formatPrice(cmmc.cartTotal)}</span>
-      </p>
+      {scrolling() ? (
+        <ScrollArea className={cn('mt-2 w-full shrink py-0', listClx)}>
+          <Main />
+        </ScrollArea>
+      ) : (
+        <div className={cn('mt-2 w-full', listClx)}>
+          <Main />
+        </div>
+      )}
       {handleCheckout && !cmmc.cartEmpty && (
-        <Button onClick={_handleCheckout} variant='primary' rounded='lg' className='mt-12 mx-auto w-full sm:max-w-[220px]' >
+        <Button 
+          onClick={_handleCheckout} 
+          variant='primary' 
+          rounded='lg' 
+          className={cn('mt-12 mx-auto w-full sm:max-w-[220px]', buttonClx)} 
+        >
           Checkout
         </Button>
       )}
