@@ -2,31 +2,43 @@
 import React, { type PropsWithChildren } from 'react'
 import { observer } from 'mobx-react-lite'
 
-import { Button } from '@hanzo/ui/primitives'
+import { Button, ScrollArea } from '@hanzo/ui/primitives'
 import { cn } from '@hanzo/ui/util'
 
 import { useCommerce } from '../../service/context'
 import { formatPrice } from '../../util'
+import { sendFBEvent, sendGAEvent } from '../../util/analytics'
 
 import CartLineItem from './cart-line-item'
-import { sendFBEvent, sendGAEvent } from '../../util/analytics'
-import ProductsCarousel from './products-carousel'
 import PromoCode from './promo-code'
 
 const CartPanel: React.FC<PropsWithChildren & {
+    /** fix size and scroll after 'scrollAfter items in teh cart. */
+  scrollAfter?: number
+  scrollHeightClx?: string
+  imgSizePx?: number
   className?: string
-  isMobile?: boolean,
-  showCarousel?: boolean
+  itemClx?: string
+  listClx?: string
+  noItemsClx?: string
+  totalClx?: string
+  buttonClx?: string
   showPromoCode?: boolean
   showShipping?: boolean
-    /** if not provided, checkout button will not be shown */
+    /** if not provided, 'checkout' button will be rendered */
   handleCheckout?: () => void
 }> = observer(({
-    /** Children is the heading area. */
+    /** If provided, 'children' is rendered above the items. eg, a heading. */
   children,
+  scrollAfter=5,
+  scrollHeightClx='h-[70vh]',
+  imgSizePx=40,
   className='',
-  isMobile=false,
-  showCarousel=false,
+  itemClx='',
+  listClx='',
+  noItemsClx='',
+  totalClx='',
+  buttonClx='',
   showPromoCode=false,
   showShipping=false,
   handleCheckout,
@@ -62,49 +74,57 @@ const CartPanel: React.FC<PropsWithChildren & {
     handleCheckout && handleCheckout()
   }
 
-  return (
-    <div className={cn('border p-4 rounded-lg', className)}>
-      {children}
-      {showCarousel && <ProductsCarousel items={cmmc.cartItems}/>}
-      <div className='mt-2 w-full'>
-        {cmmc.cartEmpty ? (
-          <p className='text-center mt-4'>No items in cart</p>
-        ) : (<>
-          {cmmc.cartItems.map((item, i) => (
-            <CartLineItem isMobile={isMobile} item={item} key={item.sku} className='mb-2 md:mb-3'/>
-          ))}
-          {showShipping && (
-            <div className='flex flex-col gap-1 py-2 border-t'>
-              <p className='flex justify-between'>
-                <span className='text-muted-1'>Subtotal</span>
-                <span className='font-semibold'>{cmmc.cartTotal === 0 ? '0' : formatPrice(cmmc.cartTotal)}</span>
-              </p>
-              <p className='flex justify-between'>
-                <span className='text-muted-1'>Shipping</span>
-                <span className='font-semibold'>Free</span>
-              </p>
-            </div>
-          )}
-          {showPromoCode && <PromoCode/>}
-          <p className='border-t py-2 flex justify-between'>
-            TOTAL
-            <span className='font-semibold'>{cmmc.cartTotal === 0 ? '0' : formatPrice(cmmc.cartTotal)}</span>
-          </p>
-        </>
-      )}
+  const Main: React.FC = () => (<>
+    {cmmc.cartEmpty ? (
+      <p className={cn('text-center mt-4', noItemsClx)}>No items in cart</p>
+    ) : (<>
+    {cmmc.cartItems.map((item) => (
+      <CartLineItem imgSizePx={imgSizePx} item={item} key={`mobile-${item.sku}`} className={cn('mb-2', itemClx)}/>
+    ))}
+    </>)}
+    {showShipping && (
+      <div className='flex flex-col gap-1 py-2 border-t'>
+        <p className='flex justify-between'>
+          <span className='text-muted-1'>Subtotal</span>
+          <span className='font-semibold'>{cmmc.cartTotal === 0 ? '0' : formatPrice(cmmc.cartTotal)}</span>
+        </p>
+        <p className='flex justify-between'>
+          <span className='text-muted-1'>Shipping</span>
+          <span className='font-semibold'>Free</span>
+        </p>
       </div>
-      {handleCheckout && (<>
-        {!cmmc.cartEmpty && (
-          <Button 
-            variant='primary' 
-            rounded='lg' 
-            className='mt-12 mx-auto w-full sm:max-w-[220px]' 
-            onClick={_handleCheckout}
-          >
-            Checkout
-          </Button>
-        )}
-      </>)}
+    )}
+    {showPromoCode && <PromoCode/>}
+    <p className='border-t py-2 flex justify-between'>
+      TOTAL
+      <span className='font-semibold'>{cmmc.cartTotal === 0 ? '0' : formatPrice(cmmc.cartTotal)}</span>
+    </p>
+  </>)
+
+  const scrolling = (): boolean => (cmmc.cartItems.length > scrollAfter)
+
+  return (
+    <div className={cn('border p-4 rounded-lg flex flex-col', className, scrolling() ? scrollHeightClx : 'h-auto')}>
+      {children}
+      {scrolling() ? (
+        <ScrollArea className={cn('mt-2 w-full shrink py-0', listClx)}>
+          <Main />
+        </ScrollArea>
+      ) : (
+        <div className={cn('mt-2 w-full', listClx)}>
+          <Main />
+        </div>
+      )}
+      {handleCheckout && !cmmc.cartEmpty && (
+        <Button 
+          onClick={_handleCheckout} 
+          variant='primary' 
+          rounded='lg' 
+          className={cn('mt-12 mx-auto w-full sm:max-w-[220px]', buttonClx)} 
+        >
+          Checkout
+        </Button>
+      )}
     </div>
   )
 })
