@@ -11,11 +11,14 @@ import { formatPrice } from '../../util'
 import CartLineItem from './cart-line-item'
 import { sendFBEvent, sendGAEvent } from '../../util/analytics'
 import ProductsCarousel from './products-carousel'
+import PromoCode from './promo-code'
 
 const CartPanel: React.FC<PropsWithChildren & {
   className?: string
   isMobile?: boolean,
   showCarousel?: boolean
+  showPromoCode?: boolean
+  showShipping?: boolean
     /** if not provided, checkout button will not be shown */
   handleCheckout?: () => void
 }> = observer(({
@@ -24,6 +27,8 @@ const CartPanel: React.FC<PropsWithChildren & {
   className='',
   isMobile=false,
   showCarousel=false,
+  showPromoCode=false,
+  showShipping=false,
   handleCheckout,
 }) => {
 
@@ -68,8 +73,25 @@ const CartPanel: React.FC<PropsWithChildren & {
           {cmmc.cartItems.map((item, i) => (
             <CartLineItem isMobile={isMobile} item={item} key={item.sku} className='mb-2 md:mb-3'/>
           ))}
-          <p className='mt-6 text-right border-t pt-1'>TOTAL: <span className='font-semibold'>{cmmc.cartTotal === 0 ? '0' : formatPrice(cmmc.cartTotal)}</span></p>
-        </>)}
+          {showShipping && (
+            <div className='flex flex-col gap-1 py-2 border-t'>
+              <p className='flex justify-between'>
+                <span className='text-muted-1'>Subtotal</span>
+                <span className='font-semibold'>{cmmc.cartTotal === 0 ? '0' : formatPrice(cmmc.cartTotal)}</span>
+              </p>
+              <p className='flex justify-between'>
+                <span className='text-muted-1'>Shipping</span>
+                <span className='font-semibold'>Free</span>
+              </p>
+            </div>
+          )}
+          {showPromoCode && <PromoCode/>}
+          <p className='border-t py-2 flex justify-between'>
+            TOTAL
+            <span className='font-semibold'>{cmmc.cartTotal === 0 ? '0' : formatPrice(cmmc.cartTotal)}</span>
+          </p>
+        </>
+      )}
       </div>
       {handleCheckout && (<>
         {!cmmc.cartEmpty && (

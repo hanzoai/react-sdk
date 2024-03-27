@@ -23,7 +23,7 @@ const DesktopPanel: React.FC<PropsWithChildren & {
     <div className='w-full bg-background flex flex-row items-start justify-end'>
       <ScrollArea className='h-full w-full max-w-[750px] relative flex flex-col items-center justify-start px-6 pt-12 pb-9'>
         <CloseButton close={close} className='absolute top-3 left-3 w-auto h-auto rounded-full bg-level-1 hover:bg-level-2 hover:border-muted p-2' />
-        <CartPanel showCarousel className='flex border-none mt-10 w-full max-w-[550px] flex-col' />
+        <CartPanel showCarousel showPromoCode showShipping className='flex border-none mt-10 w-full max-w-[550px] flex-col' />
       </ScrollArea>
     </div>
     <ScrollArea className='w-full h-full bg-level-1 flex flex-row items-start justify-start overflow-y-auto'>
