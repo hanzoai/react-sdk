@@ -17,4 +17,4 @@ export { Icons } from './Icons'
 
 export { default as ListItemSelector } from './select/list-selector'
 export { default as RadioItemSelector } from './select/radio-selector'
-export { default as CarouselItemSelector } from './select/carousel-selector'
+export { default as CarouselItemSelector, type CarouselItemSelectorPropsExt } from './select/carousel-selector'

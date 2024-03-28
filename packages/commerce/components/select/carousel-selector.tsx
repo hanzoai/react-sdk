@@ -27,6 +27,7 @@ import type { ItemSelectorProps } from '../../types'
 interface CarouselItemSelectorPropsExt {
   constrainTo: Dimensions
   options?: CarouselOptionsType 
+  noSelection?: boolean // "display only" mode
 }
   
 const CarouselItemSelector: React.FC<ItemSelectorProps> = ({ 
