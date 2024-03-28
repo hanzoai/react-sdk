@@ -11,8 +11,8 @@ import { formatPrice } from '../../util'
 import { Icons } from '../Icons'
 
 import AddToCartWidget from './add-to-cart-widget'
-import CategoryItemRadioSelector from '../select/radio-selector'
-import CategoryItemScrollSelector from '../select/list-selector'
+import RadioItemSelector from '../select/radio-selector'
+import ListItemSelector from '../select/list-selector'
 
 const SelectCategoryItemPanel: React.FC<
   React.HTMLAttributes<HTMLDivElement> &   
@@ -93,21 +93,21 @@ const SelectCategoryItemPanel: React.FC<
           <div className={'h-[1px] bg-muted-3 ' + (mobilePicker ?  'w-pr-55' :  'w-pr-60') } />
         </div>
         {mobilePicker ? (
-          <CategoryItemScrollSelector
+          <ListItemSelector
             items={category.products as LineItem[]}
             selectedItemRef={selectedItemRef}  
             selectSku={selectSku}
             showQuantity={showQuantity}
             itemClx='h-10 border-b px-4'
-            outerClx='mb-4 h-[180px]'
+            className='mb-4 h-[180px]'
           />
         ) : (
-          <CategoryItemRadioSelector 
+          <RadioItemSelector 
             items={category.products as LineItem[]}
             selectedItemRef={selectedItemRef}  
             selectSku={selectSku}
             showQuantity={showQuantity}
-            groupClx='block columns-2 gap-4'
+            className='block columns-2 gap-4'
             itemClx='flex flex-row gap-2 items-center mb-2.5'
           />
         )}

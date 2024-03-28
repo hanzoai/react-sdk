@@ -8,8 +8,8 @@ import { Skeleton } from '@hanzo/ui/primitives'
 import type { ItemSelector, LineItem } from '../../types'
 
 import AddToCartWidget from './add-to-cart-widget'
-import CategoryItemRadioSelector from '../select/radio-selector'
-import CategoryItemScrollSelector from '../select/list-selector'
+import RadioItemSelector from '../select/radio-selector'
+import ListItemSelector from '../select/list-selector'
 import { formatPrice } from '../../util'
 
 const SelectCategoryItemCard: React.FC<React.HTMLAttributes<HTMLDivElement> & ItemSelector & {
@@ -52,19 +52,19 @@ const SelectCategoryItemCard: React.FC<React.HTMLAttributes<HTMLDivElement> & It
       )}>
         {title && (<div className={'h-[1px] bg-muted-3 ' + (mobilePicker ?  'w-pr-55' :  'w-pr-60') } /> )}
         {mobilePicker ? (
-          <CategoryItemScrollSelector
+          <ListItemSelector
             items={items}
             selectedItemRef={selItemRef}  
             selectSku={selectSku}
+            className='min-w-pr-80 h-[180px]' // 80% of 65% parent
             itemClx='h-10 border-b px-4'
-            outerClx='min-w-pr-80 h-[180px]' // 80% of 65% parent
           />
         ) : (
-          <CategoryItemRadioSelector 
+          <RadioItemSelector 
             items={items}
             selectedItemRef={selItemRef}  
             selectSku={selectSku}
-            groupClx='mt-2'
+            className='mt-2'
             showQuantity={false}
             itemClx='flex flex-row gap-2.5 items-center'
           />

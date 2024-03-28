@@ -4,8 +4,8 @@ import { observer } from 'mobx-react-lite'
 
 import { cn } from '@hanzo/ui/util'
 
-import type { LineItem } from '../../types'
-import { formatPrice } from '../../util'
+import type { LineItem } from '../../../types'
+import { formatPrice } from '../../../util'
 import AddToCartWidget from '../../buy/add-to-cart-widget'
 
 const DEF_IMG_SIZE=40

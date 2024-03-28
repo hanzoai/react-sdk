@@ -8,29 +8,36 @@ import { cn } from '@hanzo/ui/util'
 import type { FacetsValue, ItemSelectorProps, LineItem } from '../../types'
 import { useCommerce } from '../../service/context'
 import { getFacetValuesMutator } from '../../util'
+
 import FacetValuesWidget from '../facet-values-widget'
-import SelectCategoryItemCard from './_to_deprecate_select-category-item-card'
+import AddToCartWidget from './add-to-cart-widget'
 
 const AllVariantsBuyCard: React.FC<{
   skuPath: string
+  className?: string
+  facetsWidgetClx?: string
   Selector: ComponentType<ItemSelectorProps>
   selShowPrice?: boolean
   selShowQuantity?: boolean
   selClx?: string
   selItemClx?: string
   selExt?: any
-  className?: string
+  addWidgetClx?: string
+  isMobile?: boolean
   onQuantityChanged?: (sku: string, oldV: number, newV: number) => void
 }> = observer(({
   skuPath,
   className='',
-  onQuantityChanged,
+  facetsWidgetClx='',
   Selector,
   selShowPrice=true,
   selShowQuantity=false,
   selClx='',
   selItemClx='',
   selExt,
+  addWidgetClx='',
+  isMobile=false,
+  onQuantityChanged,
 }) => {
 
   const cmmc = useCommerce()
@@ -52,6 +59,7 @@ const AllVariantsBuyCard: React.FC<{
     }
     cmmc.setFacets(fsv)
 
+  /*
     return autorun(() => {
       const cats = cmmc.specifiedCategories
         // Original cat was legit
@@ -66,6 +74,7 @@ const AllVariantsBuyCard: React.FC<{
         }
       }
     })
+  */
   }, [cat, facets])
 
   const renderFacetTabs = facets && levelRef.current > 0
@@ -74,24 +83,41 @@ const AllVariantsBuyCard: React.FC<{
     <div className={className} >
     {renderFacetTabs && (
       <FacetValuesWidget
-        className={cn('grid gap-0 ' + `grid-cols-${facets.length}` + ' self-start ', 'border-b-2 border-level-3 mb-2 -mr-2 -ml-2')} 
-        isMobile={false}
+        className={cn(
+          'grid gap-0 ' + `grid-cols-${facets.length}` + ' self-start ', 
+          'border-b-2 border-level-3 mb-2 -mr-2 -ml-2',
+          facetsWidgetClx  
+        )} 
+        isMobile={isMobile}
         mutator={getFacetValuesMutator(levelRef.current + 1, cmmc)} 
         itemClx='flex-col h-auto gap-0 pb-1 pt-3 px-3'
-        buttonClx={'h-full !rounded-bl-none !rounded-br-none !rounded-tl-lg !rounded-tr-lg ' +
-        '!border-r !border-t !border-level-3'}
+        buttonClx={
+          'h-full !rounded-bl-none !rounded-br-none !rounded-tl-lg !rounded-tr-lg ' +
+          '!border-r !border-t !border-level-3'
+        }
         facetValues={facets}
       />
     )}
     {cmmc.specifiedCategories[0] && (
-      <SelectCategoryItemCard 
+      <Selector 
         items={cmmc.specifiedCategories[0].products as LineItem[]}
-        selectedItemRef={cmmc /* ...conveniently. :) */ }
+        selectedItemRef={cmmc}
         selectSku={cmmc.setCurrentItem.bind(cmmc)}
-        className=''
-        onQuantityChanged={onQuantityChanged}
+        className={selClx}
+        itemClx={selItemClx}
+        ext={selExt}
+        showPrice={selShowPrice}
+        showQuantity={selShowQuantity}
       />  
     )}
+    {(cmmc.currentItem) && (
+      <AddToCartWidget 
+        size='default' 
+        item={cmmc.currentItem}
+        onQuantityChanged={onQuantityChanged} 
+        className={cn('lg:min-w-[160px] lg:mx-auto', addWidgetClx)}
+      />
+    )} 
     </div >
   )
 })

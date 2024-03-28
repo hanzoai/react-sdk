@@ -12,17 +12,20 @@ import {
 
 import { cn } from '@hanzo/ui/util'
 
-import BuyCard from './buy-item-card'
+import BuyCard from './all-variants-buy-card'
+import RadioItemSelector from '../select/radio-selector'
 
 const BuyDrawer: React.FC<{
   skuPath: string
   trigger: ReactNode
+  isMobile?: boolean
   triggerClx?: string  
   drawerClx?: string
   cardClx?: string
 }> = ({
   skuPath,
   trigger,
+  isMobile=false,
   triggerClx='',
   drawerClx='',
   cardClx=''
@@ -45,7 +48,16 @@ const BuyDrawer: React.FC<{
         className={cn('rounded-tl-xl rounded-tr-xl p-0 overflow-hidden', drawerClx)}
        // side="bottom" 
       >
-        <BuyCard skuPath={skuPath} mobile onQuantityChanged={onQuantityChanged} className={cn("w-full relative ", cardClx)}/>
+        <BuyCard 
+          skuPath={skuPath} 
+          isMobile={isMobile} 
+          onQuantityChanged={onQuantityChanged} 
+          className={cn("w-full relative ", cardClx)}
+          Selector={RadioItemSelector}
+          selClx=''
+          selItemClx=''
+          addWidgetClx=''
+        />
       </DrawerContent>
     </Drawer>
   )

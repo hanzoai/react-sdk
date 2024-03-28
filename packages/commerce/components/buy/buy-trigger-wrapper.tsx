@@ -1,25 +1,18 @@
 'use client'
 import React from 'react'
 
-import BuyPopup from './buy-popup'
-import BuyMobileDrawer from './buy-mobile-drawer'
+import BuyMobileDrawer from './buy-drawer'
 
 const BuyTriggerWrapper: React.FC<{
   skuPath: string
-  desktopTrigger: React.ReactNode
-  mobileTrigger: React.ReactNode
-  popupClx?: string
+  trigger: React.ReactNode
+  mobileTrigger?: React.ReactNode
 }> = ({
   skuPath,
-  desktopTrigger,
+  trigger,
   mobileTrigger,
-  popupClx=''
-}) => (<>
-  <BuyPopup skuPath={skuPath} popupClx={popupClx}>
-    {desktopTrigger}
-  </BuyPopup>
-  <BuyMobileDrawer skuPath={skuPath} trigger={mobileTrigger} />
-</>
+}) => (
+  <BuyMobileDrawer skuPath={skuPath} trigger={trigger} />
 )
 
 export default BuyTriggerWrapper

@@ -12,7 +12,7 @@ import {
   toast 
 } from '@hanzo/ui/primitives'
 
-import type { PaymentMethodComponentProps } from '../../../types'
+import type { PaymentMethodComponentProps } from '../../../../types'
 
 import ContactForm from '../contact-form'
 
