@@ -74,12 +74,18 @@ const CartPanel: React.FC<PropsWithChildren & {
     handleCheckout && handleCheckout()
   }
 
-  const Main: React.FC = () => (<>
+  const Main: React.FC = observer(() => (<>
     {cmmc.cartEmpty ? (
       <p className={cn('text-center mt-4', noItemsClx)}>No items in cart</p>
     ) : (<>
     {cmmc.cartItems.map((item) => (
-      <CartLineItem imgSizePx={imgSizePx} item={item} key={`mobile-${item.sku}`} className={cn('mb-2', itemClx)}/>
+      <CartLineItem
+        key={`mobile-${item.sku}`}
+        imgSizePx={imgSizePx}
+        item={item}
+        className={cn('mb-2', itemClx)}
+        showPromoCode={showPromoCode}
+      />
     ))}
     </>)}
     {showShipping && (
@@ -95,11 +101,11 @@ const CartPanel: React.FC<PropsWithChildren & {
       </div>
     )}
     {showPromoCode && <PromoCode/>}
-    <p className='border-t py-2 flex justify-between'>
+    <p className={cn('border-t py-2 flex justify-between', totalClx)}>
       TOTAL
-      <span className='font-semibold'>{cmmc.cartTotal === 0 ? '0' : formatPrice(cmmc.cartTotal)}</span>
+      <span className='font-semibold'>{formatPrice(showPromoCode ? cmmc.cartTotalWithPromo : cmmc.cartTotal)}</span>
     </p>
-  </>)
+  </>))
 
   const scrolling = (): boolean => (cmmc.cartItems.length > scrollAfter)
 

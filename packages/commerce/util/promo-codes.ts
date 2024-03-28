@@ -1,17 +1,46 @@
 'use server'
 
-const PROMO_CODES: {[key: string]: number} = {
-  '10OFF': 10,
-  '20OFF': 20,
-}
+import type { Promo } from '../types'
 
-const getCodeDiscount = async (code: string) => {
-  if (!PROMO_CODES[code]) {
-    return null
+const PROMO_CODES: Promo[] = [
+  {
+    type: 'percent',
+    code: 'ANGEL',
+    value: 20
+  },
+  {
+    type: 'percent',
+    code: 'NASSER',
+    value: 20
+  },
+  {
+    type: 'percent',
+    code: 'DARA',
+    value: 20
+  },
+  {
+    type: 'percent',
+    code: 'ROSEY',
+    value: 20
+  },
+  {
+    type: 'percent',
+    code: 'IYKYK',
+    value: 20
+  },
+  {
+    type: 'percent',
+    code: 'GENESIS',
+    value: 99,
+    skus: ['LXM-PS-PS']
   }
-  return PROMO_CODES[code]
+]
+
+// TODO: implement a real API call
+const getPromoFromApi = async (code: string) => {
+  return PROMO_CODES.find(promo => promo.code === code)
 }
 
 export {
-  getCodeDiscount as default
+  getPromoFromApi as default
 }

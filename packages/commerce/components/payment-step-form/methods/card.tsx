@@ -1,11 +1,11 @@
 'use client'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 
-import type { UseFormReturn } from 'react-hook-form'
 // @ts-ignore
 import { ApplePay, GooglePay, CreditCard, PaymentForm } from 'react-square-web-payments-sdk'
 
 import { ChevronRight } from 'lucide-react'
+import { observer } from 'mobx-react-lite'
 
 import {
   Accordion,
@@ -27,7 +27,7 @@ import { sendFBEvent, sendGAEvent } from '../../../util/analytics'
 import ContactInfo from '../contact-form'
 import PaymentMethods from '../card-icon-row'
 
-const PayWithCard: React.FC<PaymentMethodComponentProps> = ({
+const PayWithCard: React.FC<PaymentMethodComponentProps> = observer(({
   onDone,
   transactionStatus,
   setTransactionStatus,
@@ -42,9 +42,8 @@ const PayWithCard: React.FC<PaymentMethodComponentProps> = ({
   ) => {
     contactForm.handleSubmit(async () => {
       setTransactionStatus('paid')
-      const res = await processSquareCardPayment(token.token, cmmc.cartTotal, verifiedBuyer.token)
+      const res = await processSquareCardPayment(token.token, cmmc.cartTotalWithPromo, verifiedBuyer.token)
       if (res) {
-        console.log(token)
         await storePaymentInfo({paymentMethod: token.details.method ?? null, processed: res})
         setTransactionStatus('confirmed')
         sendGAEvent('purchase', {
@@ -66,7 +65,7 @@ const PayWithCard: React.FC<PaymentMethodComponentProps> = ({
             quantity: item.quantity
           })),
           num_items: cmmc.cartItems.length,
-          value: cmmc.cartTotal,
+          value: cmmc.cartTotalWithPromo,
           currency: 'USD',
         })
       } else {
@@ -78,7 +77,7 @@ const PayWithCard: React.FC<PaymentMethodComponentProps> = ({
   const createVerificationDetails = () => {
     const {name, email} = contactForm.getValues()
     return {
-      amount: cmmc.cartTotal.toFixed(2),
+      amount: cmmc.cartTotalWithPromo.toFixed(2),
       billingContact: {
         givenName: name,
         email,
@@ -88,7 +87,7 @@ const PayWithCard: React.FC<PaymentMethodComponentProps> = ({
     }
   }
 
-  const createPaymentRequest= () => ({
+  const createPaymentRequest = () => ({
     countryCode: "US",
     currencyCode: "USD",
     lineItems: cmmc.cartItems.map(item => ({
@@ -99,10 +98,26 @@ const PayWithCard: React.FC<PaymentMethodComponentProps> = ({
     requestBillingContact: false,
     requestShippingContact: false,
     total: {
-      amount: cmmc.cartTotal.toFixed(2),
+      amount: cmmc.cartTotalWithPromo.toFixed(2),
       label: "Total",
     },
   })
+
+  /**
+   * Reload payment form after checkout value changes (promo code applied, etc.)
+   * Reloading is required so that Apple Pay and Google Pay buttons are updated for new cart total.
+   */
+  const [loadingPaymentForm, setLoadingPaymentForm] = useState<boolean>(false)
+  useEffect(() => {
+    setLoadingPaymentForm(true)
+    const timeout = setTimeout(() => setLoadingPaymentForm(false), 1000)
+    return () => clearTimeout(timeout)
+  }, [cmmc.cartTotalWithPromo])
+
+  if (loadingPaymentForm) {
+    //TODO: show skeleton loader
+    return null
+  }
 
   return (
     <PaymentForm
@@ -229,6 +244,6 @@ const PayWithCard: React.FC<PaymentMethodComponentProps> = ({
       </ApplyTypography>
     </PaymentForm>
   )
-}
+})
 
 export default PayWithCard

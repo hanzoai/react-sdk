@@ -1,20 +1,25 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { useSearchParams } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Check } from 'lucide-react'
+import { observer } from 'mobx-react-lite'
 
 import { Button, Form, FormControl, FormField, FormItem, Input } from '@hanzo/ui/primitives'
-import getCodeDiscount from '../../util/promo-codes'
-import { useSearchParams } from 'next/navigation'
+
+import { useCommerce } from '../..'
+import type { Promo } from '../../types'
+import getPromoFromApi from '../../util/promo-codes'
 
 const formSchema = z.object({
   code: z.string().min(1, 'Invalid code'),
 })
 
-const PromoCode = () => {
+const PromoCode = observer(() => {
+  const cmmc = useCommerce()
   const searchParams = useSearchParams()
 
   const [codeAccepted, setCodeAccepted] = useState<boolean>(false)
@@ -23,15 +28,24 @@ const PromoCode = () => {
   useEffect(() => {
     const code = searchParams.get('code')
     if (code) {
-      getCodeDiscount(code).then((discount) => {
-        if (discount) {
+      getPromoFromApi(code).then((promo?: Promo) => {
+        if (promo) {
           form.setValue('code', code)
           setCodeAccepted(true)
           setDiscount(discount)
+          cmmc.setPromo(promo)
         }
       })
     }
   }, [searchParams])
+
+  useEffect(() => {
+    if (cmmc.promo) {
+      form.setValue('code', cmmc.promo.code)
+      setCodeAccepted(true)
+      setDiscount(cmmc.promo.value)
+    }
+  }, [cmmc.promo])
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -42,13 +56,20 @@ const PromoCode = () => {
 
   const applyPromoCode = async (values: z.infer<typeof formSchema>) => {
     const { code } = values
-    const discount = await getCodeDiscount(code)
-    if (!discount) {
+    const promo = await getPromoFromApi(code)
+    if (!promo) {
       form.setError('code', { message: 'Invalid code' })
       return
     }
     setCodeAccepted(true)
     setDiscount(discount)
+    cmmc.setPromo(promo)
+  }
+
+  const removePromoCode = () => {
+    cmmc.setPromo(null)
+    setCodeAccepted(false)
+    setDiscount(undefined)
   }
 
   return (
@@ -62,7 +83,7 @@ const PromoCode = () => {
               render={({ field }) => (
                 <FormItem className='w-full'>
                   <FormControl>
-                    <Input {...field} placeholder='Discount or invite code' disabled={codeAccepted}/>
+                    <Input {...field} placeholder='Discount or invite code' onInput={removePromoCode}/>
                   </FormControl>
                 </FormItem>
               )}
@@ -70,20 +91,13 @@ const PromoCode = () => {
             {codeAccepted ? (
               <Check/>
             ) : (
-              <Button variant='outline' disabled={codeAccepted} className='!w-fit !min-w-0'>Apply</Button>
+              <Button variant='outline' className='!w-fit !min-w-0 font-inter'>Apply</Button>
             )}
           </div>
         </form>
       </Form>
-
-      {codeAccepted && (
-        <p className='flex justify-between'>
-          <span className='text-muted-1'>Discount</span>
-          <span className='font-semibold'>{discount}%</span>
-        </p>
-      )}
     </div>
   )
-}
+})
 
 export default PromoCode
