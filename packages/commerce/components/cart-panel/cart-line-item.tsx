@@ -44,7 +44,7 @@ const CartLineItem: React.FC<{
         setDiscountedPrice(undefined)
       }
     }
-  }, [cmmc.promo])
+  }, [cmmc.promo, item.price, item.quantity])
   
   return (
     <div className={cn('flex flex-col justify-start items-start text-sm font-sans', className)}>
