@@ -182,7 +182,7 @@ class StandaloneService
     return this.cartItems.length === 0    
   }
 
-  // TODO: turn cartTotal into a computed function that accepts a boolean and returns with or without discount
+  // TODO: maybe turn cartTotal into a computed function that accepts a boolean and returns with or without discount?
   get cartTotal(): number {
     return this.cartItems.reduce(
       (total, item) => (total + item.price * item.quantity), 

@@ -88,6 +88,7 @@ const CartPanel: React.FC<PropsWithChildren & {
       />
     ))}
     </>)}
+    {showPromoCode && <PromoCode/>}
     {showShipping && (
       <div className='flex flex-col gap-1 py-2 border-t'>
         <p className='flex justify-between'>
@@ -100,7 +101,6 @@ const CartPanel: React.FC<PropsWithChildren & {
         </p>
       </div>
     )}
-    {showPromoCode && <PromoCode/>}
     <p className={cn('border-t py-2 flex justify-between', totalClx)}>
       TOTAL
       <span className='font-semibold'>{formatPrice(showPromoCode ? cmmc.cartTotalWithPromo : cmmc.cartTotal)}</span>

@@ -14,6 +14,7 @@ import {
   AccordionTrigger,
   ApplyTypography, 
   Button, 
+  Skeleton, 
   buttonVariants
 } from '@hanzo/ui/primitives'
 
@@ -115,8 +116,12 @@ const PayWithCard: React.FC<PaymentMethodComponentProps> = observer(({
   }, [cmmc.cartTotalWithPromo])
 
   if (loadingPaymentForm) {
-    //TODO: show skeleton loader
-    return null
+    return (
+      <div className='flex flex-col gap-2'>
+        <Skeleton className='w-full h-10' />
+        <Skeleton className='w-full h-10' />
+      </div>
+    )
   }
 
   return (
