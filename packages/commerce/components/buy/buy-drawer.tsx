@@ -12,9 +12,9 @@ import {
 
 import { cn } from '@hanzo/ui/util'
 
-import BuyItemCard from './buy-item-card'
+import BuyCard from './buy-item-card'
 
-const BuyItemMobileDrawer: React.FC<{
+const BuyDrawer: React.FC<{
   skuPath: string
   trigger: ReactNode
   triggerClx?: string  
@@ -45,10 +45,10 @@ const BuyItemMobileDrawer: React.FC<{
         className={cn('rounded-tl-xl rounded-tr-xl p-0 overflow-hidden', drawerClx)}
        // side="bottom" 
       >
-        <BuyItemCard skuPath={skuPath} mobile onQuantityChanged={onQuantityChanged} className={cn("w-full relative ", cardClx)}/>
+        <BuyCard skuPath={skuPath} mobile onQuantityChanged={onQuantityChanged} className={cn("w-full relative ", cardClx)}/>
       </DrawerContent>
     </Drawer>
   )
 }
 
-export default BuyItemMobileDrawer
+export default BuyDrawer

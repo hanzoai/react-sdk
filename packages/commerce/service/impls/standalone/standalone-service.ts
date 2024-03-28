@@ -236,6 +236,17 @@ class StandaloneService
     return this.specifiedCategories
   }
 
+  setFacetsFromSkuPath(skuPath: string): Category[] {
+    const toks = skuPath.split(SEP)
+    const highestLevel = toks.length - 1
+    const fsv: FacetsValue = {}
+    for (let level = 1; level <= highestLevel; level++ ) {
+      fsv[level] = [toks[level]]   
+    } 
+    return this.setFacets(fsv)
+  }
+
+
   get facetsValue(): FacetsValue {
     const result: FacetsValue = {}
     for( let level in this._selectedFacets ) {

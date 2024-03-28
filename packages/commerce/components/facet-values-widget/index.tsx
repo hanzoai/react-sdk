@@ -85,6 +85,5 @@ const FacetValuesWidget: React.FC<{
     </ToggleGroup>  
   )
 }
-// hidden md:block 
 
 export default FacetValuesWidget

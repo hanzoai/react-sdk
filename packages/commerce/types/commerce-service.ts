@@ -29,6 +29,7 @@ interface CommerceService extends ObsLineItemRef {
      * An empty value object specifies all Category's and all LineItem's,
      * */ 
   setFacets(value: FacetsValue): Category[]
+  setFacetsFromSkuPath(skuPath: string): Category[] 
   get facetsValue(): FacetsValue // returns a copy
   get specifiedItems(): LineItem[]
   get specifiedCategories(): Category[] 
@@ -36,9 +37,10 @@ interface CommerceService extends ObsLineItemRef {
     /** Whether this path defines a Category, or if it has further levels */
   getFacetValuesAtSkuPath(skuPath: string): FacetValueDesc[] | undefined 
 
-    /** Based on current value of 'level', what are the available subfacets? 
-     *  If more than one value is specified at 'level' returned FacetValueDesc[]
-     * may represent multiple sets. 
+    /** 
+     * Based on 'level', what are the available subfacets? 
+     * If more than one value is specified at 'level', 
+     * the returned FacetValueDesc[] may represent multiple sets. 
      * */ 
   getFacetValuesSpecified(level: number): FacetValueDesc[] | undefined 
 

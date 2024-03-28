@@ -13,11 +13,11 @@ import {
 import type { ImageDef } from '@hanzo/ui/types'
 import { cn } from '@hanzo/ui/util'
 
-import { formatPrice } from '../util'
-import type { LineItem } from '../types'
-import { Icons } from './Icons'
+import { formatPrice } from '../../util'
+import type { LineItem } from '../../types'
+import { Icons } from '../Icons'
 
-import AddToCartWidget from './add-to-cart-widget'
+import AddToCartWidget from '../buy/add-to-cart-widget'
 
 interface ProductCardProps extends React.HTMLAttributes<HTMLDivElement> {
   item: LineItem

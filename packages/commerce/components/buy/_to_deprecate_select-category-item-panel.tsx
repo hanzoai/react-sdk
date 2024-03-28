@@ -6,17 +6,21 @@ import { observer } from 'mobx-react-lite'
 import { cn } from '@hanzo/ui/util'
 import { Skeleton } from '@hanzo/ui/primitives'
 
-import type { ItemSelector } from '../types'
-import { formatPrice } from '../util'
-import { Icons } from './Icons'
+import type { Category, ItemSelector, LineItem, ObsLineItemRef } from '../../types'
+import { formatPrice } from '../../util'
+import { Icons } from '../Icons'
 
 import AddToCartWidget from './add-to-cart-widget'
-import CategoryItemRadioSelector from './category-item-radio-selector'
-import CategoryItemScrollSelector from './category-item-scroll-selector'
+import CategoryItemRadioSelector from '../select/radio-selector'
+import CategoryItemScrollSelector from '../select/list-selector'
 
 const SelectCategoryItemPanel: React.FC<
-  React.HTMLAttributes<HTMLDivElement> & ItemSelector &   
+  React.HTMLAttributes<HTMLDivElement> &   
   {
+    category: Category
+    selectedItemRef: ObsLineItemRef
+    selectSku: (sku: string) => void 
+    showQuantity?: boolean
     isLoading?: boolean
     mobile?: boolean
   }
@@ -90,7 +94,7 @@ const SelectCategoryItemPanel: React.FC<
         </div>
         {mobilePicker ? (
           <CategoryItemScrollSelector
-            category={category}
+            items={category.products as LineItem[]}
             selectedItemRef={selectedItemRef}  
             selectSku={selectSku}
             showQuantity={showQuantity}
@@ -99,7 +103,7 @@ const SelectCategoryItemPanel: React.FC<
           />
         ) : (
           <CategoryItemRadioSelector 
-            category={category}
+            items={category.products as LineItem[]}
             selectedItemRef={selectedItemRef}  
             selectSku={selectSku}
             showQuantity={showQuantity}

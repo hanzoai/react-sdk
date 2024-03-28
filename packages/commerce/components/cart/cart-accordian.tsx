@@ -11,7 +11,7 @@ import {
   AccordionTrigger,
 } from '@hanzo/ui/primitives'
 
-import { formatPrice, useCommerce } from '..'
+import { formatPrice, useCommerce } from '../..'
 
 import CartPanel from './cart-panel'
 

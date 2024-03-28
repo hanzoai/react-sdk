@@ -6,7 +6,7 @@ import { cn } from '@hanzo/ui/util'
 
 import type { LineItem } from '../../types'
 import { formatPrice } from '../../util'
-import AddToCartWidget from '../add-to-cart-widget'
+import AddToCartWidget from '../../buy/add-to-cart-widget'
 
 const DEF_IMG_SIZE=40
 

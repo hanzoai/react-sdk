@@ -51,8 +51,8 @@ export const getFacetValuesMutator = (level: number, cmmc: CommerceService): Str
   }
 
   return {
-    get: () => (getLevelValueSafe(level)),
-    set: (v: string) => {setLevel(v, level)}
+    get: (): string | null => (getLevelValueSafe(level)),
+    set: (v: string): void => {setLevel(v, level)}
   } satisfies StringMutator
 }
 

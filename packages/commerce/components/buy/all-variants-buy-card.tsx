@@ -1,27 +1,36 @@
 'use client'
-import React, { useRef, useEffect } from 'react'
+import React, { useRef, useEffect, type ComponentType } from 'react'
 import { autorun  } from 'mobx'
 import { observer } from 'mobx-react-lite'
 
 import { cn } from '@hanzo/ui/util'
 
-import type { FacetsValue } from '../../types'
+import type { FacetsValue, ItemSelectorProps, LineItem } from '../../types'
 import { useCommerce } from '../../service/context'
 import { getFacetValuesMutator } from '../../util'
 import FacetValuesWidget from '../facet-values-widget'
-import SelectCategoryItemCard from './select-category-item-card'
+import SelectCategoryItemCard from './_to_deprecate_select-category-item-card'
 
-
-const BuyItemCard: React.FC<{
+const AllVariantsBuyCard: React.FC<{
   skuPath: string
-  mobile?: boolean
+  Selector: ComponentType<ItemSelectorProps>
+  selShowPrice?: boolean
+  selShowQuantity?: boolean
+  selClx?: string
+  selItemClx?: string
+  selExt?: any
   className?: string
   onQuantityChanged?: (sku: string, oldV: number, newV: number) => void
 }> = observer(({
   skuPath,
-  mobile=false,
   className='',
-  onQuantityChanged
+  onQuantityChanged,
+  Selector,
+  selShowPrice=true,
+  selShowQuantity=false,
+  selClx='',
+  selItemClx='',
+  selExt,
 }) => {
 
   const cmmc = useCommerce()
@@ -38,8 +47,8 @@ const BuyItemCard: React.FC<{
     for (let level = 1; level <= levelRef.current; level++ ) {
       fsv[level] = [toks[level]]   
     } 
-    if (facets) {
-      fsv[levelRef.current + 1] = [facets[0].value]
+    if (!cat) {
+      fsv[levelRef.current + 1] = [facets![0].value]
     }
     cmmc.setFacets(fsv)
 
@@ -76,9 +85,7 @@ const BuyItemCard: React.FC<{
     )}
     {cmmc.specifiedCategories[0] && (
       <SelectCategoryItemCard 
-        noTitle
-        mobile={mobile}
-        category={cmmc.specifiedCategories[0]}
+        items={cmmc.specifiedCategories[0].products as LineItem[]}
         selectedItemRef={cmmc /* ...conveniently. :) */ }
         selectSku={cmmc.setCurrentItem.bind(cmmc)}
         className=''
@@ -89,4 +96,4 @@ const BuyItemCard: React.FC<{
   )
 })
 
-export default BuyItemCard
+export default AllVariantsBuyCard
