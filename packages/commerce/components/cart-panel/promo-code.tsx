@@ -23,7 +23,6 @@ const PromoCode = observer(() => {
   const searchParams = useSearchParams()
 
   const [codeAccepted, setCodeAccepted] = useState<boolean>(false)
-  const [discount, setDiscount] = useState<number>()
 
   useEffect(() => {
     const code = searchParams.get('code')
@@ -32,7 +31,6 @@ const PromoCode = observer(() => {
         if (promo) {
           form.setValue('code', code)
           setCodeAccepted(true)
-          setDiscount(discount)
           cmmc.setPromo(promo)
         }
       })
@@ -43,7 +41,6 @@ const PromoCode = observer(() => {
     if (cmmc.promo) {
       form.setValue('code', cmmc.promo.code)
       setCodeAccepted(true)
-      setDiscount(cmmc.promo.value)
     }
   }, [cmmc.promo])
 
@@ -62,14 +59,12 @@ const PromoCode = observer(() => {
       return
     }
     setCodeAccepted(true)
-    setDiscount(discount)
     cmmc.setPromo(promo)
   }
 
   const removePromoCode = () => {
     cmmc.setPromo(null)
     setCodeAccepted(false)
-    setDiscount(undefined)
   }
 
   return (
