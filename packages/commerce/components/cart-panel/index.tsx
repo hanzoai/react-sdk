@@ -89,16 +89,24 @@ const CartPanel: React.FC<PropsWithChildren & {
     ))}
     </>)}
     {showPromoCode && <PromoCode/>}
-    {showShipping && (
+    {(showShipping || showPromoCode) && (
       <div className='flex flex-col gap-1 py-2 border-t'>
         <p className='flex justify-between'>
           <span className='text-muted-1'>Subtotal</span>
           <span className='font-semibold'>{cmmc.cartTotal === 0 ? '0' : formatPrice(cmmc.cartTotal)}</span>
         </p>
-        <p className='flex justify-between'>
-          <span className='text-muted-1'>Shipping</span>
-          <span className='font-semibold'>Free</span>
-        </p>
+        {cmmc.cartTotalWithPromo !== cmmc.cartTotal && (
+          <p className='flex justify-between'>
+            <span className='text-muted-1'>Discount</span>
+            <span className='font-semibold'>-{formatPrice(cmmc.cartTotal - cmmc.cartTotalWithPromo)}</span>
+          </p>
+        )}
+        {showShipping && (
+          <p className='flex justify-between'>
+            <span className='text-muted-1'>Shipping</span>
+            <span className='font-semibold'>Free Global Shipping</span>
+          </p>
+        )}
       </div>
     )}
     <p className={cn('border-t py-2 flex justify-between', totalClx)}>
