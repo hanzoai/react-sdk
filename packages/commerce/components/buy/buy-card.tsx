@@ -11,17 +11,20 @@ import { getFacetValuesMutator } from '../../util'
 
 import FacetValuesWidget from '../facet-values-widget'
 import AddToCartWidget from './add-to-cart-widget'
+import { string } from 'square/dist/types/schema'
+import { ApplyTypography } from '@hanzo/ui/primitives'
 
-const AllVariantsBuyCard: React.FC<{
+const BuyCard: React.FC<{
   skuPath: string
-  className?: string
-  facetsWidgetClx?: string
   Selector: ComponentType<ItemSelectorProps>
   selShowPrice?: boolean
   selShowQuantity?: boolean
   selClx?: string
   selItemClx?: string
   selExt?: any
+  allVariants?: boolean
+  className?: string
+  facetsWidgetClx?: string
   addWidgetClx?: string
   isMobile?: boolean
   onQuantityChanged?: (sku: string, oldV: number, newV: number) => void
@@ -36,6 +39,7 @@ const AllVariantsBuyCard: React.FC<{
   selItemClx='',
   selExt,
   addWidgetClx='',
+  allVariants=true,
   isMobile=false,
   onQuantityChanged,
 }) => {
@@ -43,29 +47,32 @@ const AllVariantsBuyCard: React.FC<{
   const cmmc = useCommerce()
   const levelRef = useRef<number>(-1)
 
-  const cat = cmmc.getCategory(skuPath) 
-  const facets = cat ? undefined : cmmc.getFacetValuesAtSkuPath(skuPath)
+  const specifiedCat = cmmc.getCategory(skuPath) 
+  const facetValues = specifiedCat ? undefined : cmmc.getFacetValuesAtSkuPath(skuPath)
 
   useEffect(() => {
 
     const toks = skuPath.split('-')
     levelRef.current = toks.length - 1
+    if (levelRef.current === 0) {
+      throw new Error('BuyCard.useEffect(): must specify at least a Level 1 skuPath!') 
+    }
     const fsv: FacetsValue = {}
     for (let level = 1; level <= levelRef.current; level++ ) {
       fsv[level] = [toks[level]]   
     } 
-    if (!cat) {
-      fsv[levelRef.current + 1] = [facets![0].value]
+    if (!specifiedCat) {
+      fsv[levelRef.current + 1] = [facetValues![0].value]
     }
     cmmc.setFacets(fsv)
 
   /*
     return autorun(() => {
       const cats = cmmc.specifiedCategories
-        // Original cat was legit
-      if (cat && (cats.length === 0 || cats[0].id !== cat.id)) {
-        if (!cmmc.currentItem || cmmc.currentItem.categoryId !== cat.id) {
-          cmmc.setCurrentItem(cat.products[0].sku)
+        // Original specifiedCat was legit
+      if (specifiedCat && (cats.length === 0 || cats[0].id !== specifiedCat.id)) {
+        if (!cmmc.currentItem || cmmc.currentItem.categoryId !== specifiedCat.id) {
+          cmmc.setCurrentItem(specifiedCat.products[0].sku)
         }
       }
       else if (cats.length > 0) {
@@ -75,16 +82,28 @@ const AllVariantsBuyCard: React.FC<{
       }
     })
   */
-  }, [cat, facets])
+  }, [specifiedCat, facetValues])
 
-  const renderFacetTabs = facets && levelRef.current > 0
+  const TitleArea: React.FC<{
+    title: string
+    byline?: string
+    className?: string
+  }> = ({
+    title,
+    byline,
+    className='' 
+  }) => (
+    <ApplyTypography className='typo'>
+      <h3 >{title}</h3>
+    </ApplyTypography>
+  )
 
   return (
     <div className={className} >
-    {renderFacetTabs && (
+    {facetValues && (
       <FacetValuesWidget
         className={cn(
-          'grid gap-0 ' + `grid-cols-${facets.length}` + ' self-start ', 
+          'grid gap-0 ' + `grid-cols-${facetValues.length}` + ' self-start ', 
           'border-b-2 border-level-3 mb-2 -mr-2 -ml-2',
           facetsWidgetClx  
         )} 
@@ -95,15 +114,18 @@ const AllVariantsBuyCard: React.FC<{
           'h-full !rounded-bl-none !rounded-br-none !rounded-tl-lg !rounded-tr-lg ' +
           '!border-r !border-t !border-level-3'
         }
-        facetValues={facets}
+        facetValues={facetValues}
       />
+    )} 
+    {specifiedCat && (
+      <TitleArea title={specifiedCat.title}/>
     )}
     {cmmc.specifiedCategories[0] && (
       <Selector 
         items={cmmc.specifiedCategories[0].products as LineItem[]}
         selectedItemRef={cmmc}
         selectSku={cmmc.setCurrentItem.bind(cmmc)}
-        className={selClx}
+        clx={selClx}
         itemClx={selItemClx}
         ext={selExt}
         showPrice={selShowPrice}
@@ -122,4 +144,4 @@ const AllVariantsBuyCard: React.FC<{
   )
 })
 
-export default AllVariantsBuyCard
+export default BuyCard

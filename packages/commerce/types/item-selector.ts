@@ -9,7 +9,8 @@ interface ItemSelector {
 }
 
 interface ItemSelectorProps extends ItemSelector {
-  className?: string
+  clx?: string
+  soleItemClx?: string
   itemClx?: string
   ext?: any
 }

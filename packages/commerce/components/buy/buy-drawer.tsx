@@ -12,7 +12,7 @@ import {
 
 import { cn } from '@hanzo/ui/util'
 
-import BuyCard from './all-variants-buy-card'
+import BuyCard from './buy-card'
 import RadioItemSelector from '../select/radio-selector'
 
 const BuyDrawer: React.FC<{

@@ -1,7 +1,7 @@
 export { default as AddToCartWidget } from './buy/add-to-cart-widget'
 export { default as BuyTriggerWrapper } from './buy/buy-trigger-wrapper'
 export { default as BuyButton } from './buy/buy-button'
-export { default as BuyCard } from './buy/all-variants-buy-card'
+export { default as BuyCard } from './buy/buy-card'
 export { default as BuyDrawer } from './buy/buy-drawer'
 
 export { default as CartAccordian } from './cart/cart-accordian'

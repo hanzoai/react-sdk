@@ -13,10 +13,10 @@ const ListItemSelector: React.FC<ItemSelectorProps> = observer(({
   items,
   selectedItemRef: iRef,
   selectSku,
-  className='',
+  clx='',
   itemClx=''
 }) => (
-  <ScrollArea className={cn('border border-muted-4 rounded-lg', className)}>
+  <ScrollArea className={cn('border border-muted-4 rounded-lg', clx)}>
     {items.map((item) => (
       <div key={item.sku} onClick={() => {selectSku(item.sku)}}>
         <div className={cn(

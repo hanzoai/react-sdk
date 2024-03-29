@@ -56,7 +56,7 @@ const SelectCategoryItemCard: React.FC<React.HTMLAttributes<HTMLDivElement> & It
             items={items}
             selectedItemRef={selItemRef}  
             selectSku={selectSku}
-            className='min-w-pr-80 h-[180px]' // 80% of 65% parent
+            clx='min-w-pr-80 h-[180px]' // 80% of 65% parent
             itemClx='h-10 border-b px-4'
           />
         ) : (
@@ -64,7 +64,7 @@ const SelectCategoryItemCard: React.FC<React.HTMLAttributes<HTMLDivElement> & It
             items={items}
             selectedItemRef={selItemRef}  
             selectSku={selectSku}
-            className='mt-2'
+            clx='mt-2'
             showQuantity={false}
             itemClx='flex flex-row gap-2.5 items-center'
           />

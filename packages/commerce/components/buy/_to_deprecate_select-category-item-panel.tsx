@@ -99,7 +99,7 @@ const SelectCategoryItemPanel: React.FC<
             selectSku={selectSku}
             showQuantity={showQuantity}
             itemClx='h-10 border-b px-4'
-            className='mb-4 h-[180px]'
+            clx='mb-4 h-[180px]'
           />
         ) : (
           <RadioItemSelector 
@@ -107,7 +107,7 @@ const SelectCategoryItemPanel: React.FC<
             selectedItemRef={selectedItemRef}  
             selectSku={selectSku}
             showQuantity={showQuantity}
-            className='block columns-2 gap-4'
+            clx='block columns-2 gap-4'
             itemClx='flex flex-row gap-2 items-center mb-2.5'
           />
         )}

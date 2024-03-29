@@ -32,7 +32,7 @@ interface CarouselItemSelectorPropsExt {
   
 const CarouselItemSelector: React.FC<ItemSelectorProps> = ({ 
   items,
-  className='',
+  clx='',
   itemClx='',
   ext={
     options: {},
@@ -43,7 +43,7 @@ const CarouselItemSelector: React.FC<ItemSelectorProps> = ({
   const { options, constrainTo: cnst } = ext
 
   return ( 
-    <Carousel options={options} className={cn('px-2', className)} >
+    <Carousel options={options} className={cn('px-2', clx)} >
       <CarouselContent>
       {items.map(({title, img, video, animation}, index) => (
         <CarouselItem key={index} className={cn('p-2 flex flex-row justify-center items-center', itemClx)}>

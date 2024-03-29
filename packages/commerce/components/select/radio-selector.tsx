@@ -11,8 +11,9 @@ const RadioItemSelector: React.FC<ItemSelectorProps> = observer(({
   items,
   selectedItemRef: itemRef,
   selectSku,
-  className='',
+  clx='',
   itemClx='',
+  soleItemClx='',
   showPrice=true,
   showQuantity=true
 }) => {
@@ -30,9 +31,21 @@ const RadioItemSelector: React.FC<ItemSelectorProps> = observer(({
     </div>
   )
 
+  const SoleChoice: React.FC<{
+    item: LineItem
+    className?: string
+  }> = ({
+    item,
+    className=''
+  }) => (
+    <div className={cn(className, soleItemClx)}>
+      {item.titleAsOption + (showPrice ? (', ' + formatPrice(item.price)) : '')}
+    </div>
+  )
+
   return items.length > 1 ? (
     <RadioGroup
-      className={cn(showQuantity ? 'table' : '', className)}
+      className={cn(showQuantity ? 'table' : '', clx)}
       onValueChange={selectSku}
       value={itemRef.item ? itemRef.item.sku : ''}
     >
@@ -45,7 +58,9 @@ const RadioItemSelector: React.FC<ItemSelectorProps> = observer(({
       <Choice item={item} className='mb-2'  key={item.sku}/>
     )))}
     </RadioGroup>
-  ) : (<p>TODO</p>)
+  ) : (
+    <SoleChoice item={items[0]} className=''/>
+  )
 })
 
 export default RadioItemSelector

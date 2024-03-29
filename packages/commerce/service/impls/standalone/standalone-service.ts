@@ -342,6 +342,14 @@ class StandaloneService
       0
     )
   }
+
+  debug_getSpecifiedCategories = () => {
+    const spec = this.specifiedCategories
+    console.log('NUM SPEC CATS: ', spec.length) 
+    if (spec.length > 0) {
+      console.log('IDS: ', (spec.map((c) => (c.id))).join(', ')) 
+    }
+  }
 }
 
 export {
