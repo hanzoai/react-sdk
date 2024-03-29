@@ -45,8 +45,8 @@ const BuyDrawer: React.FC<{
         {trigger}
       </DrawerTrigger>
       <DrawerContent 
-        className={cn('rounded-t-xl z-20 mt-6 pb-12 h-auto min-h-[35vh] pt-6', drawerClx)}
-       // side="bottom" 
+        className={cn('rounded-t-xl z-[52] mt-6 pb-12 h-auto min-h-[35vh] pt-6', drawerClx)}
+        overlayClx='z-[51]'
       >
         <BuyCard 
           skuPath={skuPath} 
