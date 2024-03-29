@@ -20,7 +20,7 @@ export function unslugify(str: string) {
 }
 
 
-export function formatPrice(price: number): string {
+export function formatCurrencyValue(price: number): string {
   const str = price.toLocaleString('en-US', {
     style: 'currency',
     currency: 'USD',
@@ -28,18 +28,6 @@ export function formatPrice(price: number): string {
   return (str.endsWith('.00')) ? str.replace('.00', '') : str 
 }
 
-export function promoPrice(price: number, promo?: Promo | null): number {
-  if (promo) {
-    if (promo.type === 'percent') {
-      return price * (1 - promo.value / 100)
-    }
-    else {
-      return price - promo.value
-    }
-  }
-
-  return price
-}
 
 export const getFacetValuesMutator = (level: number, cmmc: CommerceService): StringMutator => {
 

@@ -6,7 +6,7 @@ import { Button, ScrollArea } from '@hanzo/ui/primitives'
 import { cn } from '@hanzo/ui/util'
 
 import { useCommerce } from '../../service/context'
-import { formatPrice } from '../../util'
+import { formatCurrencyValue } from '../../util'
 import { sendFBEvent, sendGAEvent } from '../../util/analytics'
 
 import CartLineItem from './cart-line-item'
@@ -93,12 +93,12 @@ const CartPanel: React.FC<PropsWithChildren & {
       <div className='flex flex-col gap-1 py-2 border-t'>
         <p className='flex justify-between'>
           <span className='text-muted-1'>Subtotal</span>
-          <span className='font-semibold'>{cmmc.cartTotal === 0 ? '0' : formatPrice(cmmc.cartTotal)}</span>
+          <span className='font-semibold'>{cmmc.cartTotal === 0 ? '0' : formatCurrencyValue(cmmc.cartTotal)}</span>
         </p>
-        {cmmc.cartTotalWithPromo !== cmmc.cartTotal && (
+        {cmmc.promoAppliedCartTotal !== cmmc.cartTotal && (
           <p className='flex justify-between'>
-            <span className='text-muted-1'>Discount</span>
-            <span className='font-semibold'>-{formatPrice(cmmc.cartTotal - cmmc.cartTotalWithPromo)}</span>
+            <span className='text-muted-1'>Promo Discount</span>
+            <span className='font-semibold'>-{formatCurrencyValue(cmmc.cartTotal - cmmc.promoAppliedCartTotal)}</span>
           </p>
         )}
         {showShipping && (
@@ -111,7 +111,7 @@ const CartPanel: React.FC<PropsWithChildren & {
     )}
     <p className={cn('border-t py-2 flex justify-between', totalClx)}>
       TOTAL
-      <span className='font-semibold'>{formatPrice(showPromoCode ? cmmc.cartTotalWithPromo : cmmc.cartTotal)}</span>
+      <span className='font-semibold'>{formatCurrencyValue(showPromoCode ? cmmc.promoAppliedCartTotal : cmmc.cartTotal)}</span>
     </p>
   </>))
 

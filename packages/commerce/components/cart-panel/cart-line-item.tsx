@@ -1,13 +1,13 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import Image from 'next/image'
 import { observer } from 'mobx-react-lite'
 
 import { cn } from '@hanzo/ui/util'
 
 import type { LineItem } from '../../types'
-import { formatPrice, promoPrice } from '../../util'
+import { formatCurrencyValue } from '../../util'
 import AddToCartWidget from '../add-to-cart-widget'
 import { useCommerce } from '../..'
 
@@ -32,19 +32,9 @@ const CartLineItem: React.FC<{
   imgSizePx=DEF_IMG_SIZE,
   showPromoCode
 }) => {
-  const cmmc = useCommerce()
-  const [discountedPrice, setDiscountedPrice] = useState<number | undefined>()
 
-  useEffect(() => {
-    if (showPromoCode) {
-      if (cmmc.promo && (!cmmc.promo?.skus || cmmc.promo.skus.includes(item.sku))) {
-        setDiscountedPrice(promoPrice(item.price * item.quantity, cmmc.promo))
-      }
-      else {
-        setDiscountedPrice(undefined)
-      }
-    }
-  }, [cmmc.promo, item.price, item.quantity])
+  const cmmc = useCommerce()
+  const promoPrice = showPromoCode ? cmmc.itemPromoPrice(item) : undefined
   
   return (
     <div className={cn('flex flex-col justify-start items-start text-sm font-sans', className)}>
@@ -59,11 +49,11 @@ const CartLineItem: React.FC<{
       <div className='flex flex-row items-center justify-between w-full'>
         <div className='flex flex-row items-center'>
           <AddToCartWidget className='' item={item} size='xs' buttonClx='h-8 md:h-6' ghost/>
-          {item.quantity > 1 && (<span className='pl-2.5'>{'@' + formatPrice(item.price)}</span>)}
+          {item.quantity > 1 && (<span className='pl-2.5'>{'@' + formatCurrencyValue(item.price)}</span>)}
         </div>
         <div className='flex flex-row gap-1 items-center justify-end'>
-          <span className={cn(discountedPrice ? 'line-through	text-muted-2' : '')}>{formatPrice(item.price * item.quantity)}</span>
-          {discountedPrice && <span>{formatPrice(discountedPrice)}</span>}
+          <span className={promoPrice ? 'line-through	text-muted-2' : ''}>{formatCurrencyValue(item.price * item.quantity)}</span>
+          {promoPrice && <span>{formatCurrencyValue(promoPrice * item.quantity)}</span>}
         </div>
       </div>
     </div>

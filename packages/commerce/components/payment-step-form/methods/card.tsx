@@ -43,7 +43,7 @@ const PayWithCard: React.FC<PaymentMethodComponentProps> = observer(({
   ) => {
     contactForm.handleSubmit(async () => {
       setTransactionStatus('paid')
-      const res = await processSquareCardPayment(token.token, cmmc.cartTotalWithPromo, verifiedBuyer.token)
+      const res = await processSquareCardPayment(token.token, cmmc.promoAppliedCartTotal, verifiedBuyer.token)
       if (res) {
         await storePaymentInfo({paymentMethod: token.details.method ?? null, processed: res})
         setTransactionStatus('confirmed')
@@ -66,7 +66,7 @@ const PayWithCard: React.FC<PaymentMethodComponentProps> = observer(({
             quantity: item.quantity
           })),
           num_items: cmmc.cartItems.length,
-          value: cmmc.cartTotalWithPromo,
+          value: cmmc.promoAppliedCartTotal,
           currency: 'USD',
         })
       } else {
@@ -78,7 +78,7 @@ const PayWithCard: React.FC<PaymentMethodComponentProps> = observer(({
   const createVerificationDetails = () => {
     const {name, email} = contactForm.getValues()
     return {
-      amount: cmmc.cartTotalWithPromo.toFixed(2),
+      amount: cmmc.promoAppliedCartTotal.toFixed(2),
       billingContact: {
         givenName: name,
         email,
@@ -99,7 +99,7 @@ const PayWithCard: React.FC<PaymentMethodComponentProps> = observer(({
     requestBillingContact: false,
     requestShippingContact: false,
     total: {
-      amount: cmmc.cartTotalWithPromo.toFixed(2),
+      amount: cmmc.promoAppliedCartTotal.toFixed(2),
       label: "Total",
     },
   })
@@ -113,7 +113,7 @@ const PayWithCard: React.FC<PaymentMethodComponentProps> = observer(({
     setLoadingPaymentForm(true)
     const timeout = setTimeout(() => setLoadingPaymentForm(false), 1000)
     return () => clearTimeout(timeout)
-  }, [cmmc.cartTotalWithPromo])
+  }, [cmmc.promoAppliedCartTotal])
 
   if (loadingPaymentForm) {
     return (

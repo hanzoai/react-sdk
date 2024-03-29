@@ -31,18 +31,18 @@ const PromoCode = observer(() => {
         if (promo) {
           form.setValue('code', code)
           setCodeAccepted(true)
-          cmmc.setPromo(promo)
+          cmmc.setAppliedPromo(promo)
         }
       })
     }
   }, [searchParams])
 
   useEffect(() => {
-    if (cmmc.promo) {
-      form.setValue('code', cmmc.promo.code)
+    if (cmmc.appliedPromo) {
+      form.setValue('code', cmmc.appliedPromo.code)
       setCodeAccepted(true)
     }
-  }, [cmmc.promo])
+  }, [cmmc.appliedPromo])
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -59,11 +59,11 @@ const PromoCode = observer(() => {
       return
     }
     setCodeAccepted(true)
-    cmmc.setPromo(promo)
+    cmmc.setAppliedPromo(promo)
   }
 
   const removePromoCode = () => {
-    cmmc.setPromo(null)
+    cmmc.setAppliedPromo(null)
     setCodeAccepted(false)
   }
 
