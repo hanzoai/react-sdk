@@ -11,7 +11,8 @@ import {
   AccordionTrigger,
 } from '@hanzo/ui/primitives'
 
-import { formatPrice, useCommerce } from '../..'
+import { formatCurrencyValue } from '../../util'
+import { useCommerce } from '../../service/context'
 
 import CartPanel from './cart-panel'
 
@@ -35,7 +36,7 @@ const CartAccordian: React.FC<{
             </h5>
           </div>
           <div className='flex gap-1 items-center'>
-            <h5 className='text-sm sm:text-xl grow truncate'>{formatPrice(cmmc.cartTotal)}</h5>
+            <h5 className='text-sm sm:text-xl grow truncate'>{formatCurrencyValue(cmmc.promoAppliedCartTotal)}</h5>
             <ChevronRight className="h-5 w-5 -mr-2 shrink-0 transition-transform duration-200 group-data-[state=open]:rotate-90" />
           </div>
         </AccordionTrigger>
@@ -46,6 +47,8 @@ const CartAccordian: React.FC<{
             scrollHeightClx='h-[350px]'
             itemClx='mt-2'
             totalClx='sticky px-1 pr-2 border-t -bottom-[1px] bg-background'
+            showShipping
+            showPromoCode
           />
         </AccordionContent>
       </AccordionItem>

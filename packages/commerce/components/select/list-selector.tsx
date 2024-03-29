@@ -6,7 +6,7 @@ import { cn } from '@hanzo/ui/util'
 import { ScrollArea } from '@hanzo/ui/primitives'
 
 import type { ItemSelectorProps } from '../../types'
-import { formatPrice } from '../../util'
+import { formatCurrencyValue } from '../../util'
 
 
 const ListItemSelector: React.FC<ItemSelectorProps> = observer(({
@@ -24,7 +24,7 @@ const ListItemSelector: React.FC<ItemSelectorProps> = observer(({
           (iRef.item?.sku === item.sku) ? 'font-semibold text-accent' : 'text-muted', 
           itemClx
         )}>
-          {item.titleAsOption + ', ' + formatPrice(item.price)}
+          {item.titleAsOption + ', ' + formatCurrencyValue(item.price)}
         </div>
       </div>
     ))}

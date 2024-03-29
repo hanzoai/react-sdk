@@ -10,7 +10,7 @@ import type { ItemSelector, LineItem } from '../../types'
 import AddToCartWidget from './add-to-cart-widget'
 import RadioItemSelector from '../select/radio-selector'
 import ListItemSelector from '../select/list-selector'
-import { formatPrice } from '../../util'
+import { formatCurrencyValue } from '../../util'
 
 const SelectCategoryItemCard: React.FC<React.HTMLAttributes<HTMLDivElement> & ItemSelector & {
   isLoading?: boolean
@@ -40,7 +40,7 @@ const SelectCategoryItemCard: React.FC<React.HTMLAttributes<HTMLDivElement> & It
       const item = items[0] as LineItem
       return (
         <div className={cn('flex flex-col justify-center items-center ' + (mobilePicker ? 'h-[180px] ' : 'h-auto min-h-24'), className)}>
-          <p className='text-lg text-center font-semibold'>{item.titleAsOption + ', ' + formatPrice(item.price)}</p>
+          <p className='text-lg text-center font-semibold'>{item.titleAsOption + ', ' + formatCurrencyValue(item.price)}</p>
         </div>
       )
     }
