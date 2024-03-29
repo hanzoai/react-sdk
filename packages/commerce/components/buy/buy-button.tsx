@@ -12,14 +12,16 @@ const BuyButton: React.FC<PropsWithChildren & {
   size?: ButtonSizes  
   /* rounded?: ButtonRounded // TODO: wait for version bump*/
   className?: string 
+  mobile?: boolean
 }> = ({
   skuPath,
   variant,
   size,
   children,
-  className=''
+  className='',
+  mobile=false
 }) => (
-  <BuyTriggerWrapper skuPath={skuPath}
+  <BuyTriggerWrapper skuPath={skuPath} mobile={mobile}
     trigger={  <Button size={size} variant={variant} className={cn(className, '')}>{children}</Button> }
   />
 )

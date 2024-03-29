@@ -18,17 +18,17 @@ import RadioItemSelector from '../select/radio-selector'
 const BuyDrawer: React.FC<{
   skuPath: string
   trigger: ReactNode
-  isMobile?: boolean
   triggerClx?: string  
   drawerClx?: string
   cardClx?: string
+  mobile?: boolean
 }> = ({
   skuPath,
   trigger,
-  isMobile=false,
   triggerClx='',
   drawerClx='',
-  cardClx=''
+  cardClx='',
+  mobile=false
 }) => {
 
   const [open, setOpen] = useState<boolean>(false)
@@ -45,17 +45,18 @@ const BuyDrawer: React.FC<{
         {trigger}
       </DrawerTrigger>
       <DrawerContent 
-        className={cn('rounded-tl-xl rounded-tr-xl p-0 overflow-hidden', drawerClx)}
+        className={cn('rounded-t-xl z-20 mt-6 pb-12 h-auto min-h-[35vh] pt-6', drawerClx)}
        // side="bottom" 
       >
         <BuyCard 
           skuPath={skuPath} 
-          isMobile={isMobile} 
+          mobile={mobile} 
           onQuantityChanged={onQuantityChanged} 
-          className={cn("w-full relative ", cardClx)}
+          className={cn('w-full', cardClx)}
           Selector={RadioItemSelector}
           selClx=''
           selItemClx=''
+          selSoleItemClx='mb-3'
           addWidgetClx=''
         />
       </DrawerContent>

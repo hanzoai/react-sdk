@@ -14,7 +14,7 @@ const FacetValuesWidget: React.FC<{
   className?: string
   buttonClx?: string
   itemClx?: string
-  isMobile?: boolean
+  mobile?: boolean
   tabSize?: string
 }> = ({
   facetValues,
@@ -23,7 +23,7 @@ const FacetValuesWidget: React.FC<{
   buttonClx='',
   itemClx='',
   className='',
-  isMobile=false,
+  mobile=false,
   tabSize
 }) => {
 
@@ -54,7 +54,7 @@ const FacetValuesWidget: React.FC<{
       type={multiple ? 'multiple' : 'single'} 
       value={val}
       variant='default'
-      size={tabSize ? tabSize : (isMobile ? 'sm' : 'default')}
+      size={tabSize ? tabSize : (mobile ? 'sm' : 'default')}
       onValueChange={multiple ? handleChangeMultiple : handleChangeSingle}
       className={className}
       {...roundedToSpread}
@@ -77,7 +77,7 @@ const FacetValuesWidget: React.FC<{
         >
           <span className={cn('flex flex-row justify-center gap-1 h-6 items-center', itemClx)} >
             <FacetImage facetValueDesc={fv} />
-            {(!isMobile || !fv.img) && (<span className='whitespace-nowrap'>{fv.label}</span>)}
+            {(!mobile || !fv.img) && (<span className='whitespace-nowrap'>{fv.label}</span>)}
           </span>
         </ToggleGroupItem>
       )

@@ -20,13 +20,14 @@ const BuyCard: React.FC<{
   selShowPrice?: boolean
   selShowQuantity?: boolean
   selClx?: string
+  selSoleItemClx?: string
   selItemClx?: string
   selExt?: any
   allVariants?: boolean
   className?: string
   facetsWidgetClx?: string
   addWidgetClx?: string
-  isMobile?: boolean
+  mobile?: boolean
   onQuantityChanged?: (sku: string, oldV: number, newV: number) => void
 }> = observer(({
   skuPath,
@@ -37,18 +38,19 @@ const BuyCard: React.FC<{
   selShowQuantity=false,
   selClx='',
   selItemClx='',
+  selSoleItemClx='',
   selExt,
   addWidgetClx='',
   allVariants=true,
-  isMobile=false,
+  mobile=false,
   onQuantityChanged,
 }) => {
 
   const cmmc = useCommerce()
   const levelRef = useRef<number>(-1)
 
-  const specifiedCat = cmmc.getCategory(skuPath) 
-  const facetValues = specifiedCat ? undefined : cmmc.getFacetValuesAtSkuPath(skuPath)
+  const requestedCat = cmmc.getCategory(skuPath) 
+  const facetValues = requestedCat ? undefined : cmmc.getFacetValuesAtSkuPath(skuPath)
 
   useEffect(() => {
 
@@ -61,45 +63,54 @@ const BuyCard: React.FC<{
     for (let level = 1; level <= levelRef.current; level++ ) {
       fsv[level] = [toks[level]]   
     } 
-    if (!specifiedCat) {
+      // Actually specify the requested Cat, 
+      // or the first Cat if no Cats at this level
+    if (!requestedCat) {
       fsv[levelRef.current + 1] = [facetValues![0].value]
     }
     cmmc.setFacets(fsv)
 
-  /*
     return autorun(() => {
-      const cats = cmmc.specifiedCategories
-        // Original specifiedCat was legit
-      if (specifiedCat && (cats.length === 0 || cats[0].id !== specifiedCat.id)) {
-        if (!cmmc.currentItem || cmmc.currentItem.categoryId !== specifiedCat.id) {
-          cmmc.setCurrentItem(specifiedCat.products[0].sku)
+      //const cats = cmmc.specifiedCategories
+        // Original requestedCat was legit
+      if (requestedCat /* && (cats.length === 0 || cats[0].id !== requestedCat.id) */) {
+        if (
+          !cmmc.currentItem 
+          || 
+          cmmc.currentItem.categoryId !== requestedCat.id 
+          || 
+          requestedCat.products.length === 1
+        ) {
+          cmmc.setCurrentItem(requestedCat.products[0].sku)
         }
       }
+      /*
       else if (cats.length > 0) {
         if (!cmmc.currentItem || cmmc.currentItem.categoryId !== cats[0].id) {
           cmmc.setCurrentItem(cats[0].products[0].sku)
         }
       }
+      */
     })
-  */
-  }, [specifiedCat, facetValues])
+  }, [requestedCat, facetValues])
 
   const TitleArea: React.FC<{
     title: string
     byline?: string
-    className?: string
+    clx?: string
   }> = ({
     title,
     byline,
-    className='' 
+    clx='' 
   }) => (
-    <ApplyTypography className='typo'>
-      <h3 >{title}</h3>
+    <ApplyTypography className={clx}>
+      <h3>{title}</h3>
+      {byline && (<h6>{byline}</h6>)}
     </ApplyTypography>
   )
 
   return (
-    <div className={className} >
+    <div className={cn('px-4 md:px-6 pt-3 pb-4 flex flex-col items-center', className)} >
     {facetValues && (
       <FacetValuesWidget
         className={cn(
@@ -107,7 +118,7 @@ const BuyCard: React.FC<{
           'border-b-2 border-level-3 mb-2 -mr-2 -ml-2',
           facetsWidgetClx  
         )} 
-        isMobile={isMobile}
+        mobile={mobile}
         mutator={getFacetValuesMutator(levelRef.current + 1, cmmc)} 
         itemClx='flex-col h-auto gap-0 pb-1 pt-3 px-3'
         buttonClx={
@@ -117,8 +128,8 @@ const BuyCard: React.FC<{
         facetValues={facetValues}
       />
     )} 
-    {specifiedCat && (
-      <TitleArea title={specifiedCat.title}/>
+    {requestedCat && (
+      <TitleArea title={requestedCat.title} clx=''/>
     )}
     {cmmc.specifiedCategories[0] && (
       <Selector 
@@ -127,6 +138,7 @@ const BuyCard: React.FC<{
         selectSku={cmmc.setCurrentItem.bind(cmmc)}
         clx={selClx}
         itemClx={selItemClx}
+        soleItemClx={selSoleItemClx}
         ext={selExt}
         showPrice={selShowPrice}
         showQuantity={selShowQuantity}
@@ -137,7 +149,7 @@ const BuyCard: React.FC<{
         size='default' 
         item={cmmc.currentItem}
         onQuantityChanged={onQuantityChanged} 
-        className={cn('lg:min-w-[160px] lg:mx-auto', addWidgetClx)}
+        className={cn('min-w-[160px] mx-auto', addWidgetClx)}
       />
     )} 
     </div >
