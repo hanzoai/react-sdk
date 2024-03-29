@@ -5,7 +5,7 @@ import { observer } from 'mobx-react-lite'
 
 import { ArrowLeft } from 'lucide-react'
 
-import { ApplyTypography, Button, toast } from '@hanzo/ui/primitives'
+import { ApplyTypography, Button, Separator, toast } from '@hanzo/ui/primitives'
 import { cn } from '@hanzo/ui/util'
 
 import { useAuth } from '../service'
@@ -103,10 +103,9 @@ const Login: React.FC<PropsWithChildren & {
   }
 
   return (
-    <ApplyTypography className={cn('w-full LOGIN_OUTER', className)}>
-      <div className='w-full mx-auto'>
+    <ApplyTypography className={cn('w-full flex flex-col text-center !gap-3 LOGIN_OUTER', className)}>
       {auth.loggedIn && !redirectUrl ? (
-        <div className='flex flex-col text-center gap-4'>
+        <>
           <h3>Welcome!</h3>
           {auth.user && (<> {/*  this means the hanzo user isn't loaded yet ...*/}
             <p>You are signed in as {auth.user?.displayName ?? auth.user?.email}</p>
@@ -115,9 +114,9 @@ const Login: React.FC<PropsWithChildren & {
               <Button onClick={() => logout()} variant='outline' disabled={isLoading}>Sign Out</Button>
             </div>
           </>)}
-        </div>
+        </>
       ) : (
-        <div className='flex flex-col gap-4 text-center'>
+        <>
           {!noHeading && (
             <div className='mb-4 items-center flex'>
               {returnToUrl && (
@@ -125,28 +124,30 @@ const Login: React.FC<PropsWithChildren & {
                   <ArrowLeft/>
                 </Button>
               )}
-              <h2 className='mx-auto'>Login</h2>
+              <h3 className='mx-auto'>Login</h3>
             </div>
           )}
           {redirectUrl === 'checkout' && <p>You will be redirected to checkout after login.</p>}
           {children}
           <EmailPasswordForm onSubmit={loginWithEmailPassword} isLoading={isLoading} className='mb-4' inputClassName={inputClassName}/>
-          <p>- <span className='font-normal'>or</span> -</p>
+          <div className='flex gap-2 whitespace-nowrap items-center my-1 sm:my-3 text-xs text-muted'>
+            <Separator className='grow w-auto'/><div className='shrink-0 mx-1'>or continue with</div><Separator className='grow w-auto'/>
+          </div>
+
           {/* <Button onClick={loginWithEthereum} className='w-full mx-auto flex items-center gap-2' disabled={isLoading}>
             <Ethereum height={20}/>Login with your wallet
           </Button> */}
           <Button onClick={() => loginWithProvider('google')} className='w-full mx-auto flex items-center gap-2' disabled={isLoading}>
-            <Google height={20}/>Login with Google
+            <Google height={20}/>Google
           </Button>
           <Button onClick={() => loginWithProvider('facebook')} className='w-full mx-auto flex items-center gap-2' disabled={isLoading}>
-            <Facebook height={20}/>Login with Facebook
+            <Facebook height={20}/>Facebook
           </Button>
           <Button onClick={() => loginWithProvider('github')} className='w-full mx-auto flex items-center gap-2' disabled={isLoading}>
-            <GitHub height={20}/>Login with Github
+            <GitHub height={20}/>Github
           </Button>
-        </div>
+        </>
       )}
-      </div>
     </ApplyTypography>
   )
 })

@@ -11,7 +11,6 @@ import {
   FormControl,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
   Input
 } from '@hanzo/ui/primitives'
@@ -44,16 +43,22 @@ const EmailPasswordForm: React.FC<{
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(({email, password}) => onSubmit(email, password))} className={cn('text-left', className)}>
+      <form
+        onSubmit={form.handleSubmit(({email, password}) => onSubmit(email, password))}
+        className={cn('text-left', className)}
+      >
         <FormField
-          
           control={form.control}
           name='email'
           render={({ field }) => (
             <FormItem className='space-y-1'>
-              <FormLabel>Email</FormLabel>
               <FormControl>
-                <Input {...field} className={inputClassName}/>
+                <Input
+                  {...field}
+                  className={inputClassName}
+                  placeholder='Email'
+                  disabled={isLoading}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -63,10 +68,15 @@ const EmailPasswordForm: React.FC<{
           control={form.control}
           name='password'
           render={({ field }) => (
-            <FormItem  className='space-y-1'>
-              <FormLabel>Password</FormLabel>
+            <FormItem className='space-y-1'>
               <FormControl>
-                <Input type='password' {...field} className={inputClassName}/>
+                <Input
+                  type='password'
+                  {...field}
+                  className={inputClassName}
+                  placeholder='Password'
+                  disabled={isLoading}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
