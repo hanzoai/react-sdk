@@ -9,7 +9,6 @@ import type { ItemSelector, LineItem } from '../../types'
 
 import AddToCartWidget from './add-to-cart-widget'
 import RadioItemSelector from '../select/radio-selector'
-import ListItemSelector from '../select/list-selector'
 import { formatCurrencyValue } from '../../util'
 
 const SelectCategoryItemCard: React.FC<React.HTMLAttributes<HTMLDivElement> & ItemSelector & {
@@ -51,24 +50,14 @@ const SelectCategoryItemCard: React.FC<React.HTMLAttributes<HTMLDivElement> & It
         className
       )}>
         {title && (<div className={'h-[1px] bg-muted-3 ' + (mobilePicker ?  'w-pr-55' :  'w-pr-60') } /> )}
-        {mobilePicker ? (
-          <ListItemSelector
-            items={items}
-            selectedItemRef={selItemRef}  
-            selectSku={selectSku}
-            clx='min-w-pr-80 h-[180px]' // 80% of 65% parent
-            itemClx='h-10 border-b px-4'
-          />
-        ) : (
-          <RadioItemSelector 
-            items={items}
-            selectedItemRef={selItemRef}  
-            selectSku={selectSku}
-            clx='mt-2'
-            showQuantity={false}
-            itemClx='flex flex-row gap-2.5 items-center'
-          />
-        )}
+        <RadioItemSelector 
+          items={items}
+          selectedItemRef={selItemRef}  
+          selectSku={selectSku}
+          clx='mt-2'
+          showQuantity={false}
+          itemClx='flex flex-row gap-2.5 items-center'
+        />
       </div>
     )
   }

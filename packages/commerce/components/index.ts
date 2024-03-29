@@ -15,6 +15,6 @@ export { default as ShippingStepForm } from './checkout/shipping-step-form'
 export { default as ProductCard } from './item/product-card'
 export { Icons } from './Icons'
 
-export { default as ListItemSelector } from './select/list-selector'
+export { default as ImageItemSelector } from './select/image-selector'
 export { default as RadioItemSelector } from './select/radio-selector'
 export { default as CarouselItemSelector, type CarouselItemSelectorPropsExt } from './select/carousel-selector'

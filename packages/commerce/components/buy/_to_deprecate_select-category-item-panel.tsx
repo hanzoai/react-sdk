@@ -12,7 +12,6 @@ import { Icons } from '../Icons'
 
 import AddToCartWidget from './add-to-cart-widget'
 import RadioItemSelector from '../select/radio-selector'
-import ListItemSelector from '../select/list-selector'
 
 const SelectCategoryItemPanel: React.FC<
   React.HTMLAttributes<HTMLDivElement> &   
@@ -92,16 +91,6 @@ const SelectCategoryItemPanel: React.FC<
           <h6 className='text-center font-semibold'>Available options</h6>
           <div className={'h-[1px] bg-muted-3 ' + (mobilePicker ?  'w-pr-55' :  'w-pr-60') } />
         </div>
-        {mobilePicker ? (
-          <ListItemSelector
-            items={category.products as LineItem[]}
-            selectedItemRef={selectedItemRef}  
-            selectSku={selectSku}
-            showQuantity={showQuantity}
-            itemClx='h-10 border-b px-4'
-            clx='mb-4 h-[180px]'
-          />
-        ) : (
           <RadioItemSelector 
             items={category.products as LineItem[]}
             selectedItemRef={selectedItemRef}  
@@ -110,7 +99,6 @@ const SelectCategoryItemPanel: React.FC<
             clx='block columns-2 gap-4'
             itemClx='flex flex-row gap-2 items-center mb-2.5'
           />
-        )}
       </div>
     )
   })

@@ -14,6 +14,7 @@ import { cn } from '@hanzo/ui/util'
 
 import BuyCard from './buy-card'
 import RadioItemSelector from '../select/radio-selector'
+import ImageItemSelector from '../select/image-selector'
 
 const BuyDrawer: React.FC<{
   skuPath: string
@@ -53,7 +54,7 @@ const BuyDrawer: React.FC<{
           mobile={mobile} 
           onQuantityChanged={onQuantityChanged} 
           className={cn('w-full', cardClx)}
-          selector={RadioItemSelector}
+          selector={ImageItemSelector}
           selClx=''
           selItemClx=''
           selSoleItemClx='mb-3'
