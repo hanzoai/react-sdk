@@ -155,10 +155,10 @@ const PayWithCard: React.FC<PaymentMethodComponentProps> = observer(({
     >
       <ApplyTypography className='flex flex-col mt-6 gap-1'>
         {transactionStatus === 'paid' ? (
-          <h6 className='mx-auto font-nav'>Processing your payment...</h6>
+          <h6 className='mx-auto'>Processing your payment...</h6>
         ) : transactionStatus === 'confirmed' ? (
           <div className='flex flex-col gap-4'>
-            <h5 className='mx-auto font-nav'>Payment confirmed!</h5>
+            <h5 className='mx-auto'>Payment confirmed!</h5>
             <p className='mx-auto'>Thank you for your purchase.</p>
             <Button onClick={onDone}>Continue</Button>
           </div>

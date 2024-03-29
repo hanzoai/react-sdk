@@ -131,7 +131,7 @@ const Login: React.FC<PropsWithChildren & {
           {redirectUrl === 'checkout' && <p>You will be redirected to checkout after login.</p>}
           {children}
           <EmailPasswordForm onSubmit={loginWithEmailPassword} isLoading={isLoading} className='mb-4' inputClassName={inputClassName}/>
-          <p>- <span className='font-normal font-nav'>or</span> -</p>
+          <p>- <span className='font-normal'>or</span> -</p>
           {/* <Button onClick={loginWithEthereum} className='w-full mx-auto flex items-center gap-2' disabled={isLoading}>
             <Ethereum height={20}/>Login with your wallet
           </Button> */}
