@@ -13,6 +13,29 @@ import { Facebook, Google, GitHub } from '../icons'
 import EmailPasswordForm from './email-password-form'
 import { sendGAEvent } from '../util/analytics'
 
+const ProviderLoginButton: React.FC<PropsWithChildren & {
+  provider: 'google' | 'facebook' | 'github',
+  loginWithProvider: (provider: 'google' | 'facebook' | 'github') => Promise<void>,
+  isLoading: boolean
+}> = ({
+  provider,
+  loginWithProvider,
+  isLoading,
+  children
+}) => {
+  
+  return (
+    <Button
+      onClick={() => loginWithProvider(provider)}
+      className='w-full mx-auto flex items-center gap-2'
+      disabled={isLoading}
+      variant='outline'
+    >
+      {children}
+    </Button>
+  )
+}
+
 const Login: React.FC<PropsWithChildren & {
   redirectUrl?: string,
   getStartedUrl?: string,
@@ -60,7 +83,7 @@ const Login: React.FC<PropsWithChildren & {
       }
     } 
     catch (e) {
-      toast("User with this email already signed up using a different provider")
+      toast('User with this email already signed up using a different provider')
     }
     setIsLoading(false)
   }
@@ -76,7 +99,7 @@ const Login: React.FC<PropsWithChildren & {
   //       }
   //     }
   //   } catch (e) {
-  //     toast({title: "No Ethereum provider found"})
+  //     toast({title: 'No Ethereum provider found'})
   //   }
   //   setIsLoading(false)
   // }
@@ -137,15 +160,15 @@ const Login: React.FC<PropsWithChildren & {
           {/* <Button onClick={loginWithEthereum} className='w-full mx-auto flex items-center gap-2' disabled={isLoading}>
             <Ethereum height={20}/>Login with your wallet
           </Button> */}
-          <Button onClick={() => loginWithProvider('google')} className='w-full mx-auto flex items-center gap-2' disabled={isLoading}>
+          <ProviderLoginButton provider='google' isLoading={isLoading} loginWithProvider={loginWithProvider}>
             <Google height={20}/>Google
-          </Button>
-          <Button onClick={() => loginWithProvider('facebook')} className='w-full mx-auto flex items-center gap-2' disabled={isLoading}>
+          </ProviderLoginButton>
+          <ProviderLoginButton provider='facebook' isLoading={isLoading} loginWithProvider={loginWithProvider}>
             <Facebook height={20}/>Facebook
-          </Button>
-          <Button onClick={() => loginWithProvider('github')} className='w-full mx-auto flex items-center gap-2' disabled={isLoading}>
+          </ProviderLoginButton>
+          <ProviderLoginButton provider='github' isLoading={isLoading} loginWithProvider={loginWithProvider}>
             <GitHub height={20}/>Github
-          </Button>
+          </ProviderLoginButton>
         </>
       )}
     </ApplyTypography>
