@@ -2,8 +2,7 @@
 import { useState, type PropsWithChildren } from 'react'
 import { useRouter } from 'next/navigation'
 import { observer } from 'mobx-react-lite'
-
-import { ArrowLeft } from 'lucide-react'
+import Link from 'next/link'
 
 import { ApplyTypography, Button, Separator, toast } from '@hanzo/ui/primitives'
 import { cn } from '@hanzo/ui/util'
@@ -39,20 +38,22 @@ const ProviderLoginButton: React.FC<PropsWithChildren & {
 const Login: React.FC<PropsWithChildren & {
   redirectUrl?: string,
   getStartedUrl?: string,
-  returnToUrl?: string,
   className?: string,
   inputClassName?: string,
   noHeading?: boolean
   onLoginChanged?: (loggedIn: boolean) => void
+  termsOfServiceUrl?: string
+  privacyPolicyUrl?: string
 }> = observer(({
   children,
   redirectUrl,
   getStartedUrl,
-  returnToUrl,
   className,
   inputClassName,
   noHeading,
-  onLoginChanged
+  onLoginChanged,
+  termsOfServiceUrl,
+  privacyPolicyUrl
 }) => {
   const router = useRouter()
   
@@ -129,30 +130,23 @@ const Login: React.FC<PropsWithChildren & {
     <ApplyTypography className={cn('w-full flex flex-col text-center !gap-3 LOGIN_OUTER', className)}>
       {auth.loggedIn && !redirectUrl ? (
         <>
-          <h3>Welcome!</h3>
+          <h4>Welcome!</h4>
           {auth.user && (<> {/*  this means the hanzo user isn't loaded yet ...*/}
             <p>You are signed in as {auth.user?.displayName ?? auth.user?.email}</p>
-            <div className='flex flex-col gap-4 items-center justify-center'>
-              {getStartedUrl && <Button variant='primary' onClick={() => router.push(getStartedUrl)}>GET STARTED</Button>}
-              <Button onClick={() => logout()} variant='outline' disabled={isLoading}>Sign Out</Button>
+            <div className='flex flex-col md:flex-row gap-3 items-center justify-center'>
+              {getStartedUrl && <Button variant='primary' onClick={() => router.push(getStartedUrl)} className='w-full'>GET STARTED</Button>}
+              <Button onClick={() => logout()} variant='outline' disabled={isLoading} className='w-full'>Sign Out</Button>
             </div>
           </>)}
         </>
       ) : (
         <>
           {!noHeading && (
-            <div className='mb-4 items-center flex'>
-              {returnToUrl && (
-                <Button size='icon' variant='ghost' className='absolute' onClick={() => router.push(returnToUrl)}>
-                  <ArrowLeft/>
-                </Button>
-              )}
-              <h3 className='mx-auto'>Login</h3>
-            </div>
+            <h4 className='text-center'>Login</h4>
           )}
-          {redirectUrl === 'checkout' && <p>You will be redirected to checkout after login.</p>}
           {children}
           <EmailPasswordForm onSubmit={loginWithEmailPassword} isLoading={isLoading} className='mb-4' inputClassName={inputClassName}/>
+
           <div className='flex gap-2 whitespace-nowrap items-center my-1 sm:my-3 text-xs text-muted'>
             <Separator className='grow w-auto'/><div className='shrink-0 mx-1'>or continue with</div><Separator className='grow w-auto'/>
           </div>
@@ -169,6 +163,7 @@ const Login: React.FC<PropsWithChildren & {
           <ProviderLoginButton provider='github' isLoading={isLoading} loginWithProvider={loginWithProvider}>
             <GitHub height={20}/>Github
           </ProviderLoginButton>
+          <p className='text-sm text-muted-2'>By logging in, you agree to our <Link href={termsOfServiceUrl ?? ''}>Terms of Service</Link> and <Link href={privacyPolicyUrl ?? ''}>Privacy Policy</Link>.</p>
         </>
       )}
     </ApplyTypography>
