@@ -4,18 +4,13 @@ import React, { useEffect, useState } from 'react'
 // @ts-ignore
 import { ApplePay, GooglePay, CreditCard, PaymentForm } from 'react-square-web-payments-sdk'
 
-import { ChevronRight } from 'lucide-react'
 import { observer } from 'mobx-react-lite'
 
 import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
   ApplyTypography, 
   Button, 
+  Separator, 
   Skeleton, 
-  buttonVariants
 } from '@hanzo/ui/primitives'
 
 import { cn } from '@hanzo/ui/util'
@@ -168,7 +163,7 @@ const PayWithCard: React.FC<PaymentMethodComponentProps> = observer(({
             <ApplePay/>
             
             <div className='flex gap-2 whitespace-nowrap items-center my-1 sm:my-3 text-xs text-muted'>
-              <hr className='grow border'/><div className='shrink-0 mx-1'>or</div><hr className='grow border'/>
+              <Separator className='grow w-auto'/><div className='shrink-0 mx-1'>or</div><Separator className='grow w-auto'/>
             </div>
 
             <PaymentMethods />
