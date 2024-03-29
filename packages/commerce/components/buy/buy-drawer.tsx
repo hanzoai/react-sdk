@@ -53,7 +53,7 @@ const BuyDrawer: React.FC<{
           mobile={mobile} 
           onQuantityChanged={onQuantityChanged} 
           className={cn('w-full', cardClx)}
-          Selector={RadioItemSelector}
+          selector={RadioItemSelector}
           selClx=''
           selItemClx=''
           selSoleItemClx='mb-3'

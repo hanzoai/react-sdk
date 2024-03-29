@@ -16,7 +16,7 @@ import { ApplyTypography } from '@hanzo/ui/primitives'
 
 const BuyCard: React.FC<{
   skuPath: string
-  Selector: ComponentType<ItemSelectorProps>
+  selector: ComponentType<ItemSelectorProps>
   selShowPrice?: boolean
   selShowQuantity?: boolean
   selClx?: string
@@ -33,7 +33,7 @@ const BuyCard: React.FC<{
   skuPath,
   className='',
   facetsWidgetClx='',
-  Selector,
+  selector: Selector,
   selShowPrice=true,
   selShowQuantity=false,
   selClx='',
@@ -150,7 +150,7 @@ const BuyCard: React.FC<{
         size='default' 
         item={cmmc.currentItem}
         onQuantityChanged={onQuantityChanged} 
-        className={cn('min-w-[160px] mx-auto', addWidgetClx)}
+        className={cn('min-w-[160px] mx-auto mt-4', addWidgetClx)}
       />
     )} 
     </div >
