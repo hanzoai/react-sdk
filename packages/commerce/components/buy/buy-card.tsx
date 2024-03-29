@@ -11,7 +11,7 @@ import { getFacetValuesMutator } from '../../util'
 
 import FacetValuesWidget from '../facet-values-widget'
 import AddToCartWidget from './add-to-cart-widget'
-import { string } from 'square/dist/types/schema'
+import ItemMedia from '../item/item-media'
 import { ApplyTypography } from '@hanzo/ui/primitives'
 
 const BuyCard: React.FC<{
@@ -131,6 +131,7 @@ const BuyCard: React.FC<{
     {requestedCat && (
       <TitleArea title={requestedCat.title} clx=''/>
     )}
+    {(cmmc.currentItem) && (<ItemMedia item={cmmc.currentItem} />)} 
     {cmmc.specifiedCategories[0] && (
       <Selector 
         items={cmmc.specifiedCategories[0].products as LineItem[]}
