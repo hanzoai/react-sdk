@@ -5,7 +5,7 @@ import { observer } from 'mobx-react-lite'
 
 import { cn } from '@hanzo/ui/util'
 
-import type { FacetsValue, ItemSelectorProps, LineItem } from '../../types'
+import type { SelectedPaths, ItemSelectorProps, LineItem } from '../../types'
 import { useCommerce } from '../../service/context'
 import { getFacetValuesMutator } from '../../util'
 
@@ -26,6 +26,7 @@ const BuyCard: React.FC<{
   allVariants?: boolean
   className?: string
   facetsWidgetClx?: string
+  facetsAs?: 'image' | 'label' | 'image-and-label'
   addWidgetClx?: string
   mobile?: boolean
   onQuantityChanged?: (sku: string, oldV: number, newV: number) => void
@@ -41,6 +42,7 @@ const BuyCard: React.FC<{
   selSoleItemClx='',
   selExt,
   addWidgetClx='',
+  facetsAs='image-and-label', 
   allVariants=true,
   mobile=false,
   onQuantityChanged,
@@ -50,7 +52,7 @@ const BuyCard: React.FC<{
   const levelRef = useRef<number>(-1)
 
   const requestedCat = cmmc.getCategory(skuPath) 
-  const facetValues = requestedCat ? undefined : cmmc.getFacetValuesAtSkuPath(skuPath)
+  const levelNode = requestedCat ? undefined : cmmc.getNodeAtPath(skuPath)
 
   useEffect(() => {
 
@@ -59,19 +61,19 @@ const BuyCard: React.FC<{
     if (levelRef.current === 0) {
       throw new Error('BuyCard.useEffect(): must specify at least a Level 1 skuPath!') 
     }
-    const fsv: FacetsValue = {}
+    const fsv: SelectedPaths = {}
     for (let level = 1; level <= levelRef.current; level++ ) {
       fsv[level] = [toks[level]]   
     } 
       // Actually specify the requested Cat, 
       // or the first Cat if no Cats at this level
     if (!requestedCat) {
-      fsv[levelRef.current + 1] = [facetValues![0].value]
+      fsv[levelRef.current + 1] = [levelNode!.subNodes![0].skuToken]
     }
-    cmmc.setFacets(fsv)
+    cmmc.selectPaths(fsv)
 
     return autorun(() => {
-      //const cats = cmmc.specifiedCategories
+      //const cats = cmmc.selectedCategories
         // Original requestedCat was legit
       if (requestedCat /* && (cats.length === 0 || cats[0].id !== requestedCat.id) */) {
         if (
@@ -92,7 +94,7 @@ const BuyCard: React.FC<{
       }
       */
     })
-  }, [requestedCat, facetValues])
+  }, [requestedCat, levelNode?.subNodes])
 
   const TitleArea: React.FC<{
     title: string
@@ -109,32 +111,38 @@ const BuyCard: React.FC<{
     </ApplyTypography>
   )
 
+  const catTitle = requestedCat ? requestedCat.title : cmmc.selectedCategories?.[0]?.title
+
   return (
     <div className={cn('px-4 md:px-6 pt-3 pb-4 flex flex-col items-center', className)} >
-    {facetValues && (
+    {levelNode && (<>
+      <ApplyTypography className=''>
+        <h3>{levelNode.label}</h3>
+      </ApplyTypography>
       <FacetValuesWidget
         className={cn(
-          'grid gap-0 ' + `grid-cols-${facetValues.length}` + ' self-start ', 
-          'border-b-2 border-level-3 mb-2 -mr-2 -ml-2',
+          'grid gap-0 ' + `grid-cols-${levelNode!.subNodes!.length}` + ' self-start ', 
+          'border-b-2 rounded-lg border-level-3 mb-2 -mr-2 -ml-2',
           facetsWidgetClx  
         )} 
         mobile={mobile}
         mutator={getFacetValuesMutator(levelRef.current + 1, cmmc)} 
-        itemClx='flex-col h-auto gap-0 pb-1 pt-3 px-3'
+        itemClx='flex-col h-auto gap-0 py-1 px-3'
         buttonClx={
-          'h-full !rounded-bl-none !rounded-br-none !rounded-tl-lg !rounded-tr-lg ' +
-          '!border-r !border-t !border-level-3'
+          'h-full ' +
+          '!border-level-3'
         }
-        facetValues={facetValues}
+        facetValues={levelNode!.subNodes!}
+        show={facetsAs}
       />
-    )} 
-    {requestedCat && (
-      <TitleArea title={requestedCat.title} clx=''/>
+    </>)} 
+    {catTitle && (
+      <TitleArea title={catTitle} clx=''/>
     )}
     {(cmmc.currentItem) && (<ItemMedia item={cmmc.currentItem} />)} 
-    {cmmc.specifiedCategories[0] && (
+    {cmmc.selectedCategories[0] && (
       <Selector 
-        items={cmmc.specifiedCategories[0].products as LineItem[]}
+        items={cmmc.selectedCategories[0].products as LineItem[]}
         selectedItemRef={cmmc}
         selectSku={cmmc.setCurrentItem.bind(cmmc)}
         clx={selClx}

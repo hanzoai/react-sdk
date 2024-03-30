@@ -59,6 +59,7 @@ const BuyDrawer: React.FC<{
           selItemClx=''
           selSoleItemClx='mb-3'
           addWidgetClx=''
+          facetsAs='label'
         />
       </DrawerContent>
     </Drawer>
