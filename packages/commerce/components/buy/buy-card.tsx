@@ -73,7 +73,7 @@ const BuyCard: React.FC<{
     cmmc.selectPaths(fsv)
 
     return autorun(() => {
-      //const cats = cmmc.selectedCategories
+      const cats = cmmc.selectedCategories
         // Original requestedCat was legit
       if (requestedCat /* && (cats.length === 0 || cats[0].id !== requestedCat.id) */) {
         if (
@@ -86,13 +86,11 @@ const BuyCard: React.FC<{
           cmmc.setCurrentItem(requestedCat.products[0].sku)
         }
       }
-      /*
       else if (cats.length > 0) {
         if (!cmmc.currentItem || cmmc.currentItem.categoryId !== cats[0].id) {
           cmmc.setCurrentItem(cats[0].products[0].sku)
         }
       }
-      */
     })
   }, [requestedCat, levelNode?.subNodes])
 
@@ -118,11 +116,14 @@ const BuyCard: React.FC<{
     {levelNode && (<>
       <ApplyTypography className=''>
         <h3>{levelNode.label}</h3>
+        {levelNode.subNodesLabel && (
+          <h6 className='!text-center mt-4 mb-1'>{levelNode.subNodesLabel}</h6>
+        )}
       </ApplyTypography>
       <FacetValuesWidget
         className={cn(
-          'grid gap-0 ' + `grid-cols-${levelNode!.subNodes!.length}` + ' self-start ', 
-          'border-b-2 rounded-lg border-level-3 mb-2 -mr-2 -ml-2',
+          'grid gap-0 ' + `grid-cols-${levelNode!.subNodes!.length}`, 
+          'border-b-2 rounded-lg border-level-3 mb-4 -mr-2 -ml-2 max-w-[460px]',
           facetsWidgetClx  
         )} 
         mobile={mobile}
@@ -136,7 +137,7 @@ const BuyCard: React.FC<{
         show={facetsAs}
       />
     </>)} 
-    {catTitle && (
+    {!levelNode && catTitle && (
       <TitleArea title={catTitle} clx=''/>
     )}
     {(cmmc.currentItem) && (<ItemMedia item={cmmc.currentItem} />)} 

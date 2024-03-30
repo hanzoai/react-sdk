@@ -1,13 +1,13 @@
 'use client'
 import React, { useState, type ReactNode } from 'react'
 
-//import { X as LucideX} from 'lucide-react'
-//import { Sheet, SheetContent, SheetTrigger } from '@hanzo/ui/primitives'
+import { X as LucideX} from 'lucide-react'
 
 import {
   Drawer,
   DrawerTrigger,
   DrawerContent,
+  Button,
 } from '@hanzo/ui/primitives'
 
 import { cn } from '@hanzo/ui/util'
@@ -35,9 +35,9 @@ const BuyDrawer: React.FC<{
   const [open, setOpen] = useState<boolean>(false)
 
   const onQuantityChanged = (sku: string, oldV: number, newV: number) => {
-    if (oldV === 0 && newV === 1) {
-      setTimeout(() => {setOpen(false)}, 150)
-    }
+    //if (oldV === 0 && newV === 1) {
+    //  setTimeout(() => {setOpen(false)}, 150)
+    //}
   }
 
   return (
@@ -46,7 +46,7 @@ const BuyDrawer: React.FC<{
         {trigger}
       </DrawerTrigger>
       <DrawerContent 
-        className={cn('rounded-t-xl z-[52] mt-6 pb-12 h-auto min-h-[35vh] pt-6', drawerClx)}
+        className={cn('rounded-t-xl z-[52] mt-6 pb-12 h-auto min-h-[35vh] pt-6 md:max-w-[550px] md:mx-auto', drawerClx)}
         overlayClx='z-[51]'
       >
         <BuyCard 
@@ -61,6 +61,15 @@ const BuyDrawer: React.FC<{
           addWidgetClx=''
           facetsAs='label'
         />
+        <Button
+          variant='ghost'
+          size='icon'
+          onClick={() => {setOpen(false)}}
+          className={'absolute top-4 right-4 w-8 h-8 group rounded-full p-1 hidden md:flex items-center'}
+        >
+          <LucideX className='w-6 h-6 text-muted group-hover:text-foreground'/>
+        </Button>    
+
       </DrawerContent>
     </Drawer>
   )

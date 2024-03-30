@@ -8,6 +8,7 @@ import { Label, RadioGroup, RadioGroupItem } from '@hanzo/ui/primitives'
 import type { ItemSelectorProps, LineItem } from '../../types'
 import { formatCurrencyValue } from '../../util'
 import { cn } from '@hanzo/ui/util'
+import type { Dimensions } from '@hanzo/ui/types'
 
 const ImageRadioGroupItem = React.forwardRef<
   React.ElementRef<typeof RadioGroupPrimitive.Item>,
@@ -21,6 +22,29 @@ const ImageRadioGroupItem = React.forwardRef<
   className, 
   ...props 
 }, ref) => {
+
+  let dim: Dimensions 
+  if (item.imgAR) {
+    if (item.imgAR >= 1) {
+      dim = {
+        w: imgSizePx,
+        h: imgSizePx / item.imgAR
+      }
+    }
+    else {
+      dim = {
+        w: imgSizePx * item.imgAR,
+        h: imgSizePx
+      }
+    }
+  }
+  else {
+    dim = {
+      w: imgSizePx,
+      h: imgSizePx
+    }
+  }
+
   return (
     <RadioGroupPrimitive.Item
       ref={ref}
@@ -33,9 +57,9 @@ const ImageRadioGroupItem = React.forwardRef<
       value={item.sku}
     >
       {!!item.img ? (
-        <Image src={item.img} alt={item.title + ' image'} height={imgSizePx} width={imgSizePx} className=''/>
+        <Image src={item.img} alt={item.title + ' image'} height={dim.h} width={dim.w} className=''/>
       ) : ( // placeholder so things align
-        <div style={{height: imgSizePx, width: imgSizePx}}/>
+        <div style={{height: dim.h, width: dim.w}}/>
       )}
     </RadioGroupPrimitive.Item>
   )
