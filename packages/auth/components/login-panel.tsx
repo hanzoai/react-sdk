@@ -35,11 +35,11 @@ const ProviderLoginButton: React.FC<PropsWithChildren & {
   )
 }
 
-const Login: React.FC<PropsWithChildren & {
+const LoginPanel: React.FC<PropsWithChildren & {
   redirectUrl?: string,
   getStartedUrl?: string,
   className?: string,
-  inputClassName?: string,
+  inputClx?: string,
   noHeading?: boolean
   onLoginChanged?: (loggedIn: boolean) => void
   termsOfServiceUrl?: string
@@ -49,7 +49,7 @@ const Login: React.FC<PropsWithChildren & {
   redirectUrl,
   getStartedUrl,
   className,
-  inputClassName,
+  inputClx,
   noHeading,
   onLoginChanged,
   termsOfServiceUrl,
@@ -145,7 +145,7 @@ const Login: React.FC<PropsWithChildren & {
             <h4 className='text-center'>Login</h4>
           )}
           {children}
-          <EmailPasswordForm onSubmit={loginWithEmailPassword} isLoading={isLoading} className='mb-4' inputClassName={inputClassName}/>
+          <EmailPasswordForm onSubmit={loginWithEmailPassword} isLoading={isLoading} className='mb-4' inputClx={inputClx}/>
 
           <div className='flex gap-2 whitespace-nowrap items-center my-1 sm:my-3 text-xs text-muted'>
             <Separator className='grow w-auto'/><div className='shrink-0 mx-1'>or continue with</div><Separator className='grow w-auto'/>
@@ -170,4 +170,4 @@ const Login: React.FC<PropsWithChildren & {
   )
 })
 
-export default Login
+export default LoginPanel
