@@ -2,13 +2,11 @@ import React from 'react'
 
 import Spline from '@splinetool/react-spline'
 
-import type { Dimensions } from '@hanzo/ui/types'
+import { Image  } from '@hanzo/ui/primitives'
 import { cn } from '@hanzo/ui/util'
 
 import {
   VideoBlockComponent,
-  ImageBlockComponent,
-  type ImageBlock,
   type Block,
   type VideoBlock
 } from '@hanzo/ui/blocks'
@@ -16,7 +14,7 @@ import type { LineItem } from '../../types'
 
 const ItemMedia: React.FC<{
   item: LineItem
-  constrainTo?: Dimensions
+  constrainTo?: {w: number, h: number}
   clx?: string
 }> = ({
   item,
@@ -38,18 +36,14 @@ const ItemMedia: React.FC<{
     />
   ) : video ? (
     <VideoBlockComponent
-      constraint={cnst}
+      constrainTo={cnst}
       block={{blockType: 'video', ...video} satisfies VideoBlock as Block}
       className={clx}
     />
-  ) : (
-    <ImageBlockComponent
-      block={{
-        blockType: 'image',
-        src: img ?? '',
-        alt: title + ' image',
-        dim: cnst
-      } satisfies ImageBlock as Block} 
+  ) : (img && 
+    <Image
+      def={img}
+      constrainTo={cnst} 
       className={cn('m-auto', clx)}
     />
   )

@@ -5,7 +5,7 @@ import {
   observable, 
 } from 'mobx'
 
-import type { VideoDef } from '@hanzo/ui/types'
+import type { ImageDef, VideoDef } from '@hanzo/ui/types'
 
 import type { Product, LineItem } from '../../../types'
 
@@ -31,7 +31,7 @@ class ActualLineItem
   categoryId: string  
   desc?: string
   price: number
-  img?: string 
+  img?: ImageDef 
   video?: VideoDef 
   animation?: string 
   timeAdded: number = 0 // timeAdded of being added to cart

@@ -1,14 +1,14 @@
 'use client'
 import React from 'react'
-import Image from 'next/image'
 import { observer } from 'mobx-react-lite'
 
 import * as RadioGroupPrimitive from "@radix-ui/react-radio-group"
-import { Label, RadioGroup, RadioGroupItem } from '@hanzo/ui/primitives'
+
+import { Label, RadioGroup, Image } from '@hanzo/ui/primitives'
+import { cn } from '@hanzo/ui/util'
+
 import type { ItemSelectorProps, LineItem } from '../../types'
 import { formatCurrencyValue } from '../../util'
-import { cn } from '@hanzo/ui/util'
-import type { Dimensions } from '@hanzo/ui/types'
 
 const ImageRadioGroupItem = React.forwardRef<
   React.ElementRef<typeof RadioGroupPrimitive.Item>,
@@ -23,28 +23,6 @@ const ImageRadioGroupItem = React.forwardRef<
   ...props 
 }, ref) => {
 
-  let dim: Dimensions 
-  if (item.imgAR) {
-    if (item.imgAR >= 1) {
-      dim = {
-        w: imgSizePx,
-        h: imgSizePx / item.imgAR
-      }
-    }
-    else {
-      dim = {
-        w: imgSizePx * item.imgAR,
-        h: imgSizePx
-      }
-    }
-  }
-  else {
-    dim = {
-      w: imgSizePx,
-      h: imgSizePx
-    }
-  }
-
   return (
     <RadioGroupPrimitive.Item
       ref={ref}
@@ -56,10 +34,10 @@ const ImageRadioGroupItem = React.forwardRef<
       id={item.sku}
       value={item.sku}
     >
-      {!!item.img ? (
-        <Image src={item.img} alt={item.title + ' image'} height={dim.h} width={dim.w} className=''/>
+      {item.img ? (
+        <Image def={item.img} constrainTo={{w: imgSizePx, h: imgSizePx}} className=''/>
       ) : ( // placeholder so things align
-        <div style={{height: dim.h, width: dim.w}}/>
+        <div style={{height: imgSizePx, width: imgSizePx}}/>
       )}
     </RadioGroupPrimitive.Item>
   )

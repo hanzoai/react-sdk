@@ -26,7 +26,7 @@ import {
 import type { ItemSelectorProps } from '../../types'
 
 interface CarouselItemSelectorPropsExt {
-  constrainTo: Dimensions
+  constrainTo: {w: number, h: number}
   options?: CarouselOptionsType 
   noSelection?: boolean // "display only" mode
 }

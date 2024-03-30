@@ -1,4 +1,4 @@
-import type { VideoDef } from '@hanzo/ui/types'
+import type { ImageDef, VideoDef } from '@hanzo/ui/types'
 
 interface Product {
   id: string    // DB index // not a logical aspect of our domain.  may not be necessary at all
@@ -9,8 +9,7 @@ interface Product {
   categoryId: string  // skuPath, eg LXB-AU-B
   desc?: string
   price: number
-  img?: string  // if undefined: (category's img exists) ? (use it) : (use generic placeholder)
-  imgAR?: number
+  img?: ImageDef  // if undefined: (category's img exists) ? (use it) : (use generic placeholder)
   animation?: string  // spline scene url
   video?: VideoDef
 }

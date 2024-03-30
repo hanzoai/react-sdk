@@ -1,16 +1,15 @@
 'use client'
 
 import React from 'react'
-import Image from 'next/image'
 import { observer } from 'mobx-react-lite'
 
 import { cn } from '@hanzo/ui/util'
+import { Image } from '@hanzo/ui/primitives'
 
 import type { LineItem } from '../../../types'
 import { formatCurrencyValue } from '../../../util'
 import AddToCartWidget from '../../buy/add-to-cart-widget'
 import { useCommerce } from '../../../service/context'
-import type { Dimensions } from '@hanzo/ui/types'
 
 const DEF_IMG_SIZE=40
 
@@ -36,34 +35,12 @@ const CartLineItem: React.FC<{
 
   const cmmc = useCommerce()
   const promoPrice = showPromoCode ? cmmc.itemPromoPrice(item) : undefined
-  
-  let dim: Dimensions 
-  if (item.imgAR) {
-    if (item.imgAR >= 1) {
-      dim = {
-        w: imgSizePx,
-        h: imgSizePx / item.imgAR
-      }
-    }
-    else {
-      dim = {
-        w: imgSizePx * item.imgAR,
-        h: imgSizePx
-      }
-    }
-  }
-  else {
-    dim = {
-      w: imgSizePx,
-      h: imgSizePx
-    }
-  }
 
   return (
     <div className={cn('flex flex-col justify-start items-start text-sm font-sans', className)}>
       <div className='flex flex-row justify-between items-center gap-2'>
-      {!!item.img ? (
-        <Image src={item.img} alt={item.title + ' image'} height={dim.h} width={dim.w} className=''/>
+      {item.img ? (
+        <Image def={item.img} constrainTo={{w: imgSizePx, h: imgSizePx}} className=''/>
       ) : ( // placeholder so things align
         <div style={{height: imgSizePx, width: imgSizePx}}/>
       )}
