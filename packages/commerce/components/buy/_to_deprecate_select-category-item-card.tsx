@@ -79,7 +79,7 @@ const SelectCategoryItemCard: React.FC<React.HTMLAttributes<HTMLDivElement> & It
     isLoading ? (<Skeleton className={'h-8 w-full ' + className} />) : (
 
       <div className={cn('text-center flex flex-col justify-start items-center', className)}>
-        <p className='font-nav text-center'>{title}</p>
+        <p className='font-heading text-center'>{title}</p>
       </div>
 
   )))
