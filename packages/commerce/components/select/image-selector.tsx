@@ -35,7 +35,7 @@ const ImageRadioGroupItem = React.forwardRef<
       value={item.sku}
     >
       {item.img ? (
-        <Image def={item.img} constrainTo={{w: imgSizePx, h: imgSizePx}} className=''/>
+        <Image def={item.img} constrainTo={{w: imgSizePx, h: imgSizePx}} preload className=''/>
       ) : ( // placeholder so things align
         <div style={{height: imgSizePx, width: imgSizePx}}/>
       )}

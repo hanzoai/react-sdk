@@ -9,11 +9,13 @@ const Image: React.FC<{
   constrainTo?: {w: number, h: number}
   fullWidth?: boolean
   className?: string
+  preload?: boolean
 }> = ({
   def,
   constrainTo,
   fullWidth=false,
   className='',
+  preload=false
 }) => {
   
   const {
@@ -60,10 +62,10 @@ const Image: React.FC<{
 
   return (fullWidth) ? (
     <div className='relative flex flex-col items-center w-full'>
-      <NextImage src={src} alt={_alt} {...toSpread} className={cn(svgFillClass, className)}/>
+      <NextImage src={src} alt={_alt} {...toSpread} priority={preload} lazy={!preload} className={cn(svgFillClass, className)}/>
     </div>
   ) : (
-    <NextImage src={src} alt={_alt} {...toSpread} className={cn(svgFillClass, className)}/>   
+    <NextImage src={src} alt={_alt} {...toSpread} priority={preload} lazy={!preload} className={cn(svgFillClass, className)}/>   
   )
 }
 

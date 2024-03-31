@@ -52,17 +52,8 @@ export const asNum = (n: number | `${number}`): number => (
 
 export const resolveDimensions = (dim: Dimensions, constraint?: {w: number, h: number}): {w: number, h: number} => {
 
-  if ('w' in dim  && 'h' in dim) {
-    return {w: dim.w, h: dim.h}
-  }
-
-  const resolved = ('w' in dim) ? {
-    w: dim.w,
-    h: dim.w / dim.ar
-  } : {
-    w: dim.h * dim.ar,
-    h: dim.h
-  }
+  const resolved = ('w' in dim) ? 
+    (('h' in dim) ? {w: dim.w, h: dim.h} : { w: dim.w, h: dim.w / dim.ar }) : { w: dim.h * dim.ar, h: dim.h }
 
   return constraint ? constrain(resolved, constraint) : resolved
 }
