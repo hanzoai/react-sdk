@@ -10,19 +10,18 @@ import {
   type Block,
   type VideoBlock
 } from '@hanzo/ui/blocks'
-import type { LineItem } from '../../types'
+import type { Product } from '../../types'
 
 const ItemMedia: React.FC<{
-  item: LineItem
+  item: Product
   constrainTo?: {w: number, h: number}
   clx?: string
 }> = ({
-  item,
+  item: {img, video, animation},
   constrainTo: cnst = {w: 250, h: 250},
   clx=''
 }) => {
 
-  const {title, img, video, animation} = item
     // Order of precedence: 3D > MP4 > Image
   return animation ? ( 
     <Spline
@@ -46,7 +45,7 @@ const ItemMedia: React.FC<{
       constrainTo={cnst} 
       className={cn('m-auto', clx)}
     />
-  )
+  ) // TODO: return placeholder
 }
 
 export default ItemMedia

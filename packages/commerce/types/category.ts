@@ -1,3 +1,4 @@
+import type { ImageDef } from '@hanzo/ui/types'
 import type Product from './product'
 
 interface Category {
@@ -5,7 +6,7 @@ interface Category {
   title: string       // Minted Bar
   parentTitle?: string // Lux Gold
   desc?: string
-  img?: string 
+  img?: ImageDef, 
     // inbound they're Products and then interally they become LineItems
   products: Product[] 
 }

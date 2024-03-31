@@ -12,7 +12,7 @@ const Image: React.FC<{
 }> = ({
   def,
   constrainTo,
-  fullWidth,
+  fullWidth=false,
   className='',
 }) => {
   

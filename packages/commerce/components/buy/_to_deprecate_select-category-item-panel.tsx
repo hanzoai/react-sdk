@@ -52,7 +52,7 @@ const SelectCategoryItemPanel: React.FC<
         <div className={cn('w-full border rounded-xl p-6 ')}>
           <div className={cn('w-full aspect-square  relative')}>
             <Image
-              src={category.img}
+              src={category.img.src}
               fill
               sizes="(max-width: 480px) 100vw, (max-width: 768px) 50vw, (max-width: 1200px) 50vw, 20vw"
               alt={category.title}
