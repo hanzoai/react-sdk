@@ -26,11 +26,15 @@ const CartLineItem: React.FC<{
   className?: string
   imgSizePx?: number
   showPromoCode?: boolean
+  itemClicked?: (item: LineItem) => void
+  selected?: boolean
 }> = observer(({
   item,
   className='',
   imgSizePx=DEF_IMG_SIZE,
-  showPromoCode
+  showPromoCode=false,
+  itemClicked,
+  selected=false
 }) => {
 
   const cmmc = useCommerce()
@@ -38,13 +42,22 @@ const CartLineItem: React.FC<{
 
   return (
     <div className={cn('flex flex-col justify-start items-start text-sm font-sans', className)}>
-      <div className='flex flex-row justify-between items-center gap-2'>
-      {item.img ? (
-        <Image def={item.img} constrainTo={{w: imgSizePx, h: imgSizePx}} className=''/>
-      ) : ( // placeholder so things align
-        <div style={{height: imgSizePx, width: imgSizePx}}/>
-      )}
-        <div className='grow leading-tight'>{renderTitle(item.title)}</div>
+      <div 
+        className={
+          'flex flex-row justify-between items-center gap-1 ' + 
+          (itemClicked && !selected ? 'cursor-pointer ' : 'cursor-default ') 
+        } 
+        onClick={() => {itemClicked && itemClicked(item)}}
+      >
+        {/* 1px gap between image and border for better emphasis w small images */}
+        <div className={selected ? 'border-foreground p-[1px] border rounded-sm' : 'p-[2px]'}>
+        {item.img ? (
+          <Image def={item.img} constrainTo={{w: imgSizePx, h: imgSizePx}} />
+        ) : ( // placeholder so things align
+          <div style={{height: imgSizePx, width: imgSizePx}} className='bg-level-3'/>
+        )}
+        </div>
+        <div className='grow leading-tight ml-1'>{renderTitle(item.title)}</div>
       </div>
       <div className='flex flex-row items-center justify-between w-full'>
         <div className='flex flex-row items-center'>

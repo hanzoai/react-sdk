@@ -1,27 +1,20 @@
-import React from 'react'
+'use client'
+import React, { useCallback, useEffect, useRef } from 'react'
+import { reaction } from 'mobx'
+import { observer } from 'mobx-react-lite'
 
-import Spline from '@splinetool/react-spline'
-
-import type { Dimensions } from '@hanzo/ui/types'
 import { cn } from '@hanzo/ui/util'
 import ItemMedia from '../item/item-media'
 
 import {
   type CarouselOptionsType,
+  type CarouselApi,
   Carousel,
   CarouselContent,
   CarouselItem,
   CarouselPrevious,
   CarouselNext
 } from '@hanzo/ui/primitives'
-
-import {
-  VideoBlockComponent,
-  ImageBlockComponent,
-  type ImageBlock,
-  type Block,
-  type VideoBlock
-} from '@hanzo/ui/blocks'
 
 import type { ItemSelectorProps } from '../../types'
 
@@ -31,8 +24,10 @@ interface CarouselItemSelectorPropsExt {
   noSelection?: boolean // "display only" mode
 }
   
-const CarouselItemSelector: React.FC<ItemSelectorProps> = ({ 
+const CarouselItemSelector: React.FC<ItemSelectorProps> = observer(({ 
   items,
+  selectSku,
+  selectedItemRef: itemRef,
   clx='',
   itemClx='',
   ext={
@@ -43,8 +38,40 @@ const CarouselItemSelector: React.FC<ItemSelectorProps> = ({
 
   const { options, constrainTo} = ext
 
+  const elbaApiRef = useRef<CarouselApi | undefined>(undefined)
+  const dontRespondRef = useRef<boolean>(false)
+
+  const setApi = (api: CarouselApi) => {elbaApiRef.current = api}
+
+  const onSelect = useCallback((emblaApi: CarouselApi) => {
+    if (dontRespondRef.current) {
+      dontRespondRef.current = false
+      return
+    }
+    const index = emblaApi.selectedScrollSnap()
+    if (index !== -1) {
+      selectSku(items[index].sku)
+    }
+    dontRespondRef.current = false
+  }, [])
+
+  useEffect(() => {
+    return reaction(
+      () => ({item: itemRef.item}),
+      ({item}) => {
+        if (elbaApiRef.current) {
+          const index = items.findIndex((el) => (el.sku === item?.sku))  
+          if (index !== -1) {
+            dontRespondRef.current = true
+            elbaApiRef.current.scrollTo(index) 
+          }
+        }
+      }  
+    )
+  }, [])
+
   return ( 
-    <Carousel options={options} className={cn('px-2', clx)} >
+    <Carousel options={options} className={cn('px-2', clx)} onSelect={onSelect} setApi={setApi}>
       <CarouselContent>
       {items.map((item, index) => (
         <CarouselItem key={index} className={cn('p-2 flex flex-row justify-center items-center', itemClx)}>
@@ -56,7 +83,7 @@ const CarouselItemSelector: React.FC<ItemSelectorProps> = ({
       <CarouselNext className='right-1'/>
     </Carousel>
   )
-}
+})
 
 export {
   type CarouselItemSelectorPropsExt,
