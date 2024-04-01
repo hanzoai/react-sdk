@@ -1,13 +1,20 @@
 'use client'
 import React, { useRef, useEffect, type ComponentType } from 'react'
-import { autorun  } from 'mobx'
+import { reaction, type IReactionDisposer } from 'mobx'
 import { observer } from 'mobx-react-lite'
 
 import { cn } from '@hanzo/ui/util'
 
-import type { SelectedPaths, ItemSelectorProps, LineItem } from '../../types'
+import type { 
+  SelectedPaths, 
+  ItemSelectorProps, 
+  LineItem, 
+  Category, 
+  ProductTreeNode, 
+} from '../../types'
+
 import { useCommerce } from '../../service/context'
-import { getFacetValuesMutator } from '../../util'
+import { getFacetValuesMutator, ObsStringMutator } from '../../util'
 
 import LevelNodesWidget from '../level-nodes-widget'
 import AddToCartWidget from './add-to-cart-widget'
@@ -49,56 +56,85 @@ const BuyCard: React.FC<{
 }) => {
 
   const cmmc = useCommerce()
-  const levelRef = useRef<number>(-1)
+  const inst = useRef<{
+    level: number,
+    requestedCat : Category | undefined
+    requestedNode: ProductTreeNode | undefined
+    currentCat: ObsStringMutator
+    disposers: IReactionDisposer[]
+  } | undefined>(undefined)
 
-  const requestedCat = cmmc.getCategory(skuPath) 
-  const levelNode = requestedCat ? undefined : cmmc.getNodeAtPath(skuPath)
 
   useEffect(() => {
 
+    let requestedCat = cmmc.getCategory(skuPath) 
+    let requestedNode = requestedCat ? undefined : cmmc.getNodeAtPath(skuPath)
     const toks = skuPath.split('-')
-    levelRef.current = toks.length - 1
-    if (levelRef.current === 0) {
-      throw new Error('BuyCard.useEffect(): must specify at least a Level 1 skuPath!') 
+    const level = toks.length - 1
+    if (level === 0) {
+      throw new Error('BuyCard.useEffect(): must specify at least at least one Level in skuPath!') 
     }
     const paths: SelectedPaths = {}
-    for (let level = 1; level <= levelRef.current; level++ ) {
-      paths[level] = [toks[level]]   
+    for (let l = 1; l <= level; l++ ) {
+      paths[l] = [toks[l]]   
     } 
-    if (!requestedCat) {
-        // select siblings
+    if (requestedCat) { 
       if (allVariants) {
-        paths[levelRef.current + 1] = [...levelNode!.subNodes!.map((node) => (node.skuToken))]
-      }
-        // Actually select the requested Cat, 
-        // or the first Cat if no Cats at this level
-      else {
-        paths[levelRef.current + 1] = [levelNode!.subNodes![0].skuToken]
+          // select all siblings of requestedCat (buy deleting last token from the object)
+        delete paths[level]
+        requestedCat = undefined
+        const _path = toks.slice(0, -1).join('-') 
+        requestedNode = cmmc.getNodeAtPath(_path)
       }
     }
-    cmmc.selectPaths(paths)
+    else {
+        // select siblings paths
+      if (allVariants) {
+        paths[level + 1] = [...requestedNode!.subNodes!.map((node) => (node.skuToken))]
+      }
+        // Actually select the the first cat at the cat level, 
+      else {
+        paths[level + 1] = [requestedNode!.subNodes![0].skuToken]
+      }
+    }
 
-    return autorun(() => {
-      const cats = cmmc.selectedCategories
-        // Original requestedCat was legit
-      if (requestedCat /* && (cats.length === 0 || cats[0].id !== requestedCat.id) */) {
-        if (
-          !cmmc.currentItem 
-          || 
-          cmmc.currentItem.categoryId !== requestedCat.id 
-          || 
-          requestedCat.products.length === 1
-        ) {
-          cmmc.setCurrentItem(requestedCat.products[0].sku)
-        }
-      }
-      else if (cats.length > 0) {
-        if (!cmmc.currentItem || cmmc.currentItem.categoryId !== cats[0].id) {
-          cmmc.setCurrentItem(cats[0].products[0].sku)
-        }
-      }
-    })
-  }, [requestedCat, levelNode?.subNodes])
+    const selectedCats = cmmc.selectPaths(paths)
+    const initialCat = requestedCat ? requestedCat : selectedCats[0]
+    const initialPathValue = initialCat?.id.split('-').pop()!
+    cmmc.setCurrentItem(initialCat.products[0].sku)
+
+    inst.current = {
+      level,
+      requestedCat,
+      requestedNode,
+      currentCat: new ObsStringMutator(initialPathValue),
+      disposers: []
+    }
+
+    return () => {
+      inst.current?.disposers.forEach((d) => {d()})
+    }
+
+  }, [])
+
+  const setCatPath = (pathValue: string | null) => {
+    if (inst.current?.currentCat.get() !== pathValue) {
+      inst.current?.currentCat.set(pathValue) 
+    }
+    const found = cmmc.selectedItems.find((item) => (item.categoryId.endsWith(pathValue!)))
+    if (found) { 
+      cmmc.setCurrentItem(found.sku) 
+    }
+  }
+
+  const selectSku = (sku: string) => {
+    cmmc.setCurrentItem(sku)
+    const pathValue = cmmc.currentItem?.categoryId.split('-').pop()!
+    console.log("SEL SKU: ", pathValue)
+    if (pathValue !== inst.current?.currentCat.get()) {
+      inst.current?.currentCat.set(pathValue) 
+    }
+  }
 
   const TitleArea: React.FC<{
     title: string
@@ -115,46 +151,53 @@ const BuyCard: React.FC<{
     </ApplyTypography>
   )
 
-  const catTitle = requestedCat ? requestedCat.title : cmmc.selectedCategories?.[0]?.title
+  const catTitle = inst.current?.requestedCat ? inst.current.requestedCat.title : cmmc.selectedCategories?.[0]?.title
 
   const itemsToShow = (!cmmc.hasSelection) ? undefined : 
     allVariants ? cmmc.selectedItems : cmmc.selectedCategories[0].products as LineItem[]
 
   return (
     <div className={cn('px-4 md:px-6 pt-3 pb-4 flex flex-col items-center', className)} >
-    {levelNode && (<>
+    {inst.current?.requestedNode && (<>
       <ApplyTypography className=''>
-        <h3>{levelNode.label}</h3>
-        {levelNode.subNodesLabel && (
-          <h6 className='!text-center font-bold text-muted mt-3 mb-2'>{levelNode.subNodesLabel}</h6>
+        <h3>{inst.current!.requestedNode.label}</h3>
+        {inst.current!.requestedNode.subNodesLabel && (
+          <h6 className='!text-center font-bold text-muted mt-3 mb-2'>{inst.current!.requestedNode.subNodesLabel}</h6>
         )}
       </ApplyTypography>
       <LevelNodesWidget
         className={cn(
-          'grid gap-0 ' + `grid-cols-${levelNode!.subNodes!.length}`, 
+          'grid gap-0 ' + `grid-cols-${inst.current.requestedNode.subNodes!.length}`, 
           'border-b-2 rounded-lg border-level-3 mb-4 -mr-2 -ml-2 max-w-[460px]',
           facetsWidgetClx  
         )} 
         mobile={mobile}
-        mutator={getFacetValuesMutator(levelRef.current + 1, cmmc)} 
+        mutator={allVariants ? 
+          {
+            get: () => (inst.current!.currentCat.s),
+            set: setCatPath
+          }
+          : 
+          getFacetValuesMutator(inst.current.level + 1, cmmc)
+        } 
         itemClx='flex-col h-auto gap-0 py-1 px-3'
         buttonClx={
           'h-full ' +
           '!border-level-3'
         }
-        levelNodes={levelNode!.subNodes!}
+        levelNodes={inst.current.requestedNode.subNodes!}
         show={facetsAs}
       />
     </>)} 
-    {!levelNode && catTitle && (
+    {!inst.current?.requestedNode && catTitle && (
       <TitleArea title={catTitle} clx=''/>
     )}
-    {(cmmc.currentItem) && (<ItemMedia item={cmmc.currentItem} />)} 
+    {(cmmc.currentItem) && (<ItemMedia item={cmmc.currentItem} constrainTo={{w: 200, h: 200}}/>)} 
     {itemsToShow && (
       <Selector 
         items={itemsToShow}
         selectedItemRef={cmmc}
-        selectSku={cmmc.setCurrentItem.bind(cmmc)}
+        selectSku={selectSku}
         clx={selClx}
         itemClx={selItemClx}
         soleItemClx={selSoleItemClx}

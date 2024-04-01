@@ -78,8 +78,8 @@ class StandaloneService
         '_currentItem' |
         '_promo'
     >(this, {
-      _selectedPaths :  observable.deep,
-      _currentItem: observable,
+      _selectedPaths : observable.deep,
+      _currentItem: observable.shallow,
       _promo: observable,
     })
 
@@ -238,10 +238,19 @@ class StandaloneService
 
   setCurrentItem(skuToFind: string | undefined): boolean {
 
+    const logMe = (s: string) => {
+      //if (skuToFind?.startsWith('LXM-CR-E')) {
+        //console.log(s)
+      //}
+    }
+
     if (skuToFind === undefined || skuToFind.length === 0) {
       this._currentItem = undefined
       return true
     }
+
+    logMe("SETTING ITEM: " + skuToFind)
+
       // self calling function
     this._currentItem = ((): ActualLineItem | undefined  => {
 
@@ -251,6 +260,7 @@ class StandaloneService
           categoriesTried.push(category.id)
           const foundItem = category.products.find((p) => (p.sku === skuToFind))
           if (foundItem) {
+            logMe("FOUND 1st LOOP")
             return foundItem as ActualLineItem
           }
         }
@@ -259,12 +269,15 @@ class StandaloneService
         if (categoriesTried.includes(categoryId)) continue
         const foundItem = category.products.find((p) => (p.sku === skuToFind)) as ActualLineItem | undefined
         if (foundItem) {
+          logMe("FOUND 2nd LOOP")
           return foundItem as ActualLineItem
         }
       }
+      logMe("NOT FOUND")
       return undefined
     })();
 
+    logMe("CURRENT ITEM SET TO: " + this._currentItem?.sku)
     return !!this._currentItem
   }
 

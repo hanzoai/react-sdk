@@ -55,17 +55,17 @@ const Image: React.FC<{
   else {
     const tokens = src.split('/')
       // Something remotely meaningful
-    alt = (tokens.length > 0) ? tokens[tokens.length] : src
+    alt = (tokens.length > 0) ? tokens[tokens.length - 1] : src
   }
 
   const svgFillClass = _svgFillClass ?? ''
 
   return (fullWidth) ? (
     <div className='relative flex flex-col items-center w-full'>
-      <NextImage src={src} alt={_alt} {...toSpread} priority={preload} lazy={!preload} className={cn(svgFillClass, className)}/>
+      <NextImage src={src} alt={alt} {...toSpread} priority={preload} loading={preload ? 'eager' : 'lazy'} className={cn(svgFillClass, className)}/>
     </div>
   ) : (
-    <NextImage src={src} alt={_alt} {...toSpread} priority={preload} lazy={!preload} className={cn(svgFillClass, className)}/>   
+    <NextImage src={src} alt={alt} {...toSpread} priority={preload} loading={preload ? 'eager' : 'lazy'} className={cn(svgFillClass, className)}/>   
   )
 }
 

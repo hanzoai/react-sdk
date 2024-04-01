@@ -7,18 +7,18 @@ import * as RadioGroupPrimitive from "@radix-ui/react-radio-group"
 import { Label, RadioGroup, Image } from '@hanzo/ui/primitives'
 import { cn } from '@hanzo/ui/util'
 
-import type { ItemSelectorProps, LineItem } from '../../types'
+import type { CommerceService, ItemSelectorProps, LineItem } from '../../types'
 import { formatCurrencyValue } from '../../util'
 
 const ImageRadioGroupItem = React.forwardRef<
   React.ElementRef<typeof RadioGroupPrimitive.Item>,
   Omit<React.ComponentPropsWithoutRef<typeof RadioGroupPrimitive.Item>, 'value' | 'id'> & {
     item: LineItem,
-    imgSizePx: number  
+    constrainTo: {w: number, h: number}  
   }
 >(({ 
   item,
-  imgSizePx,
+  constrainTo,
   className, 
   ...props 
 }, ref) => {
@@ -35,9 +35,9 @@ const ImageRadioGroupItem = React.forwardRef<
       value={item.sku}
     >
       {item.img ? (
-        <Image def={item.img} constrainTo={{w: imgSizePx, h: imgSizePx}} preload className=''/>
+        <Image def={item.img} constrainTo={constrainTo} preload className=''/>
       ) : ( // placeholder so things align
-        <div style={{height: imgSizePx, width: imgSizePx}}/>
+        <div style={{height: constrainTo.h, width: constrainTo.w}}/>
       )}
     </RadioGroupPrimitive.Item>
   )
@@ -66,7 +66,7 @@ const ImageItemSelector: React.FC<ItemSelectorProps> = observer(({
     <div className={cn('flex items-center mb-1', className, itemClx)}>
       <ImageRadioGroupItem 
         item={item} 
-        imgSizePx={40} 
+        constrainTo={{h: 36, w: 72}} // Apple suggest 42px 
         className='mr-2 border-2 border-transparent rounded-sm data-[state=checked]:border-foreground'
       />
       <Label htmlFor={item.sku}>{
@@ -83,10 +83,14 @@ const ImageItemSelector: React.FC<ItemSelectorProps> = observer(({
     item,
     className=''
   }) => (
-    <div className={cn(className, soleItemClx)}>
-      {item.optionLabel + (showPrice ? (', ' + formatCurrencyValue(item.price)) : '')}
-    </div>
+    <div className={cn(className, soleItemClx)}>{
+      (showCategoryName ? item.title : item.optionLabel) + 
+      (showPrice ? (', ' + formatCurrencyValue(item.price)) : '')
+    }</div>
   )
+
+  //console.log('ITEM IN WIDGET: ', itemRef.item?.sku)
+  //console.log('CURRENT_ITEM IN WIDGET: ', (itemRef as CommerceService).currentItem?.sku)
 
   return items.length > 1 ? (
     <RadioGroup
