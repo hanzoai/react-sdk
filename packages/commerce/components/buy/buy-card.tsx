@@ -9,7 +9,7 @@ import type { SelectedPaths, ItemSelectorProps, LineItem } from '../../types'
 import { useCommerce } from '../../service/context'
 import { getFacetValuesMutator } from '../../util'
 
-import FacetValuesWidget from '../facet-values-widget'
+import LevelNodesWidget from '../level-nodes-widget'
 import AddToCartWidget from './add-to-cart-widget'
 import ItemMedia from '../item/item-media'
 import { ApplyTypography } from '@hanzo/ui/primitives'
@@ -43,7 +43,7 @@ const BuyCard: React.FC<{
   selExt,
   addWidgetClx='',
   facetsAs='image-and-label', 
-  allVariants=true,
+  allVariants=false,
   mobile=false,
   onQuantityChanged,
 }) => {
@@ -61,16 +61,22 @@ const BuyCard: React.FC<{
     if (levelRef.current === 0) {
       throw new Error('BuyCard.useEffect(): must specify at least a Level 1 skuPath!') 
     }
-    const fsv: SelectedPaths = {}
+    const paths: SelectedPaths = {}
     for (let level = 1; level <= levelRef.current; level++ ) {
-      fsv[level] = [toks[level]]   
+      paths[level] = [toks[level]]   
     } 
-      // Actually specify the requested Cat, 
-      // or the first Cat if no Cats at this level
     if (!requestedCat) {
-      fsv[levelRef.current + 1] = [levelNode!.subNodes![0].skuToken]
+        // select siblings
+      if (allVariants) {
+        paths[levelRef.current + 1] = [...levelNode!.subNodes!.map((node) => (node.skuToken))]
+      }
+        // Actually select the requested Cat, 
+        // or the first Cat if no Cats at this level
+      else {
+        paths[levelRef.current + 1] = [levelNode!.subNodes![0].skuToken]
+      }
     }
-    cmmc.selectPaths(fsv)
+    cmmc.selectPaths(paths)
 
     return autorun(() => {
       const cats = cmmc.selectedCategories
@@ -111,16 +117,19 @@ const BuyCard: React.FC<{
 
   const catTitle = requestedCat ? requestedCat.title : cmmc.selectedCategories?.[0]?.title
 
+  const itemsToShow = (!cmmc.hasSelection) ? undefined : 
+    allVariants ? cmmc.selectedItems : cmmc.selectedCategories[0].products as LineItem[]
+
   return (
     <div className={cn('px-4 md:px-6 pt-3 pb-4 flex flex-col items-center', className)} >
     {levelNode && (<>
       <ApplyTypography className=''>
         <h3>{levelNode.label}</h3>
         {levelNode.subNodesLabel && (
-          <h6 className='!text-center mt-4 mb-1'>{levelNode.subNodesLabel}</h6>
+          <h6 className='!text-center font-bold text-muted mt-3 mb-2'>{levelNode.subNodesLabel}</h6>
         )}
       </ApplyTypography>
-      <FacetValuesWidget
+      <LevelNodesWidget
         className={cn(
           'grid gap-0 ' + `grid-cols-${levelNode!.subNodes!.length}`, 
           'border-b-2 rounded-lg border-level-3 mb-4 -mr-2 -ml-2 max-w-[460px]',
@@ -133,7 +142,7 @@ const BuyCard: React.FC<{
           'h-full ' +
           '!border-level-3'
         }
-        facetValues={levelNode!.subNodes!}
+        levelNodes={levelNode!.subNodes!}
         show={facetsAs}
       />
     </>)} 
@@ -141,15 +150,16 @@ const BuyCard: React.FC<{
       <TitleArea title={catTitle} clx=''/>
     )}
     {(cmmc.currentItem) && (<ItemMedia item={cmmc.currentItem} />)} 
-    {cmmc.selectedCategories[0] && (
+    {itemsToShow && (
       <Selector 
-        items={cmmc.selectedCategories[0].products as LineItem[]}
+        items={itemsToShow}
         selectedItemRef={cmmc}
         selectSku={cmmc.setCurrentItem.bind(cmmc)}
         clx={selClx}
         itemClx={selItemClx}
         soleItemClx={selSoleItemClx}
         ext={selExt}
+        showCategoryName={allVariants}
         showPrice={selShowPrice}
         showQuantity={selShowQuantity}
       />  

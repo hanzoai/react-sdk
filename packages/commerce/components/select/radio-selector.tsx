@@ -14,8 +14,9 @@ const RadioItemSelector: React.FC<ItemSelectorProps> = observer(({
   clx='',
   itemClx='',
   soleItemClx='',
+  showCategoryName=false,
   showPrice=true,
-  showQuantity=true
+  showQuantity=false
 }) => {
 
   const Choice: React.FC<{
@@ -27,7 +28,10 @@ const RadioItemSelector: React.FC<ItemSelectorProps> = observer(({
   }) => (
     <div className={cn(className, itemClx)}>
       <RadioGroupItem value={item.sku} id={item.sku} className='mr-2'/>
-      <Label htmlFor={item.sku}>{item.titleAsOption + (showPrice ? (', ' + formatCurrencyValue(item.price)) : '')}</Label>
+      <Label htmlFor={item.sku}>{
+        (showCategoryName ? item.title  : item.optionLabel) + 
+        (showPrice ? (', ' + formatCurrencyValue(item.price)) : '')
+      }</Label>
     </div>
   )
 
@@ -39,7 +43,7 @@ const RadioItemSelector: React.FC<ItemSelectorProps> = observer(({
     className=''
   }) => (
     <div className={cn(className, soleItemClx)}>
-      {item.titleAsOption + (showPrice ? (', ' + formatCurrencyValue(item.price)) : '')}
+      {item.optionLabel + (showPrice ? (', ' + formatCurrencyValue(item.price)) : '')}
     </div>
   )
 

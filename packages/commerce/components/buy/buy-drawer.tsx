@@ -55,11 +55,9 @@ const BuyDrawer: React.FC<{
           onQuantityChanged={onQuantityChanged} 
           className={cn('w-full', cardClx)}
           selector={ImageItemSelector}
-          selClx=''
-          selItemClx=''
           selSoleItemClx='mb-3'
-          addWidgetClx=''
           facetsAs='label'
+          allVariants
         />
         <Button
           variant='ghost'

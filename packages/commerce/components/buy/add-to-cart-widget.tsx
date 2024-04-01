@@ -81,12 +81,14 @@ const AddToCartWidget: React.FC<{
     if (onQuantityChanged) {
       onQuantityChanged(item.sku, old, old - 1) 
     }
+    /*
     if (old === 1) {
       toast(`Removed ${item.title} from your bag.`)
     }
     else {
       toast(`Changed quantity to ${old - 1} for ${item.title}.`)
     }
+    */
     sendGAEvent('remove_from_cart', {
       items: [{
         item_id: item.sku,

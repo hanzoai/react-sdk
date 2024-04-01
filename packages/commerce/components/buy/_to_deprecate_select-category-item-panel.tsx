@@ -124,7 +124,7 @@ const SelectCategoryItemPanel: React.FC<
         </h3>
         {selectedItemRef.item?.sku ? (
           <h6 className='text-center font-semibold'>
-            {(soleOption ? '' : (selectedItemRef.item.titleAsOption + ': ')) + formatCurrencyValue(selectedItemRef.item.price)}
+            {(soleOption ? '' : (selectedItemRef.item.optionLabel + ': ')) + formatCurrencyValue(selectedItemRef.item.price)}
           </h6>
         ) : ''}
       </div>

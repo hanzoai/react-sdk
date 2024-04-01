@@ -4,6 +4,7 @@ interface ItemSelector {
   items: LineItem[]
   selectedItemRef: ObsLineItemRef
   selectSku: (sku: string) => void 
+  showCategoryName?: boolean
   showPrice?: boolean       // true by default
   showQuantity?: boolean    // false by default (not impl)
 }

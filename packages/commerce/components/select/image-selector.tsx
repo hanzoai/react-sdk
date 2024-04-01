@@ -51,8 +51,9 @@ const ImageItemSelector: React.FC<ItemSelectorProps> = observer(({
   clx='',
   itemClx='',
   soleItemClx='',
+  showCategoryName=false,
   showPrice=true,
-  showQuantity=true
+  showQuantity=false
 }) => {
 
   const Choice: React.FC<{
@@ -63,8 +64,15 @@ const ImageItemSelector: React.FC<ItemSelectorProps> = observer(({
     className=''
   }) => (
     <div className={cn('flex items-center mb-1', className, itemClx)}>
-      <ImageRadioGroupItem item={item} imgSizePx={40} className='mr-2 border-2 border-transparent rounded-sm data-[state=checked]:border-foreground'/>
-      <Label htmlFor={item.sku}>{item.titleAsOption + (showPrice ? (', ' + formatCurrencyValue(item.price)) : '')}</Label>
+      <ImageRadioGroupItem 
+        item={item} 
+        imgSizePx={40} 
+        className='mr-2 border-2 border-transparent rounded-sm data-[state=checked]:border-foreground'
+      />
+      <Label htmlFor={item.sku}>{
+        (showCategoryName ? item.title : item.optionLabel) + 
+        (showPrice ? (', ' + formatCurrencyValue(item.price)) : '')
+      }</Label>
     </div>
   )
 
@@ -76,7 +84,7 @@ const ImageItemSelector: React.FC<ItemSelectorProps> = observer(({
     className=''
   }) => (
     <div className={cn(className, soleItemClx)}>
-      {item.titleAsOption + (showPrice ? (', ' + formatCurrencyValue(item.price)) : '')}
+      {item.optionLabel + (showPrice ? (', ' + formatCurrencyValue(item.price)) : '')}
     </div>
   )
 

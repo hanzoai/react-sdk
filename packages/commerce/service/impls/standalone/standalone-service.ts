@@ -91,6 +91,7 @@ class StandaloneService
       cartEmpty: computed,
       selectedItems: computed,
       selectedCategories: computed, 
+      hasSelection: computed, 
       setCurrentItem: action,
       currentItem: computed,
       item: computed,
@@ -164,7 +165,7 @@ class StandaloneService
   }
 
   takeSnapshot = (): StandaloneServiceSnapshot => ({
-    items : (this.cartItems as ActualLineItem[]).map((it) => (it.takeSnapshot()))
+    items : (this.cartItems as ActualLineItem[]).map((it) => (it.takeSnapshot(this)))
   })
 
   get cartItems(): LineItem[] {
@@ -377,6 +378,10 @@ class StandaloneService
 
     return this.selectedCategories.reduce(
       (allProducts, cat) => ([...allProducts, ...(cat.products as LineItem[])]), [] as LineItem[])
+  }
+
+  get hasSelection(): boolean {
+    return this.selectedCategories.length > 0
   }
 
   getCartCategorySubtotal(categoryId: string): number {
