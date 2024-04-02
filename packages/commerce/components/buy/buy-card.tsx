@@ -133,6 +133,21 @@ const BuyCard: React.FC<{
       disposers: []
     }
 
+    if (!allVariants) {
+      inst.current?.disposers.push(reaction(
+        () => {
+          const cats = cmmc.selectedCategories
+          return (cats.length > 0) ? cats[0].id : undefined
+        },
+        (catId) => {
+          if (catId && catId !== cmmc.currentItem?.categoryId) {
+            const cat = cmmc.getCategory(catId)
+            cmmc.setCurrentItem(cat?.products[0].sku)
+          }
+        }
+      ))
+    }
+
     return () => {
       inst.current?.disposers.forEach((d) => {d()})
     }

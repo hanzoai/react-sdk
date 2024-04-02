@@ -36,7 +36,7 @@ const CarouselItemSelector: React.FC<ItemSelectorProps> = observer(({
   itemClx='',
   showCategory=false,
   ext={
-    options: {},
+    options: {loop: true},
     constrainTo: {w: 250, h: 250},
     imageOnly: false 
   } satisfies CarouselItemSelectorPropsExt

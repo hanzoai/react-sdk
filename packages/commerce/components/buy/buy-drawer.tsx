@@ -62,7 +62,7 @@ const BuyDrawer: React.FC<{
       >
         <BuyCard 
           skuPath={skuPath} 
-          //scrollAfter={8}
+          scrollAfter={spec.selector === 'carousel' ? 999 : undefined}
           mobile={mobile} 
           onQuantityChanged={onQuantityChanged} 
           clx={cn('w-full', cardClx)}
