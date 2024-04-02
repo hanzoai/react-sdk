@@ -51,10 +51,11 @@ const BuyDrawer: React.FC<{
       >
         <BuyCard 
           skuPath={skuPath} 
+          scrollAfter={8}
           mobile={mobile} 
           onQuantityChanged={onQuantityChanged} 
           clx={cn('w-full', cardClx)}
-          selector={ImageItemSelector}
+          selector={RadioItemSelector}
           selectorProps={{soleItemClx:'mb-3', showQuantity: true}}
           categoryTabAs='label'
           allVariants

@@ -134,7 +134,6 @@ const ImageItemSelector: React.FC<ItemSelectorProps> = observer(({
   return items.length > 1 ? (
     <RadioGroup
       className={cn('flex flex-col gap-0', 
-        //(showQuantity && !scrollList ? 'table' : ''),
         (scrollList ? 'shrink min-h-0' : ''), 
         clx,
       )}
@@ -142,7 +141,7 @@ const ImageItemSelector: React.FC<ItemSelectorProps> = observer(({
       value={itemRef.item ? itemRef.item.sku : ''}
     >
       {scrollList ? (
-        <ScrollArea className={'mt-2 w-full h-full py-0 border border-muted-2 rounded-sm ' /*+ (showQuantity ? 'table' : '')*/}>
+        <ScrollArea className='mt-2 w-full h-full py-0 border border-muted-2 rounded-sm '>
           {items.map((item) => (
             <Item item={item} listBoxMode={true} selected={itemRef.item?.sku === item.sku}/>
           ))}
