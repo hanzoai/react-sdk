@@ -96,6 +96,8 @@ const SelectCategoryItemPanel: React.FC<
             selectedItemRef={selectedItemRef}  
             selectSku={selectSku}
             showQuantity={showQuantity}
+                      scrollList={false}
+
             clx='block columns-2 gap-4'
             itemClx='flex flex-row gap-2 items-center mb-2.5'
           />

@@ -53,10 +53,10 @@ const BuyDrawer: React.FC<{
           skuPath={skuPath} 
           mobile={mobile} 
           onQuantityChanged={onQuantityChanged} 
-          className={cn('w-full', cardClx)}
+          clx={cn('w-full', cardClx)}
           selector={ImageItemSelector}
-          selSoleItemClx='mb-3'
-          facetsAs='label'
+          selectorProps={{soleItemClx:'mb-3', showQuantity: true}}
+          categoryTabAs='label'
           allVariants
         />
         <Button

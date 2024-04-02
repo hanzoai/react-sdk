@@ -56,6 +56,7 @@ const SelectCategoryItemCard: React.FC<React.HTMLAttributes<HTMLDivElement> & It
           selectSku={selectSku}
           clx='mt-2'
           showQuantity={false}
+          scrollList={false}
           itemClx='flex flex-row gap-2.5 items-center'
         />
       </div>

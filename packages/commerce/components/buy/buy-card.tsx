@@ -8,6 +8,7 @@ import { cn } from '@hanzo/ui/util'
 import type { 
   SelectedPaths, 
   ItemSelectorProps, 
+  ItemSelectorCompProps,
   LineItem, 
   Category, 
   ProductTreeNode, 
@@ -23,33 +24,50 @@ import { ApplyTypography } from '@hanzo/ui/primitives'
 
 const BuyCard: React.FC<{
   skuPath: string
-  selector: ComponentType<ItemSelectorProps>
-  selShowPrice?: boolean
-  selShowQuantity?: boolean
-  selClx?: string
-  selSoleItemClx?: string
-  selItemClx?: string
-  selExt?: any
-  allVariants?: boolean
-  className?: string
-  facetsWidgetClx?: string
-  facetsAs?: 'image' | 'label' | 'image-and-label'
+
+    /** For any selectors that show a list of choices,
+     * starting with 'scrollAfter' elements, 
+     * the list will scroll, and the card will
+     * have 'scrollHeightClx' applied to it to define and fix the height.
+     * This is most like something like '80vh' 
+     * defaults are '5' and 'h-[70vh]'
+     * */
+  scrollAfter?: number
+  scrollHeightClx?: string
+
+  clx?: string
+  catWidgetClx?: string
   addWidgetClx?: string
-  mobile?: boolean
+
+  selector: ComponentType<ItemSelectorProps>
+  selectorProps?: ItemSelectorCompProps 
+
+    /** Show all items from all sibling categories
+     * If skuPath defines a Category, the first of it's items will 
+     * be selected. The facet widget will just select a the first 
+     * item in the chosen Category without changings the overall set
+     * of choices. */
+  allVariants?: boolean
+
+  categoryTabAs?: 'image' | 'label' | 'image-and-label'
+
   onQuantityChanged?: (sku: string, oldV: number, newV: number) => void
+  mobile?: boolean
 }> = observer(({
   skuPath,
-  className='',
-  facetsWidgetClx='',
-  selector: Selector,
-  selShowPrice=true,
-  selShowQuantity=false,
-  selClx='',
-  selItemClx='',
-  selSoleItemClx='',
-  selExt,
+  scrollAfter=5,
+  scrollHeightClx='h-[80vh]',
+  clx='',
+  catWidgetClx='',
   addWidgetClx='',
-  facetsAs='image-and-label', 
+  selector: Selector,
+  selectorProps={
+    clx: '',
+    soleItemClx: '',
+    itemClx: '',
+    ext: {}
+  },
+  categoryTabAs='image-and-label', 
   allVariants=false,
   mobile=false,
   onQuantityChanged,
@@ -69,6 +87,7 @@ const BuyCard: React.FC<{
 
     let requestedCat = cmmc.getCategory(skuPath) 
     let requestedNode = requestedCat ? undefined : cmmc.getNodeAtPath(skuPath)
+    let initialCat = undefined
     const toks = skuPath.split('-')
     const level = toks.length - 1
     if (level === 0) {
@@ -79,12 +98,13 @@ const BuyCard: React.FC<{
       paths[l] = [toks[l]]   
     } 
     if (requestedCat) { 
-      if (allVariants) {
-          // select all siblings of requestedCat (buy deleting last token from the object)
+      if (allVariants && level >= 2) {
+          // select all siblings of requestedCat.
+          // ie, go one level back
         delete paths[level]
+        initialCat = requestedCat
         requestedCat = undefined
-        const _path = toks.slice(0, -1).join('-') 
-        requestedNode = cmmc.getNodeAtPath(_path)
+        requestedNode = cmmc.getNodeAtPath(toks.slice(0, -1).join('-'))
       }
     }
     else {
@@ -99,15 +119,15 @@ const BuyCard: React.FC<{
     }
 
     const selectedCats = cmmc.selectPaths(paths)
-    const initialCat = requestedCat ? requestedCat : selectedCats[0]
-    const initialPathValue = initialCat?.id.split('-').pop()!
+    initialCat = initialCat ? initialCat : (requestedCat ? requestedCat : selectedCats[0])
     cmmc.setCurrentItem(initialCat.products[0].sku)
+    const currentCat = new ObsStringMutator(initialCat!.id.split('-').pop()!)
 
     inst.current = {
       level,
       requestedCat,
       requestedNode,
-      currentCat: new ObsStringMutator(initialPathValue),
+      currentCat,
       disposers: []
     }
 
@@ -130,11 +150,16 @@ const BuyCard: React.FC<{
   const selectSku = (sku: string) => {
     cmmc.setCurrentItem(sku)
     const pathValue = cmmc.currentItem?.categoryId.split('-').pop()!
-    console.log("SEL SKU: ", pathValue)
     if (pathValue !== inst.current?.currentCat.get()) {
       inst.current?.currentCat.set(pathValue) 
     }
   }
+
+  const catTitle = inst.current?.requestedCat ? inst.current.requestedCat.title : cmmc.selectedCategories?.[0]?.title
+
+  const itemsToShow = (!cmmc.hasSelection) ? undefined : 
+    allVariants ? cmmc.selectedItems : cmmc.selectedCategories[0].products as LineItem[]
+
 
   const TitleArea: React.FC<{
     title: string
@@ -151,25 +176,26 @@ const BuyCard: React.FC<{
     </ApplyTypography>
   )
 
-  const catTitle = inst.current?.requestedCat ? inst.current.requestedCat.title : cmmc.selectedCategories?.[0]?.title
-
-  const itemsToShow = (!cmmc.hasSelection) ? undefined : 
-    allVariants ? cmmc.selectedItems : cmmc.selectedCategories[0].products as LineItem[]
-
+  const scroll = !!(itemsToShow && itemsToShow.length > scrollAfter)
   return (
-    <div className={cn('px-4 md:px-6 pt-3 pb-4 flex flex-col items-center', className)} >
+    <div className={cn(
+      'px-4 md:px-6 pt-3 pb-4 flex flex-col items-center', 
+      clx,
+      scroll ? scrollHeightClx : 'h-auto'
+    )} >
     {inst.current?.requestedNode && (<>
-      <ApplyTypography className=''>
+      <ApplyTypography className={'mb-2 ' + (scroll ? 'shrink-0' : '')}>
         <h3>{inst.current!.requestedNode.label}</h3>
         {inst.current!.requestedNode.subNodesLabel && (
-          <h6 className='!text-center font-bold text-muted mt-3 mb-2'>{inst.current!.requestedNode.subNodesLabel}</h6>
+          <h6 className='!text-center font-bold text-muted mt-3'>{inst.current!.requestedNode.subNodesLabel}</h6>
         )}
       </ApplyTypography>
       <LevelNodesWidget
         className={cn(
           'grid gap-0 ' + `grid-cols-${inst.current.requestedNode.subNodes!.length}`, 
           'border-b-2 rounded-lg border-level-3 mb-4 -mr-2 -ml-2 max-w-[460px]',
-          facetsWidgetClx  
+          (scroll ? 'shrink-0' : ''),
+          catWidgetClx  
         )} 
         mobile={mobile}
         mutator={allVariants ? 
@@ -186,25 +212,25 @@ const BuyCard: React.FC<{
           '!border-level-3'
         }
         levelNodes={inst.current.requestedNode.subNodes!}
-        show={facetsAs}
+        show={categoryTabAs}
       />
     </>)} 
     {!inst.current?.requestedNode && catTitle && (
       <TitleArea title={catTitle} clx=''/>
     )}
-    {(cmmc.currentItem) && (<ItemMedia item={cmmc.currentItem} constrainTo={{w: 200, h: 200}}/>)} 
+    {(cmmc.currentItem) && (<ItemMedia item={cmmc.currentItem} constrainTo={{w: 200, h: 200}} clx={(scroll ? 'shrink-0' : '')}/>)} 
     {itemsToShow && (
       <Selector 
         items={itemsToShow}
         selectedItemRef={cmmc}
         selectSku={selectSku}
-        clx={selClx}
-        itemClx={selItemClx}
-        soleItemClx={selSoleItemClx}
-        ext={selExt}
-        showCategoryName={allVariants}
-        showPrice={selShowPrice}
-        showQuantity={selShowQuantity}
+        {...selectorProps}
+        scrollList={scroll}
+        showCategory={selectorProps.showCategory ? 
+          selectorProps.showCategory
+          :
+          (allVariants && !inst.current?.requestedCat)
+        }
       />  
     )}
     {(cmmc.currentItem) && (
@@ -212,7 +238,7 @@ const BuyCard: React.FC<{
         size='default' 
         item={cmmc.currentItem}
         onQuantityChanged={onQuantityChanged} 
-        className={cn('min-w-[160px] mx-auto mt-4', addWidgetClx)}
+        className={cn('min-w-[160px] mx-auto mt-4', (scroll ? 'shrink-0' : ''), addWidgetClx)}
       />
     )} 
     </div >

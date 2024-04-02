@@ -28,6 +28,7 @@ const CarouselItemSelector: React.FC<ItemSelectorProps> = observer(({
   items,
   selectSku,
   selectedItemRef: itemRef,
+  scrollList, // ignored
   clx='',
   itemClx='',
   ext={
