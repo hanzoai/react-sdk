@@ -181,7 +181,7 @@ const BuyCard: React.FC<{
   const scroll = !!(itemsToShow && itemsToShow.length > scrollAfter)
   return (
     <div className={cn(
-      'px-4 md:px-6 pt-3 pb-4 flex flex-col items-center', 
+      'px-4 md:px-6 pt-3 pb-4 flex flex-col items-center min-h-[60vh]', 
       clx,
       scroll ? scrollHeightClx : 'h-auto'
     )} >

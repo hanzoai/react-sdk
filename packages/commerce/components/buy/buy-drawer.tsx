@@ -12,6 +12,8 @@ import {
 
 import { cn } from '@hanzo/ui/util'
 
+import { getUISpecFromPath } from '../../util'
+
 import BuyCard from './buy-card'
 import RadioItemSelector from '../select/radio-selector'
 import ImageItemSelector from '../select/image-selector'
@@ -41,6 +43,14 @@ const BuyDrawer: React.FC<{
     //}
   }
 
+  const spec = getUISpecFromPath(skuPath) ?? {
+    selector: 'radio',
+    allVariants: false
+  }
+
+  const selector = spec.selector === 'radio' ? RadioItemSelector :
+    (spec.selector === 'image' ? ImageItemSelector : CarouselItemSelector)
+
   return (
     <Drawer open={open} onOpenChange={setOpen} >
       <DrawerTrigger asChild className={triggerClx}>
@@ -52,15 +62,15 @@ const BuyDrawer: React.FC<{
       >
         <BuyCard 
           skuPath={skuPath} 
-          scrollAfter={8}
+          //scrollAfter={8}
           mobile={mobile} 
           onQuantityChanged={onQuantityChanged} 
           clx={cn('w-full', cardClx)}
-          selector={CarouselItemSelector}
+          selector={selector}
           selectorProps={{soleItemClx:'mb-3'}}
-          showItemMedia={false}
+          showItemMedia={spec.selector !== 'carousel'}
           categoryTabAs='label'
-          allVariants
+          allVariants={spec.allVariants}
         />
         <Button
           variant='ghost'
