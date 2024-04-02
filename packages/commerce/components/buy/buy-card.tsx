@@ -50,6 +50,7 @@ const BuyCard: React.FC<{
   allVariants?: boolean
 
   categoryTabAs?: 'image' | 'label' | 'image-and-label'
+  showItemMedia?: boolean
 
   onQuantityChanged?: (sku: string, oldV: number, newV: number) => void
   mobile?: boolean
@@ -68,6 +69,7 @@ const BuyCard: React.FC<{
     ext: {}
   },
   categoryTabAs='image-and-label', 
+  showItemMedia=true,
   allVariants=false,
   mobile=false,
   onQuantityChanged,
@@ -218,7 +220,9 @@ const BuyCard: React.FC<{
     {!inst.current?.requestedNode && catTitle && (
       <TitleArea title={catTitle} clx=''/>
     )}
-    {(cmmc.currentItem) && (<ItemMedia item={cmmc.currentItem} constrainTo={{w: 200, h: 200}} clx={(scroll ? 'shrink-0' : '')}/>)} 
+    {(cmmc.currentItem && showItemMedia) && (
+      <ItemMedia item={cmmc.currentItem} constrainTo={{w: 200, h: 200}} clx={(scroll ? 'shrink-0' : '')}/>
+    )} 
     {itemsToShow && (
       <Selector 
         items={itemsToShow}
