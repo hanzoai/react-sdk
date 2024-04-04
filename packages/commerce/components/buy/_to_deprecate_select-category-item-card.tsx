@@ -8,7 +8,7 @@ import { Skeleton } from '@hanzo/ui/primitives'
 import type { ItemSelector, LineItem } from '../../types'
 
 import AddToCartWidget from './add-to-cart-widget'
-import RadioItemSelector from '../select/radio-selector'
+import RadioItemSelector from '../select-variant/radio-selector'
 import { formatCurrencyValue } from '../../util'
 
 const SelectCategoryItemCard: React.FC<React.HTMLAttributes<HTMLDivElement> & ItemSelector & {

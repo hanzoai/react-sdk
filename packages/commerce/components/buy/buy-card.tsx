@@ -142,7 +142,9 @@ const BuyCard: React.FC<{
         (catId) => {
           if (catId && catId !== cmmc.currentItem?.categoryId) {
             const cat = cmmc.getCategory(catId)
-            cmmc.setCurrentItem(cat?.products[0].sku)
+            if (cat) { 
+              cmmc.setCurrentItem(cat.products[0].sku) 
+            }
           }
         }
       ))

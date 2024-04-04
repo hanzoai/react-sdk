@@ -1,7 +1,7 @@
 import React from 'react'
 import Image from 'next/image'
 
-import type { ProductTreeNode } from '../../types'
+import type { ProductTreeNode } from '../../../types'
 
 const ICON_SIZE = 20
 

@@ -1,7 +1,7 @@
 {
   "name": "@hanzo/commerce",
   "version": "6.1.8",
-  "description": "Library with shopping cart components.",
+  "description": "e-commerce framework.",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
     "access": "public",
@@ -31,8 +31,6 @@
     "./types": "./types/index.ts"
   },
   "dependencies": {
-    "@splinetool/react-spline": "^2.2.6",
-    "@splinetool/runtime": "^1.0.75",
     "ethers": "^6.11.1",
     "next-usequerystate": "^1.17.0",
     "react-square-web-payments-sdk": "^3.2.1",

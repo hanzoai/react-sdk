@@ -16,6 +16,7 @@ export type { default as BulletItem } from './bullet-item'
 export type { default as Icon } from './icon'
 export type { default as ImageDef } from './image-def'
 export type { default as LinkDef } from './link-def'
+export type { default as MediaStackDef } from './media-stack-def'
 export type { default as TShirtSize } from './t-shirt-size' 
 export type { default as VideoDef } from './video-def'
 

@@ -11,7 +11,7 @@ import { formatCurrencyValue } from '../../util'
 import { Icons } from '../Icons'
 
 import AddToCartWidget from './add-to-cart-widget'
-import RadioItemSelector from '../select/radio-selector'
+import RadioItemSelector from '../select-variant/radio-selector'
 
 const SelectCategoryItemPanel: React.FC<
   React.HTMLAttributes<HTMLDivElement> &   

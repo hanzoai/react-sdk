@@ -15,9 +15,9 @@ import { cn } from '@hanzo/ui/util'
 import { getUISpecFromPath } from '../../util'
 
 import BuyCard from './buy-card'
-import RadioItemSelector from '../select/radio-selector'
-import ImageItemSelector from '../select/image-selector'
-import CarouselItemSelector from '../select/carousel-selector'
+import RadioItemSelector from '../select-variant/radio-selector'
+import ImageItemSelector from '../select-variant/image-selector'
+import CarouselItemSelector from '../select-variant/carousel-selector'
 
 const BuyDrawer: React.FC<{
   skuPath: string

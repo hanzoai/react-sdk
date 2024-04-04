@@ -1,23 +1,20 @@
+'use client'
 import React from 'react'
 
 import Spline from '@splinetool/react-spline'
 
-import { Image  } from '@hanzo/ui/primitives'
-import { cn } from '@hanzo/ui/util'
+import { cn } from '../util'
+import { type Block, type VideoBlock, VideoBlockComponent } from '../blocks'
+import type { ImageDef, MediaStackDef, VideoDef } from '../types'
 
-import {
-  VideoBlockComponent,
-  type Block,
-  type VideoBlock
-} from '@hanzo/ui/blocks'
-import type { Product } from '../../types'
+import Image from './image'
 
-const ItemMedia: React.FC<{
-  item: Product
+const MediaStack: React.FC<{
+  media: MediaStackDef,
   constrainTo?: {w: number, h: number}
   clx?: string
 }> = ({
-  item: {img, video, animation},
+  media: {img, video, animation},
   constrainTo: cnst = {w: 250, h: 250},
   clx=''
 }) => {
@@ -48,4 +45,4 @@ const ItemMedia: React.FC<{
   ) // TODO: return placeholder
 }
 
-export default ItemMedia
+export default MediaStack

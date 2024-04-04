@@ -13,10 +13,10 @@ import {
   CarouselItem,
   CarouselPrevious,
   CarouselNext,
-  ApplyTypography
+  ApplyTypography,
+  MediaStack
 } from '@hanzo/ui/primitives'
 
-import ItemMedia from '../item/item-media'
 import type { ItemSelectorProps, LineItem } from '../../types'
 import { formatCurrencyValue } from '../../util'
 
@@ -95,7 +95,7 @@ const CarouselItemSelector: React.FC<ItemSelectorProps> = observer(({
       <CarouselContent>
       {items.map((item, index) => (
         <CarouselItem key={index} className={cn('p-2 flex flex-col justify-center items-center', itemClx)}>
-          <ItemMedia item={item} constrainTo={constrainTo} clx='' />
+          <MediaStack media={item} constrainTo={constrainTo} clx='' />
           {!imageOnly && (<ItemInfo item={item} clx=''/>)}
         </CarouselItem>
       ))}
