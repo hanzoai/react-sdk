@@ -1,7 +1,7 @@
 import type { ImageDef } from '@hanzo/ui/types'
 import type Product from './product'
 
-interface Category {
+interface Family {
   id: string            // LXB-AU-B
   title: string         // Minted Bar, Lux Elite Card
   titleShort?: string   // Elite
@@ -13,5 +13,5 @@ interface Category {
 }
 
 export {
-  type Category as default
+  type Family as default
 }

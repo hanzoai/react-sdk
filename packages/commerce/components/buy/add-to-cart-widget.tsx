@@ -56,7 +56,7 @@ const AddToCartWidget: React.FC<{
       items: [{
         item_id: item.sku,
         item_name: item.title,
-        item_category: item.categoryId,
+        item_category: item.familyId,
         price: item.price,
         quantity: item.quantity
       }],
@@ -93,7 +93,7 @@ const AddToCartWidget: React.FC<{
       items: [{
         item_id: item.sku,
         item_name: item.title,
-        item_category: item.categoryId,
+        item_category: item.familyId,
         price: item.price,
         quantity: item.quantity
       }],

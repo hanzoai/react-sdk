@@ -17,12 +17,12 @@ interface _ItemSelectorCompProps {
     /** List selectors will scroll.  Used internally */
   scrollList: boolean
     /** 
-     * Whether the item label includes the Category name.
+     * Whether the item label includes the Family name.
      * eg, 'Minted Bar, 1oz' vs '1oz'
      * default: true in 'allVariants' mode and false otherwise.
      * This overrides
      */
-  showCategory?: boolean
+  showFamily?: boolean
     /**
      * Show the current item quantity along with title and price.
      * default: false

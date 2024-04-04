@@ -1,5 +1,5 @@
 
-export type { default as Category } from './category'
+export type { default as Family } from './family'
 export type { default as CommerceService } from './commerce-service'
 export type { default as Product } from './product'
 export type { default as Promo } from './promo'

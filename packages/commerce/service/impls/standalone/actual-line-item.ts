@@ -11,7 +11,7 @@ import type { Product, LineItem, CommerceService } from '../../../types'
 
 interface ActualLineItemSnapshot {
   sku: string  
-  categoryId: string  // helps impl of restoreFromSnapshot
+  familyId: string  // helps impl of restoreFromSnapshot
   title: string
   price: number
   quantity: number
@@ -28,8 +28,8 @@ class ActualLineItem
   sku: string   
   fullTitle?: string
   optionLabel: string
-  categoryTitle: string
-  categoryId: string  
+  familyTitle: string
+  familyId: string  
   desc?: string
   price: number
   img?: ImageDef 
@@ -42,8 +42,8 @@ class ActualLineItem
     this.sku = prod.sku
     this.fullTitle = prod.fullTitle
     this.optionLabel = prod.optionLabel
-    this.categoryTitle = prod.categoryTitle
-    this.categoryId = prod.categoryId
+    this.familyTitle = prod.familyTitle
+    this.familyId = prod.familyId
     this.desc = prod.desc
     this.price = prod.price
     this.img = prod.img
@@ -67,7 +67,7 @@ class ActualLineItem
   }
 
   get title(): string {
-    return this.fullTitle ? this.fullTitle : (this.categoryTitle + ', ' + this.optionLabel)
+    return this.fullTitle ? this.fullTitle : (this.familyTitle + ', ' + this.optionLabel)
   }
 
   takeSnapshot = (cmmc: CommerceService): ActualLineItemSnapshot => {
@@ -75,11 +75,11 @@ class ActualLineItem
     const title = this.fullTitle ? 
       this.fullTitle 
       : 
-      ((cmmc.getCategory(this.categoryId)?.title ?? this.categoryTitle) + ', ' + this.optionLabel)
+      ((cmmc.getFamily(this.familyId)?.title ?? this.familyTitle) + ', ' + this.optionLabel)
 
     return({
       sku: this.sku,
-      categoryId: this.categoryId,
+      familyId: this.familyId,
       title,
       price: this.price,
       quantity: this.qu,
@@ -107,7 +107,7 @@ class ActualLineItem
     }
   }
 
-  inCategory(id: string): boolean {
+  inFamily(id: string): boolean {
       // TODO: will break for level one (which is ok for lux, but not generally)
     return this.sku.includes(`-${id}-`)
   }

@@ -1,6 +1,6 @@
 import { enableStaticRendering } from 'mobx-react-lite'
 
-import type { CommerceService, Category, ProductTreeNode } from '../../../types'
+import type { CommerceService, Family, ProductTreeNode } from '../../../types'
 import StandaloneService, {type StandaloneServiceOptions} from './standalone-service'
 
 import { readSnapshot, listenAndWriteSnapshots } from './localStorage'
@@ -18,7 +18,7 @@ const _log = (s: string) => {
 let instance: StandaloneService | undefined =  undefined
 
 export const getInstance = (
-  categories: Category[], 
+  families: Family[], 
   rootNode: ProductTreeNode, 
   options?: StandaloneServiceOptions
 ): CommerceService => {
@@ -30,7 +30,7 @@ export const getInstance = (
    if (typeof window === "undefined") {
     //_log("NEW INSTANCE FOR SERVER")
     return new StandaloneService(
-      categories, 
+      families, 
       rootNode, 
       options
     )
@@ -41,7 +41,7 @@ export const getInstance = (
     //_log("NEW INSTANCE FOR CLIENT")
     const snapShot = readSnapshot()
     instance = new StandaloneService(
-      categories, 
+      families, 
       rootNode, 
       options,
       snapShot

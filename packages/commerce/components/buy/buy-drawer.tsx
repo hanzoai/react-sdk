@@ -14,10 +14,12 @@ import { cn } from '@hanzo/ui/util'
 
 import { getUISpecFromPath } from '../../util'
 
-import BuyCard from './buy-card'
-import RadioItemSelector from '../select-variant/radio-selector'
-import ImageItemSelector from '../select-variant/image-selector'
-import CarouselItemSelector from '../select-variant/carousel-selector'
+//import BuyCard from './buy-card'
+import FamilyCar from '../select-family/family-carousel'
+
+import RadioItemSelector from '../select-product/radio-selector'
+import ImageItemSelector from '../select-product/image-selector'
+import CarouselItemSelector from '../select-product/carousel-selector'
 
 const BuyDrawer: React.FC<{
   skuPath: string
@@ -59,18 +61,15 @@ const BuyDrawer: React.FC<{
       <DrawerContent 
         className={cn('rounded-t-xl mt-6 pb-12 h-auto min-h-[35vh] pt-6 md:max-w-[550px] md:mx-auto', drawerClx)}
       >
-        <BuyCard 
+
+        <FamilyCar
           skuPath={skuPath} 
-          scrollAfter={spec.selector === 'carousel' ? 999 : undefined}
           mobile={mobile} 
           onQuantityChanged={onQuantityChanged} 
           clx={cn('w-full', cardClx)}
-          selector={selector}
-          selectorProps={{soleItemClx:'mb-3'}}
-          showItemMedia={spec.selector !== 'carousel'}
-          categoryTabAs='label'
-          allVariants={spec.allVariants}
+
         />
+
         <Button
           variant='ghost'
           size='icon'
@@ -86,3 +85,18 @@ const BuyDrawer: React.FC<{
 }
 
 export default BuyDrawer
+
+/*
+  <BuyCard 
+    skuPath={skuPath} 
+    scrollAfter={spec.selector === 'carousel' ? 999 : undefined}
+    mobile={mobile} 
+    onQuantityChanged={onQuantityChanged} 
+    clx={cn('w-full', cardClx)}
+    selector={selector}
+    selectorProps={{soleItemClx:'mb-3'}}
+    showItemMedia={spec.selector !== 'carousel'}
+    familyTabAs='label'
+    allVariants={spec.allVariants}
+  />
+*/

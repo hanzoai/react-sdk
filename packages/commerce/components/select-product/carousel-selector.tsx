@@ -6,7 +6,7 @@ import { observer } from 'mobx-react-lite'
 import { cn } from '@hanzo/ui/util'
 
 import {
-  type CarouselOptionsType,
+  type CarouselOptions,
   type CarouselApi,
   Carousel,
   CarouselContent,
@@ -22,8 +22,8 @@ import { formatCurrencyValue } from '../../util'
 
 interface CarouselItemSelectorPropsExt {
   constrainTo: {w: number, h: number}
-  options?: CarouselOptionsType 
-    /** Do not show Category and / or Item title and Price */
+  options?: CarouselOptions 
+    /** Do not show Family and / or Item title and Price */
   imageOnly?: boolean
 }
   
@@ -34,7 +34,7 @@ const CarouselItemSelector: React.FC<ItemSelectorProps> = observer(({
   scrollList, // ignored
   clx='',
   itemClx='',
-  showCategory=false,
+  showFamily=false,
   ext={
     options: {loop: true},
     constrainTo: {w: 250, h: 250},
@@ -84,7 +84,7 @@ const CarouselItemSelector: React.FC<ItemSelectorProps> = observer(({
     clx
   }) => (
     <ApplyTypography className={cn(clx, 'flex flex-col items-center !gap-2 [&>*]:!m-0')}>
-      {showCategory && (<h4>{item.categoryTitle}</h4>)}
+      {showFamily && (<h4>{item.familyTitle}</h4>)}
       <p>{item.optionLabel}</p>
       <p>{formatCurrencyValue(item.price)}</p>
     </ApplyTypography>

@@ -1,6 +1,6 @@
 import type { LineItem, ObsLineItemRef } from './line-item'
 import type { ProductTreeNode, SelectedPaths } from './tree-node'
-import type Category from './category'
+import type Family from './family'
 import type Promo from './promo'
 
 interface CommerceService extends ObsLineItemRef {
@@ -21,7 +21,7 @@ interface CommerceService extends ObsLineItemRef {
     /** returns the price with promo applied, of undefined if no promo or promo does not apply */
   itemPromoPrice(item: LineItem): number | undefined
    
-  getCartCategorySubtotal(categoryId: string): number
+  getFamilySubtotal(familyId: string): number
 
   createOrder(email: string, name?: string): Promise<string | undefined>
   updateOrderShippingInfo(orderId: string, shippingInfo: any): Promise<void>
@@ -32,20 +32,20 @@ interface CommerceService extends ObsLineItemRef {
      * If a level is selected as [], nothing will be selected.
      * If a level is missing (undefined), everything at that level is selected
      * 
-     * This selects one or more Category's, and all the LineItem's in them.
+     * This selects one or more Family's, and all the LineItem's in them.
      * 
-     * An empty value object selects all Category's and all LineItem's,
+     * An empty value object selects all Family's and all LineItem's,
      * */ 
-  selectPaths(value: SelectedPaths): Category[]
-  selectPath(skuPath: string): Category[] 
+  selectPaths(value: SelectedPaths): Family[]
+  selectPath(skuPath: string): Family[] 
 
   get selectedPaths(): SelectedPaths // returns a copy
   
   get selectedItems(): LineItem[]
-  get selectedCategories(): Category[] 
+  get selectedFamilies(): Family[] 
   get hasSelection(): boolean
 
-    /** Whether this path defines a Category, or if it has further levels */
+    /** Whether this path defines a Family, or if it has further levels */
   getNodeAtPath(skuPath: string): ProductTreeNode | undefined 
 
     /** 
@@ -72,7 +72,7 @@ interface CommerceService extends ObsLineItemRef {
      *  */ 
   get currentItem(): LineItem | undefined
 
-  getCategory(id: string): Category | undefined
+  getFamily(id: string): Family | undefined
 
 }
 

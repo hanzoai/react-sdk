@@ -11,7 +11,7 @@ import { computedFn } from 'mobx-utils'
 
 import type {
   CommerceService, 
-  Category, 
+  Family, 
   LineItem,
   SelectedPaths, 
   ProductTreeNode,
@@ -41,7 +41,7 @@ interface StandaloneServiceSnapshot {
 class StandaloneService 
   implements CommerceService
 {
-  private _categoryMap = new Map<string, Category>()
+  private _familyMap = new Map<string, Family>()
   private _rootNode: ProductTreeNode 
   private _selectedPaths: SelectedPaths = {}
   private _promo: Promo | null = null
@@ -50,7 +50,7 @@ class StandaloneService
   private _currentItem: ActualLineItem | undefined = undefined
 
   constructor(
-    categories: Category[],
+    families: Family[],
     rootNode: ProductTreeNode,
     options: StandaloneServiceOptions,
     serviceSnapshot?: StandaloneServiceSnapshot,
@@ -59,7 +59,7 @@ class StandaloneService
     this._rootNode = rootNode
     this._options = options
 
-    categories.forEach((c) => {
+    families.forEach((c) => {
       c.products = c.products.map((p) => { 
         if (serviceSnapshot) {
           const itemSnapshot = serviceSnapshot.items.find((is) => (is.sku === p.sku))
@@ -69,7 +69,7 @@ class StandaloneService
         }
         return new ActualLineItem(p)
       })
-      this._categoryMap.set(c.id, c)
+      this._familyMap.set(c.id, c)
     })
 
     makeObservable<
@@ -90,7 +90,7 @@ class StandaloneService
       promoAppliedCartTotal: computed,
       cartEmpty: computed,
       selectedItems: computed,
-      selectedCategories: computed, 
+      selectedFamilies: computed, 
       hasSelection: computed, 
       setCurrentItem: action,
       currentItem: computed,
@@ -102,8 +102,8 @@ class StandaloneService
     })
   }
 
-  getCategory(id: string): Category | undefined {
-    return this._categoryMap.get(id)
+  getFamily(id: string): Family | undefined {
+    return this._familyMap.get(id)
   }
 
   getNodeAtPath(skuPath: string): ProductTreeNode | undefined {
@@ -170,8 +170,8 @@ class StandaloneService
 
   get cartItems(): LineItem[] {
     let result: LineItem[] = []
-    this._categoryMap.forEach((cat) => {
-      result = [...result, ...(cat.products as LineItem[]).filter((item) => (item.isInCart))]
+    this._familyMap.forEach((fam) => {
+      result = [...result, ...(fam.products as LineItem[]).filter((item) => (item.isInCart))]
     })
     return result.sort((it1, it2) => ((it1 as ActualLineItem).timeAdded - (it2 as ActualLineItem).timeAdded))
   }
@@ -238,46 +238,33 @@ class StandaloneService
 
   setCurrentItem(skuToFind: string | undefined): boolean {
 
-    const logMe = (s: string) => {
-      //if (skuToFind?.startsWith('LXM-CR-E')) {
-        //console.log(s)
-      //}
-    }
-
     if (skuToFind === undefined || skuToFind.length === 0) {
       this._currentItem = undefined
       return true
     }
-
-    logMe("SETTING ITEM: " + skuToFind)
-
       // self calling function
     this._currentItem = ((): ActualLineItem | undefined  => {
 
-      const categoriesTried: string[] = []
-      if (this.selectedCategories && this.selectedCategories.length > 0) {
-          for (let category of this.selectedCategories) {
-          categoriesTried.push(category.id)
-          const foundItem = category.products.find((p) => (p.sku === skuToFind))
+      const familiesTried: string[] = []
+      if (this.selectedFamilies && this.selectedFamilies.length > 0) {
+          for (let family of this.selectedFamilies) {
+          familiesTried.push(family.id)
+          const foundItem = family.products.find((p) => (p.sku === skuToFind))
           if (foundItem) {
-            logMe("FOUND 1st LOOP")
             return foundItem as ActualLineItem
           }
         }
       }
-      for( const [categoryId, category] of this._categoryMap.entries()) {
-        if (categoriesTried.includes(categoryId)) continue
-        const foundItem = category.products.find((p) => (p.sku === skuToFind)) as ActualLineItem | undefined
+      for( const [familyId, family] of this._familyMap.entries()) {
+        if (familiesTried.includes(familyId)) continue
+        const foundItem = family.products.find((p) => (p.sku === skuToFind)) as ActualLineItem | undefined
         if (foundItem) {
-          logMe("FOUND 2nd LOOP")
           return foundItem as ActualLineItem
         }
       }
-      logMe("NOT FOUND")
       return undefined
     })();
 
-    logMe("CURRENT ITEM SET TO: " + this._currentItem?.sku)
     return !!this._currentItem
   }
 
@@ -290,14 +277,14 @@ class StandaloneService
     return this._currentItem
   }
 
-  selectPaths(sel: SelectedPaths): Category[] {
+  selectPaths(sel: SelectedPaths): Family[] {
     runInAction (() => {
       this._selectedPaths = this._processAndValidate(sel) 
     })
-    return this.selectedCategories
+    return this.selectedFamilies
   }
 
-  selectPath(skuPath: string): Category[] {
+  selectPath(skuPath: string): Family[] {
     const toks = skuPath.split(SEP)
     const highestLevel = toks.length - 1
     const fsv: SelectedPaths = {}
@@ -315,14 +302,14 @@ class StandaloneService
     return result
   }
 
-  get selectedCategories(): Category[] {
+  get selectedFamilies(): Family[] {
     if (Object.keys(toJS(this._selectedPaths)).length === 0) {
       // FacetsDesc have never been set or unset, so cannot evaluate them
       return []
     }
 
     return this._rootNode.subNodes!.reduce(
-      (acc: Category[], subFacet: ProductTreeNode) => (
+      (acc: Family[], subFacet: ProductTreeNode) => (
           // Pass the root token as a one member array
         this._reduceNode([this._rootNode.skuToken], acc, subFacet)   
       ), 
@@ -330,7 +317,7 @@ class StandaloneService
     )
   }
 
-  private _reduceNode(parentPath: string[], acc: Category[], node: ProductTreeNode): Category[] {
+  private _reduceNode(parentPath: string[], acc: Family[], node: ProductTreeNode): Family[] {
     const path = [...parentPath, node.skuToken] // Don't mutate original please :) 
     const level = path.length - 1
       // If there is no token array supplied for this level,
@@ -350,11 +337,11 @@ class StandaloneService
         , acc)
       }
         // Process leaf
-      const cat = this._categoryMap.get(path.join(SEP))
-      if (!cat) {
-        throw new Error("selectedCategories WTF?!" + path.join(SEP))
+      const fam = this._familyMap.get(path.join(SEP))
+      if (!fam) {
+        throw new Error("selectedFamilies WTF?!" + path.join(SEP))
       }
-      acc.push(cat)    
+      acc.push(fam)    
     }
     return acc
   }
@@ -389,16 +376,16 @@ class StandaloneService
       return []
     }
 
-    return this.selectedCategories.reduce(
-      (allProducts, cat) => ([...allProducts, ...(cat.products as LineItem[])]), [] as LineItem[])
+    return this.selectedFamilies.reduce(
+      (allProducts, fam) => ([...allProducts, ...(fam.products as LineItem[])]), [] as LineItem[])
   }
 
   get hasSelection(): boolean {
-    return this.selectedCategories.length > 0
+    return this.selectedFamilies.length > 0
   }
 
-  getCartCategorySubtotal(categoryId: string): number {
-    const c = this._categoryMap.get(categoryId)!
+  getFamilySubtotal(familyId: string): number {
+    const c = this._familyMap.get(familyId)!
     return (c.products as LineItem[]).reduce(
         // avoid floating point bs around zero
       (total, item) => (item.quantity > 0 ? total + item.price * item.quantity : total),
@@ -406,9 +393,9 @@ class StandaloneService
     )
   }
 
-  debug_getSelectedCategories = () => {
-    const spec = this.selectedCategories
-    console.log('NUM SPEC CATS: ', spec.length) 
+  debug_getSelectedFamilies = () => {
+    const spec = this.selectedFamilies
+    console.log('NUM SEL FAMS: ', spec.length) 
     if (spec.length > 0) {
       console.log('IDS: ', (spec.map((c) => (c.id))).join(', ')) 
     }

@@ -5,8 +5,8 @@ interface Product extends MediaStackDef {
   sku: string   // human visible on orders etc.
   fullTitle?: string
   optionLabel: string
-  categoryId: string  // skuPath, eg LXB-AU-B
-  categoryTitle: string
+  familyId: string  // skuPath, eg LXB-AU-B
+  familyTitle: string
   desc?: string
   price: number
 }

@@ -20,14 +20,14 @@ const RadioItemSelector: React.FC<ItemSelectorProps> = observer(({
   clx='',
   itemClx='',
   soleItemClx='',
-  showCategory=false,
+  showFamily=false,
   showQuantity=false,
   scrollList=false
 }) => {
 
   const LabelText: React.FC<{item: LineItem}> = ({item}) => (
-    (showCategory ? (item.categoryTitle + ', ' + item.optionLabel) : item.optionLabel) + 
-    (showCategory ? ': ' : ', ') + formatCurrencyValue(item.price)
+    (showFamily ? (item.familyTitle + ', ' + item.optionLabel) : item.optionLabel) + 
+    (showFamily ? ': ' : ', ') + formatCurrencyValue(item.price)
   )
 
   const ItemAndPrice: React.FC<{

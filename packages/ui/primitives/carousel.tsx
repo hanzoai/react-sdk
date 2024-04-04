@@ -228,7 +228,7 @@ CarouselNext.displayName = 'CarouselNext'
 
 export {
   type CarouselApi,
-  type EmblaOptionsType as CarouselOptionsType,
+  type CarouselOptions,
   Carousel,
   CarouselContent,
   CarouselItem,

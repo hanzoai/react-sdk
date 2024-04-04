@@ -8,10 +8,10 @@ import { Skeleton } from '@hanzo/ui/primitives'
 import type { ItemSelector, LineItem } from '../../types'
 
 import AddToCartWidget from './add-to-cart-widget'
-import RadioItemSelector from '../select-variant/radio-selector'
+import RadioItemSelector from '../select-product/radio-selector'
 import { formatCurrencyValue } from '../../util'
 
-const SelectCategoryItemCard: React.FC<React.HTMLAttributes<HTMLDivElement> & ItemSelector & {
+const SelectFamilyItemCard: React.FC<React.HTMLAttributes<HTMLDivElement> & ItemSelector & {
   isLoading?: boolean
   mobile?: boolean
   title?: string
@@ -108,4 +108,4 @@ const SelectCategoryItemCard: React.FC<React.HTMLAttributes<HTMLDivElement> & It
   )
 }
 
-export default SelectCategoryItemCard
+export default SelectFamilyItemCard
