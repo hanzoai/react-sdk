@@ -1,4 +1,5 @@
 import type { BuyUISpec } from '../types'
+import sep from '../service/sep'
 
 const map = new Map<string, BuyUISpec>([
   ['LXM_AU', {
@@ -29,6 +30,6 @@ const map = new Map<string, BuyUISpec>([
 ])
 
 export default (skuPath: string): BuyUISpec | undefined => {
-  const key = skuPath.split('-').slice(0, 2).join('-')
+  const key = skuPath.split(sep.tok).slice(0, 2).join(sep.tok)
   return map.get(key)
 }

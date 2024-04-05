@@ -25,8 +25,7 @@ import {
 } from './orders'
 
 import ActualLineItem, { type ActualLineItemSnapshot } from './actual-line-item'
-
-const SEP = '-'
+import sep from '../../sep'
 
 type StandaloneServiceOptions = {
   levelZeroPrefix?: string
@@ -107,7 +106,7 @@ class StandaloneService
   }
 
   getNodeAtPath(skuPath: string): ProductTreeNode | undefined {
-    const toks = skuPath.split(SEP)
+    const toks = skuPath.split(sep.tok)
     let level = 1
     let desc: ProductTreeNode | undefined = this._rootNode
     do {
@@ -285,7 +284,7 @@ class StandaloneService
   }
 
   selectPath(skuPath: string): Family[] {
-    const toks = skuPath.split(SEP)
+    const toks = skuPath.split(sep.tok)
     const highestLevel = toks.length - 1
     const fsv: SelectedPaths = {}
     for (let level = 1; level <= highestLevel; level++ ) {
@@ -337,9 +336,9 @@ class StandaloneService
         , acc)
       }
         // Process leaf
-      const fam = this._familyMap.get(path.join(SEP))
+      const fam = this._familyMap.get(path.join(sep.tok))
       if (!fam) {
-        throw new Error("selectedFamilies WTF?!" + path.join(SEP))
+        throw new Error("selectedFamilies WTF?!" + path.join(sep.tok))
       }
       acc.push(fam)    
     }

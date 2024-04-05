@@ -7,7 +7,6 @@ import { cn } from '@hanzo/ui/util'
 import { ApplyTypography, MediaStack } from '@hanzo/ui/primitives'
 
 import type { 
-  SelectedPaths, 
   ItemSelectorProps, 
   ItemSelectorCompProps,
   LineItem, 
@@ -16,6 +15,7 @@ import type {
 } from '../../types'
 
 import { useCommerce } from '../../service/context'
+import * as pathUtils from '../../service/path-utils'
 import { getFacetValuesMutator, ObsStringMutator } from '../../util'
 
 import LevelNodesWidget from '../select-family/level-nodes-widget'
@@ -79,7 +79,7 @@ const BuyCard: React.FC<{
     level: number,
     requestedFamily : Family | undefined
     requestedNode: ProductTreeNode | undefined
-    currentFamily: ObsStringMutator
+    currentFamTokenMutator: ObsStringMutator
     disposers: IReactionDisposer[]
   } | undefined>(undefined)
 
@@ -89,15 +89,12 @@ const BuyCard: React.FC<{
     let requestedFamily = cmmc.getFamily(skuPath) 
     let requestedNode = requestedFamily ? undefined : cmmc.getNodeAtPath(skuPath)
     let initialFamily = undefined
-    const toks = skuPath.split('-')
-    const level = toks.length - 1
+
+    const { paths, level } = pathUtils.getSelectedPaths(skuPath)
+
     if (level === 0) {
       throw new Error('BuyCard.useEffect(): must specify at least at least one Level in skuPath!') 
     }
-    const paths: SelectedPaths = {}
-    for (let l = 1; l <= level; l++ ) {
-      paths[l] = [toks[l]]   
-    } 
     if (requestedFamily) { 
       if (allVariants && level >= 2) {
           // select all siblings of requestedFamily.
@@ -105,7 +102,7 @@ const BuyCard: React.FC<{
         delete paths[level]
         initialFamily = requestedFamily
         requestedFamily = undefined
-        requestedNode = cmmc.getNodeAtPath(toks.slice(0, -1).join('-'))
+        requestedNode = cmmc.getNodeAtPath(pathUtils.getParentPath(skuPath))
       }
     }
     else {
@@ -122,13 +119,13 @@ const BuyCard: React.FC<{
     const selectedFams = cmmc.selectPaths(paths)
     initialFamily = initialFamily ? initialFamily : (requestedFamily ? requestedFamily : selectedFams[0])
     cmmc.setCurrentItem(initialFamily.products[0].sku)
-    const currentFamily = new ObsStringMutator(initialFamily!.id.split('-').pop()!)
+    const currentFamTokenMutator = new ObsStringMutator(pathUtils.lastToken(initialFamily!.id))
 
     inst.current = {
       level,
       requestedFamily,
       requestedNode,
-      currentFamily,
+      currentFamTokenMutator,
       disposers: []
     }
 
@@ -156,8 +153,8 @@ const BuyCard: React.FC<{
   }, [])
 
   const setFamilyPath = (pathValue: string | null) => {
-    if (inst.current?.currentFamily.get() !== pathValue) {
-      inst.current?.currentFamily.set(pathValue) 
+    if (inst.current?.currentFamTokenMutator.get() !== pathValue) {
+      inst.current?.currentFamTokenMutator.set(pathValue) 
     }
     const found = cmmc.selectedItems.find((item) => (item.familyId.endsWith(pathValue!)))
     if (found) { 
@@ -167,9 +164,9 @@ const BuyCard: React.FC<{
 
   const selectSku = (sku: string) => {
     cmmc.setCurrentItem(sku)
-    const pathValue = cmmc.currentItem?.familyId.split('-').pop()!
-    if (pathValue !== inst.current?.currentFamily.get()) {
-      inst.current?.currentFamily.set(pathValue) 
+    const pathValue = pathUtils.lastToken(cmmc.currentItem!.familyId)
+    if (pathValue !== inst.current?.currentFamTokenMutator.get()) {
+      inst.current?.currentFamTokenMutator.set(pathValue) 
     }
   }
 
@@ -218,7 +215,7 @@ const BuyCard: React.FC<{
         mobile={mobile}
         mutator={allVariants ? 
           {
-            get: () => (inst.current!.currentFamily.s),
+            get: () => (inst.current!.currentFamTokenMutator.s),
             set: setFamilyPath
           }
           : 

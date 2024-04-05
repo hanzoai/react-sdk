@@ -4,6 +4,7 @@ import { reaction, type IReactionDisposer } from 'mobx'
 import { observer } from 'mobx-react-lite'
 
 import { cn } from '@hanzo/ui/util'
+import { ApplyTypography, MediaStack } from '@hanzo/ui/primitives'
 
 import type { 
   SelectedPaths, 
@@ -16,9 +17,9 @@ import type {
 
 import { useCommerce } from '../../service/context'
 import { ObsStringMutator } from '../../util'
+import * as pathUtils from '../../service/path-utils'
 
 import AddToCartWidget from './add-to-cart-widget'
-import { ApplyTypography, MediaStack } from '@hanzo/ui/primitives'
 
 const CarouselBuyCard: React.FC<{
   skuPath: string
@@ -86,15 +87,11 @@ const CarouselBuyCard: React.FC<{
     let reqFamily = cmmc.getFamily(skuPath) 
     let parentNode = reqFamily ? undefined : cmmc.getNodeAtPath(skuPath)
     let initialFamily = undefined
-    const toks = skuPath.split('-')
-    const level = toks.length - 1
+    const { paths, level } = pathUtils.getSelectedPaths(skuPath)
+
     if (level === 0) {
       throw new Error('BuyCard.useEffect(): must specify at least at least one Level in skuPath!') 
     }
-    const paths: SelectedPaths = {}
-    for (let l = 1; l <= level; l++ ) {
-      paths[l] = [toks[l]]   
-    } 
     if (reqFamily) { 
       if (allVariants && level >= 2) {
           // select all siblings of reqFamily.
@@ -102,7 +99,7 @@ const CarouselBuyCard: React.FC<{
         delete paths[level]
         initialFamily = reqFamily
         reqFamily = undefined
-        parentNode = cmmc.getNodeAtPath(toks.slice(0, -1).join('-'))
+        parentNode = cmmc.getNodeAtPath(pathUtils.getParentPath(skuPath))
       }
     }
     else {
@@ -119,7 +116,8 @@ const CarouselBuyCard: React.FC<{
     const selFamilies = cmmc.selectPaths(paths)
     initialFamily = initialFamily ? initialFamily : (reqFamily ? reqFamily : selFamilies[0])
     cmmc.setCurrentItem(initialFamily.products[0].sku)
-    const currentFamily = new ObsStringMutator(initialFamily!.id.split('-').pop()!)
+      // TODO
+    const currentFamily = new ObsStringMutator(pathUtils.lastToken(initialFamily!.id))
 
     inst.current = {
       level,
@@ -160,7 +158,8 @@ const CarouselBuyCard: React.FC<{
 
   const selectSku = (sku: string) => {
     cmmc.setCurrentItem(sku)
-    const pathValue = cmmc.currentItem?.familyId.split('-').pop()!
+      // TODO
+    const pathValue = pathUtils.lastToken(cmmc.currentItem!.familyId)
   }
 
   const famTitle = inst.current?.reqFamily ? inst.current.reqFamily.title : cmmc.selectedFamilies?.[0]?.title

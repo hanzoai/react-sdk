@@ -2,6 +2,7 @@ import type { LineItem, ObsLineItemRef } from './line-item'
 import type { ProductTreeNode, SelectedPaths } from './tree-node'
 import type Family from './family'
 import type Promo from './promo'
+import type { TokenSeparators } from '.'
 
 interface CommerceService extends ObsLineItemRef {
 
@@ -39,6 +40,14 @@ interface CommerceService extends ObsLineItemRef {
   selectPaths(value: SelectedPaths): Family[]
   selectPath(skuPath: string): Family[] 
 
+/*
+  peekPath(skuPath: string): {
+    family: Family | undefined
+    siblingFamilies: Family[] | undefined
+    categoryNode: ProductTreeNode | undefined
+    isSku: boolean
+  } 
+*/
   get selectedPaths(): SelectedPaths // returns a copy
   
   get selectedItems(): LineItem[]
@@ -75,6 +84,7 @@ interface CommerceService extends ObsLineItemRef {
   getFamily(id: string): Family | undefined
 
 }
+
 
 export {
   type CommerceService as default

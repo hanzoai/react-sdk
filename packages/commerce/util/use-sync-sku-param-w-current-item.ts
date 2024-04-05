@@ -10,6 +10,7 @@ import {
 
 import { useCommerce } from '../service/context'
 import type { SelectedPaths } from '../types'
+import sep from '../service/sep'
 
 const PLEASE_SELECT_FACETS = 'Please select an option from each group.'
 
@@ -54,7 +55,7 @@ const useSyncSkuParamWithCurrentItem = (
   useEffect(() => {
     
     const setCurrentFamilyFromSku = (sku: string) => {
-      const toks: string[] = sku.split('-')
+      const toks: string[] = sku.split(sep.tok)
       const fv: SelectedPaths = {}
         // TODO: confirm that extra trailing nonsense tokens won't break selectPaths()
       for (let i = 1; i < familyLevel; i++) {
