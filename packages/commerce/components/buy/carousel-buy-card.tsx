@@ -12,7 +12,7 @@ import type {
   ItemSelectorCompProps,
   LineItem, 
   Family, 
-  ProductTreeNode, 
+  CategoryNode, 
 } from '../../types'
 
 import { useCommerce } from '../../service/context'
@@ -77,7 +77,7 @@ const CarouselBuyCard: React.FC<{
   const inst = useRef<{
     level: number,
     reqFamily : Family | undefined
-    parentNode: ProductTreeNode | undefined
+    parentNode: CategoryNode | undefined
     disposers: IReactionDisposer[]
   } | undefined>(undefined)
 

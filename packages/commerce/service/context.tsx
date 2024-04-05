@@ -9,7 +9,7 @@ enableStaticRendering(typeof window === "undefined")
 import type CommerceService from '../types/commerce-service'
 import type { ServiceOptions } from '..'
 import getServiceSingleton from './impls'
-import type { Family, ProductTreeNode } from '../types'
+import type { Family, CategoryNode } from '../types'
 
 const CommerceServiceContext = createContext<CommerceService | undefined>(undefined)
 
@@ -20,7 +20,7 @@ const useCommerce = (): CommerceService => {
 
 const CommerceServiceProvider: React.FC<PropsWithChildren & {
   productsByFamily: Family[]
-  rootNode: ProductTreeNode
+  rootNode: CategoryNode
   options?: ServiceOptions
 }> = ({ 
   children,

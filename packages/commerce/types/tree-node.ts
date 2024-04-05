@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react'
 
-interface ProductTreeNode {
+interface CategoryNode {
   skuToken: string             // a token in the sku
   label: string
   img? : string | ReactNode  // icon is required 
@@ -12,13 +12,13 @@ interface ProductTreeNode {
    * refering to membership 'levels' ('black', 'elite', etc)
   */
   subNodesLabel?: string   
-  subNodes?: ProductTreeNode[]
+  subNodes?: CategoryNode[]
 }
 
   // Which facets tokens are 'on' at each level
 type SelectedPaths = Record<number, string[]>
 
 export type {
-  ProductTreeNode,
+  CategoryNode,
   SelectedPaths
 }

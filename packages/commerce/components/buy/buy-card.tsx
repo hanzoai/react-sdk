@@ -11,7 +11,7 @@ import type {
   ItemSelectorCompProps,
   LineItem, 
   Family, 
-  ProductTreeNode, 
+  CategoryNode, 
 } from '../../types'
 
 import { useCommerce } from '../../service/context'
@@ -78,7 +78,7 @@ const BuyCard: React.FC<{
   const inst = useRef<{
     level: number,
     requestedFamily : Family | undefined
-    requestedNode: ProductTreeNode | undefined
+    requestedNode: CategoryNode | undefined
     currentFamTokenMutator: ObsStringMutator
     disposers: IReactionDisposer[]
   } | undefined>(undefined)

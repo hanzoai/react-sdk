@@ -14,7 +14,7 @@ import type {
   Family, 
   LineItem,
   SelectedPaths, 
-  ProductTreeNode,
+  CategoryNode,
   Promo
 } from '../../../types'
 
@@ -41,7 +41,7 @@ class StandaloneService
   implements CommerceService
 {
   private _familyMap = new Map<string, Family>()
-  private _rootNode: ProductTreeNode 
+  private _rootNode: CategoryNode 
   private _selectedPaths: SelectedPaths = {}
   private _promo: Promo | null = null
 
@@ -50,7 +50,7 @@ class StandaloneService
 
   constructor(
     families: Family[],
-    rootNode: ProductTreeNode,
+    rootNode: CategoryNode,
     options: StandaloneServiceOptions,
     serviceSnapshot?: StandaloneServiceSnapshot,
   ) {
@@ -105,44 +105,44 @@ class StandaloneService
     return this._familyMap.get(id)
   }
 
-  getNodeAtPath(skuPath: string): ProductTreeNode | undefined {
+  getNodeAtPath(skuPath: string): CategoryNode | undefined {
     const toks = skuPath.split(sep.tok)
     let level = 1
-    let desc: ProductTreeNode | undefined = this._rootNode
+    let node: CategoryNode | undefined = this._rootNode
     do {
-      desc = desc!.subNodes?.find((vf) => (vf.skuToken === toks[level])) 
+      node = node!.subNodes?.find((sn) => (sn.skuToken === toks[level])) 
       level++
     }
-    while (desc && (level < toks.length))
-    return level === toks.length ? desc : undefined 
+    while (node && (level < toks.length))
+    return level === toks.length ? node : undefined 
   } 
 
-  getSelectedNodesAtLevel = computedFn((level: number): ProductTreeNode[] | undefined => {
+  getSelectedNodesAtLevel = computedFn((level: number): CategoryNode[] | undefined => {
 
     let lvl = 1
-    let valuesAtLevel: ProductTreeNode[] | undefined  = this._rootNode.subNodes
+    let nodesAtLevel: CategoryNode[] | undefined  = this._rootNode.subNodes
 
     do {
-      let selectedAtLevel: ProductTreeNode[] | undefined = undefined
+      let selectedAtLevel: CategoryNode[] | undefined = undefined
         // If not specified, assume all
       if (lvl in this._selectedPaths) {
-        selectedAtLevel = valuesAtLevel!.filter((fv) => (this._selectedPaths[lvl].includes(fv.skuToken))) 
+        selectedAtLevel = nodesAtLevel!.filter((n) => (this._selectedPaths[lvl].includes(n.skuToken))) 
       }
       else {
-        selectedAtLevel = valuesAtLevel 
+        selectedAtLevel = nodesAtLevel 
       }
-      let allSubsOfSelected: ProductTreeNode[] = []
-      selectedAtLevel?.forEach((fvd: ProductTreeNode) => {
-        if (fvd.subNodes) {
-          allSubsOfSelected = [...allSubsOfSelected, ...fvd.subNodes] 
+      let allSubsOfSelected: CategoryNode[] = []
+      selectedAtLevel?.forEach((n: CategoryNode) => {
+        if (n.subNodes) {
+          allSubsOfSelected = [...allSubsOfSelected, ...n.subNodes] 
         }  
       })
 
-      valuesAtLevel = allSubsOfSelected
+      nodesAtLevel = allSubsOfSelected
       lvl++
-    } while (valuesAtLevel.length > 0 && lvl <= level)
+    } while (nodesAtLevel.length > 0 && lvl <= level)
 
-    return (valuesAtLevel.length > 0 && ((lvl - 1) === level)) ? valuesAtLevel : undefined
+    return (nodesAtLevel.length > 0 && ((lvl - 1) === level)) ? nodesAtLevel : undefined
   })
 
 
@@ -308,7 +308,7 @@ class StandaloneService
     }
 
     return this._rootNode.subNodes!.reduce(
-      (acc: Family[], subFacet: ProductTreeNode) => (
+      (acc: Family[], subFacet: CategoryNode) => (
           // Pass the root token as a one member array
         this._reduceNode([this._rootNode.skuToken], acc, subFacet)   
       ), 
@@ -316,7 +316,7 @@ class StandaloneService
     )
   }
 
-  private _reduceNode(parentPath: string[], acc: Family[], node: ProductTreeNode): Family[] {
+  private _reduceNode(parentPath: string[], acc: Family[], node: CategoryNode): Family[] {
     const path = [...parentPath, node.skuToken] // Don't mutate original please :) 
     const level = path.length - 1
       // If there is no token array supplied for this level,

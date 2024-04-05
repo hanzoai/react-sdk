@@ -1,5 +1,5 @@
 import type { LineItem, ObsLineItemRef } from './line-item'
-import type { ProductTreeNode, SelectedPaths } from './tree-node'
+import type { CategoryNode, SelectedPaths } from './tree-node'
 import type Family from './family'
 import type Promo from './promo'
 import type { TokenSeparators } from '.'
@@ -44,7 +44,7 @@ interface CommerceService extends ObsLineItemRef {
   peekPath(skuPath: string): {
     family: Family | undefined
     siblingFamilies: Family[] | undefined
-    categoryNode: ProductTreeNode | undefined
+    categoryNode: CategoryNode | undefined
     isSku: boolean
   } 
 */
@@ -55,14 +55,14 @@ interface CommerceService extends ObsLineItemRef {
   get hasSelection(): boolean
 
     /** Whether this path defines a Family, or if it has further levels */
-  getNodeAtPath(skuPath: string): ProductTreeNode | undefined 
+  getNodeAtPath(skuPath: string): CategoryNode | undefined 
 
     /** 
      * Who are the subnodes selected at 'level'? 
      * If more than one value is selected at 'level', 
-     * the returned ProductTreeNode[] may represent multiple sets. 
+     * the returned CategoryNode[] may represent multiple sets. 
      * */ 
-  getSelectedNodesAtLevel(level: number): ProductTreeNode[] | undefined 
+  getSelectedNodesAtLevel(level: number): CategoryNode[] | undefined 
 
       /**
      * For convenience, so widgets can share state.

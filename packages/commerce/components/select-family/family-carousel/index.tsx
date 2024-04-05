@@ -17,7 +17,7 @@ import {
   MediaStack
 } from '@hanzo/ui/primitives'
 
-import type { Family, LineItem, ProductTreeNode } from '../../../types'
+import type { Family, LineItem, CategoryNode } from '../../../types'
 import { formatCurrencyValue } from '../../../util'
 
 

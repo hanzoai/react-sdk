@@ -1,6 +1,6 @@
 import { enableStaticRendering } from 'mobx-react-lite'
 
-import type { CommerceService, Family, ProductTreeNode } from '../../../types'
+import type { CommerceService, Family, CategoryNode } from '../../../types'
 import StandaloneService, {type StandaloneServiceOptions} from './standalone-service'
 
 import { readSnapshot, listenAndWriteSnapshots } from './localStorage'
@@ -19,7 +19,7 @@ let instance: StandaloneService | undefined =  undefined
 
 export const getInstance = (
   families: Family[], 
-  rootNode: ProductTreeNode, 
+  rootNode: CategoryNode, 
   options?: StandaloneServiceOptions
 ): CommerceService => {
 
