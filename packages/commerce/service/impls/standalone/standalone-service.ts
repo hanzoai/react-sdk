@@ -37,6 +37,15 @@ interface StandaloneServiceSnapshot {
   items: ActualLineItemSnapshot[]  
 }
 
+const dumpNode = (node: CategoryNode, level: number = 0): void => {
+  const spacers: string[] = []
+  for (let i = 0; i < level; i++) {
+    spacers.push('----')
+  }
+  console.log("NODE:" + spacers.join(''), node.skuToken)
+  node.subNodes?.forEach((sn) => {dumpNode(sn, level + 1)})
+}
+
 class StandaloneService 
   implements CommerceService
 {
@@ -58,8 +67,8 @@ class StandaloneService
     this._rootNode = rootNode
     this._options = options
 
-    families.forEach((c) => {
-      c.products = c.products.map((p) => { 
+    families.forEach((fam) => {
+      fam.products = fam.products.map((p) => { 
         if (serviceSnapshot) {
           const itemSnapshot = serviceSnapshot.items.find((is) => (is.sku === p.sku))
           if (itemSnapshot) {
@@ -68,7 +77,7 @@ class StandaloneService
         }
         return new ActualLineItem(p)
       })
-      this._familyMap.set(c.id, c)
+      this._familyMap.set(fam.id, fam)
     })
 
     makeObservable<

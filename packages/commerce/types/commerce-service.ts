@@ -1,8 +1,7 @@
 import type { LineItem, ObsLineItemRef } from './line-item'
-import type { CategoryNode, SelectedPaths } from './tree-node'
+import type { CategoryNode, SelectedPaths } from './category-node'
 import type Family from './family'
 import type Promo from './promo'
-import type { TokenSeparators } from '.'
 
 interface CommerceService extends ObsLineItemRef {
 
@@ -48,6 +47,7 @@ interface CommerceService extends ObsLineItemRef {
     isSku: boolean
   } 
 */
+
   get selectedPaths(): SelectedPaths // returns a copy
   
   get selectedItems(): LineItem[]
