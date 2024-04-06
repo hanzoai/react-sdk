@@ -8,11 +8,10 @@ enableStaticRendering(typeof window === "undefined")
 
 import type CommerceService from '../types/commerce-service'
 import type { ServiceOptions } from '..'
-import getServiceSingleton from './impls'
+import getInstance from './get-instance'
 import type { Family, CategoryNode } from '../types'
 
 const CommerceServiceContext = createContext<CommerceService | undefined>(undefined)
-
 
 const useCommerce = (): CommerceService => {
   return useContext(CommerceServiceContext) as CommerceService
@@ -30,7 +29,7 @@ const CommerceServiceProvider: React.FC<PropsWithChildren & {
 }) => {
 
     // TODO: Inject Promo fixture here
-  const serviceRef = useRef<CommerceService>(getServiceSingleton(productsByFamily, rootNode, options))
+  const serviceRef = useRef<CommerceService>(getInstance(productsByFamily, rootNode, options))
   return (
     <CommerceServiceContext.Provider value={serviceRef.current}>
       {children}

@@ -12,7 +12,7 @@ import {
 
 import { cn } from '@hanzo/ui/util'
 
-import { getUISpecFromPath } from '../../util'
+import { getSelectionUISpecifier } from '../../util'
 
 //import BuyCard from './buy-card'
 import FamilyCar from '../select-family/family-carousel'
@@ -45,14 +45,12 @@ const BuyDrawer: React.FC<{
     //}
   }
 
-  const spec = getUISpecFromPath(skuPath) ?? {
-    selector: 'radio',
-    allVariants: false
-  }
+  const spec = getSelectionUISpecifier(skuPath) 
 
+/*
   const selector = spec.selector === 'radio' ? RadioItemSelector :
     (spec.selector === 'image' ? ImageItemSelector : CarouselItemSelector)
-
+*/
   return (
     <Drawer open={open} onOpenChange={setOpen} >
       <DrawerTrigger asChild className={triggerClx}>

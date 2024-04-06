@@ -30,7 +30,6 @@ import { getParentPath } from '../../../service/path-utils'
 import sep from '../../sep'
 
 type StandaloneServiceOptions = {
-  levelZeroPrefix?: string
   dbName: string
   ordersTable: string
 }
@@ -39,14 +38,6 @@ interface StandaloneServiceSnapshot {
   items: ActualLineItemSnapshot[]  
 }
 
-const dumpNode = (node: CategoryNode, level: number = 0): void => {
-  const spacers: string[] = []
-  for (let i = 0; i < level; i++) {
-    spacers.push('----')
-  }
-  console.log("NODE:" + spacers.join(''), node.skuToken)
-  node.subNodes?.forEach((sn) => {dumpNode(sn, level + 1)})
-}
 
 class StandaloneService 
   implements CommerceService
@@ -480,13 +471,6 @@ class StandaloneService
     )
   }
 
-  debug_getSelectedFamilies = () => {
-    const spec = this.selectedFamilies
-    console.log('NUM SEL FAMS: ', spec.length) 
-    if (spec.length > 0) {
-      console.log('IDS: ', (spec.map((c) => (c.id))).join(', ')) 
-    }
-  }
 }
 
 export {

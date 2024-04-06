@@ -62,4 +62,4 @@ export { default as useSyncSkuParamWithCurrentItem } from './use-sync-sku-param-
 export { default as processSquareCardPayment } from './square-payment'
 export { default as ObsStringMutator } from './obs-string-mutator'
 
-export { default as getUISpecFromPath } from './buy-ui-conf'
+export * from './selection-ui-specifiers'
