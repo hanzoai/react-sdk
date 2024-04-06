@@ -19,8 +19,7 @@ interface _ItemSelectorCompProps {
     /** 
      * Whether the item label includes the Family name.
      * eg, 'Minted Bar, 1oz' vs '1oz'
-     * default: true in 'allVariants' mode and false otherwise.
-     * This overrides
+     * default: false.
      */
   showFamily?: boolean
     /**

@@ -41,10 +41,6 @@ interface CommerceService extends ObsLineItemRef {
   selectPath(skuPath: string): Family[] 
 
     /** 
-     * 'non-terminal': 
-     *    node is node at path
-     *    family is undefined
-     *    families is undefined
      * 'terminal': 
      *    node is node at path,
      *    family is node is node at path (this node), 
@@ -57,6 +53,10 @@ interface CommerceService extends ObsLineItemRef {
      *    node is parent of this family
      *    family is this family
      *    families is this family and siblings
+     * 'non-terminal': 
+     *    node is node at path
+     *    family is undefined
+     *    families is undefined
      * 'non-node': all undefined
     */
   peekAtNode(skuPath: string): {

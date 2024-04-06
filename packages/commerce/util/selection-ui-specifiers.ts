@@ -6,18 +6,24 @@ const DEFAULT = {
     family: 'carousel',
     inSlide: 'buttons'
   },
-  justVariant: 'carousel'
+  singleFamily: 'carousel'
 } satisfies SelectionUISpecifier
 
 const map = new Map<string, SelectionUISpecifier>()
 
   // key: first two tokens of path
 export const initSelectionUI = (v: Record<string, SelectionUISpecifier>) => {
-  if (map.size > 0) {return}
+  
+  console.log("INIT")
+    // Might have multiple calls client and server side
+  if (map.size > 0) {
+    map.clear()
+  }
 
   for (let [key, value] of Object.entries(v)) {
     map.set(key, value)
   }
+  console.log("INIT MAP: ", Array.from(map.keys()))
 }
 
 export const getSelectionUISpecifier = (skuPath: string): SelectionUISpecifier => {

@@ -12,14 +12,9 @@ import {
 
 import { cn } from '@hanzo/ui/util'
 
-import { getSelectionUISpecifier } from '../../util'
-
 //import BuyCard from './buy-card'
-import FamilyCar from '../select-family/family-carousel'
 
-import RadioItemSelector from '../select-product/radio-selector'
-import ImageItemSelector from '../select-product/image-selector'
-import CarouselItemSelector from '../select-product/carousel-selector'
+import CarouselBuyCard from './carousel-buy-card'
 
 const BuyDrawer: React.FC<{
   skuPath: string
@@ -39,18 +34,6 @@ const BuyDrawer: React.FC<{
 
   const [open, setOpen] = useState<boolean>(false)
 
-  const onQuantityChanged = (sku: string, oldV: number, newV: number) => {
-    //if (oldV === 0 && newV === 1) {
-    //  setTimeout(() => {setOpen(false)}, 150)
-    //}
-  }
-
-  const spec = getSelectionUISpecifier(skuPath) 
-
-/*
-  const selector = spec.selector === 'radio' ? RadioItemSelector :
-    (spec.selector === 'image' ? ImageItemSelector : CarouselItemSelector)
-*/
   return (
     <Drawer open={open} onOpenChange={setOpen} >
       <DrawerTrigger asChild className={triggerClx}>
@@ -59,13 +42,10 @@ const BuyDrawer: React.FC<{
       <DrawerContent 
         className={cn('rounded-t-xl mt-6 pb-12 h-auto min-h-[35vh] pt-6 md:max-w-[550px] md:mx-auto', drawerClx)}
       >
-
-        <FamilyCar
+        <CarouselBuyCard 
           skuPath={skuPath} 
           mobile={mobile} 
-          onQuantityChanged={onQuantityChanged} 
           clx={cn('w-full', cardClx)}
-
         />
 
         <Button
@@ -85,6 +65,16 @@ const BuyDrawer: React.FC<{
 export default BuyDrawer
 
 /*
+
+        <FamilyCar
+          skuPath={skuPath} 
+          mobile={mobile} 
+          onQuantityChanged={onQuantityChanged} 
+          clx={cn('w-full', cardClx)}
+
+        />
+
+
   <BuyCard 
     skuPath={skuPath} 
     scrollAfter={spec.selector === 'carousel' ? 999 : undefined}

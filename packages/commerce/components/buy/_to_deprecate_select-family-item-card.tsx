@@ -8,7 +8,7 @@ import { Skeleton } from '@hanzo/ui/primitives'
 import type { ItemSelector, LineItem } from '../../types'
 
 import AddToCartWidget from './add-to-cart-widget'
-import RadioItemSelector from '../select-product/radio-selector'
+import { ButtonItemSelector } from '../item-selector'
 import { formatCurrencyValue } from '../../util'
 
 const SelectFamilyItemCard: React.FC<React.HTMLAttributes<HTMLDivElement> & ItemSelector & {
@@ -50,7 +50,7 @@ const SelectFamilyItemCard: React.FC<React.HTMLAttributes<HTMLDivElement> & Item
         className
       )}>
         {title && (<div className={'h-[1px] bg-muted-3 ' + (mobilePicker ?  'w-pr-55' :  'w-pr-60') } /> )}
-        <RadioItemSelector 
+        <ButtonItemSelector 
           items={items}
           selectedItemRef={selItemRef}  
           selectSku={selectSku}

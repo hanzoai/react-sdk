@@ -13,7 +13,7 @@ import { cn } from '@hanzo/ui/util'
 import type { ItemSelectorProps, LineItem } from '../../types'
 import { formatCurrencyValue } from '../../util'
 
-const RadioItemSelector: React.FC<ItemSelectorProps> = observer(({
+const ButtonItemSelector: React.FC<ItemSelectorProps> = observer(({
   items,
   selectedItemRef: itemRef,
   selectSku,
@@ -122,4 +122,4 @@ const RadioItemSelector: React.FC<ItemSelectorProps> = observer(({
   )
 })
 
-export default RadioItemSelector
+export default ButtonItemSelector

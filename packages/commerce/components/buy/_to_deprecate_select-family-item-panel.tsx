@@ -11,7 +11,7 @@ import { formatCurrencyValue } from '../../util'
 import { Icons } from '../Icons'
 
 import AddToCartWidget from './add-to-cart-widget'
-import RadioItemSelector from '../select-product/radio-selector'
+import { ButtonItemSelector } from '../item-selector'
 
 const SelectFamilyItemPanel: React.FC<
   React.HTMLAttributes<HTMLDivElement> &   
@@ -91,7 +91,7 @@ const SelectFamilyItemPanel: React.FC<
           <h6 className='text-center font-semibold'>Available options</h6>
           <div className={'h-[1px] bg-muted-3 ' + (mobilePicker ?  'w-pr-55' :  'w-pr-60') } />
         </div>
-          <RadioItemSelector 
+          <ButtonItemSelector 
             items={family.products as LineItem[]}
             selectedItemRef={selectedItemRef}  
             selectSku={selectSku}

@@ -49,7 +49,7 @@ const ImageRadioGroupItem = React.forwardRef<
 })
 ImageRadioGroupItem.displayName = 'ImageRadioGroupItem'
 
-const ImageItemSelector: React.FC<ItemSelectorProps> = observer(({
+const ImageButtonItemSelector: React.FC<ItemSelectorProps> = observer(({
   items,
   selectedItemRef: itemRef,
   selectSku,
@@ -159,4 +159,4 @@ const ImageItemSelector: React.FC<ItemSelectorProps> = observer(({
   )
 })
 
-export default ImageItemSelector
+export default ImageButtonItemSelector
