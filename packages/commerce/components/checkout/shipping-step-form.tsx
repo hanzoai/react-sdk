@@ -82,7 +82,7 @@ const ShippingStepForm: React.FC<CheckoutStepComponentProps> = ({
             render={({ field }) => (
               <FormItem className='space-y-1 w-full'>
                 <FormControl>
-                  <Input {...field} className='border-muted-4' placeholder='Address line 1'/>
+                  <Input {...field} placeholder='Address line 1'/>
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -94,7 +94,7 @@ const ShippingStepForm: React.FC<CheckoutStepComponentProps> = ({
             render={({ field }) => (
               <FormItem className='space-y-1 w-full'>
                 <FormControl>
-                  <Input {...field} className='border-muted-4' placeholder='Address line 2 (optional)'/>
+                  <Input {...field} placeholder='Address line 2 (optional)'/>
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -107,7 +107,7 @@ const ShippingStepForm: React.FC<CheckoutStepComponentProps> = ({
               render={({ field }) => (
                 <FormItem className='space-y-1 w-full'>
                   <FormControl>
-                    <Input {...field} className='border-muted-4' placeholder='Zip code'/>
+                    <Input {...field} placeholder='Zip code'/>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -119,7 +119,7 @@ const ShippingStepForm: React.FC<CheckoutStepComponentProps> = ({
               render={({ field }) => (
                 <FormItem className='space-y-1 w-full'>
                   <FormControl>
-                    <Input {...field} className='border-muted-4' placeholder='City'/>
+                    <Input {...field} placeholder='City'/>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -133,7 +133,7 @@ const ShippingStepForm: React.FC<CheckoutStepComponentProps> = ({
               render={({ field }) => (
                 <FormItem className='space-y-1 w-full'>
                   <FormControl>
-                    <Input {...field} className='border-muted-4' placeholder='State (optional)'/>
+                    <Input {...field} placeholder='State (optional)'/>
                   </FormControl>
                   <FormMessage />
                 </FormItem>

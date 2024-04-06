@@ -22,10 +22,18 @@ interface CategoryNode {
   subNodes?: CategoryNode[]
 }
 
+type CategoryNodeRole = 
+  'non-terminal' | 
+  'terminal' | 
+  'terminal-w-families' | 
+  'family-w-siblings' | 
+  'non-node' 
+
   // Which facets tokens are 'on' at each level
 type SelectedPaths = Record<number, string[]>
 
 export type {
+  CategoryNodeRole,
   CategoryNode,
   SelectedPaths
 }

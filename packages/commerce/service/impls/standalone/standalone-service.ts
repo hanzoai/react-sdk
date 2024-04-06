@@ -15,6 +15,7 @@ import type {
   LineItem,
   SelectedPaths, 
   CategoryNode,
+  CategoryNodeRole,
   Promo
 } from '../../../types'
 
@@ -25,6 +26,7 @@ import {
 } from './orders'
 
 import ActualLineItem, { type ActualLineItemSnapshot } from './actual-line-item'
+import { getParentPath } from '../../../service/path-utils'
 import sep from '../../sep'
 
 type StandaloneServiceOptions = {
@@ -124,6 +126,83 @@ class StandaloneService
     }
     while (node && (level < toks.length))
     return level === toks.length ? node : undefined 
+  } 
+
+  peekAtNode(skuPath: string): {
+    role: CategoryNodeRole
+    family: Family | undefined
+    families: Family[] | undefined
+    node: CategoryNode | undefined
+  } {
+    const toks = skuPath.split(sep.tok)
+    let level: number
+    let node: CategoryNode | undefined = this._rootNode
+    let parent: CategoryNode | undefined = undefined
+    for (level = 1; level < toks.length && node && node.subNodes; level++) {
+      parent = node
+      node = node!.subNodes.find((sn) => (sn.skuToken === toks[level])) 
+      if (!node) {
+        throw new Error(`service.peekAtNode: traversing '${skuPath}'... no CategoryNode at '${toks[level]}'!`)
+      }
+    }
+    const atEnd = level === toks.length
+
+    let role: CategoryNodeRole = 'non-node' 
+    let families: Family[] | undefined = undefined
+    let family: Family | undefined = undefined
+    if (atEnd && node) {
+      if (!node.subNodes) {
+        if (parent?.terminal) {
+          role = 'family-w-siblings'  
+          const fam = this._familyMap.get(skuPath)
+          if (!fam) {
+            throw new Error(`service.peekAtNode: '${skuPath}' graphs as a Family w siblings, but no corresponding family exists!`)
+          }
+          family = fam
+          const parentPath = getParentPath(skuPath)
+            // get all siblings (subnodes of parent)
+          families = parent.subNodes!.map((sub) => {
+            const familyId = parentPath + sep.tok + sub.skuToken
+            const fam = this._familyMap.get(familyId)
+            if (!fam) {
+              throw new Error(`service.peekAtNode: No sibling Family for '${skuPath}' with id '${familyId}'!`)
+            }
+            return fam
+          })
+          node = parent
+        }
+        else {
+          role = 'terminal'  
+          const fam = this._familyMap.get(skuPath)
+          if (!fam) {
+            throw new Error(`service.peekAtNode: '${skuPath}' graphs as terminal CategoryNode and Family, but no corresponding family exists!`)
+          }
+          family = fam
+        }
+      }
+      else {
+        if (node.terminal) {
+          role = 'terminal-w-families'
+          families = node.subNodes.map((sub) => {
+            const familyId = skuPath + sep.tok + sub.skuToken
+            const fam = this._familyMap.get(familyId)
+            if (!fam) {
+              throw new Error(`service.peekAtNode: No sub Family for CategoryNode '${skuPath}' with id ${familyId}!`)
+            }
+            return fam
+          })
+        }
+        else {
+          role = 'non-terminal'
+        }
+      }
+    }
+    return {
+      role,
+      family,
+      families,
+      node
+    }
   } 
 
   getSelectedNodesAtLevel = computedFn((level: number): CategoryNode[] | undefined => {

@@ -1,7 +1,8 @@
 import type { LineItem, ObsLineItemRef } from './line-item'
-import type { CategoryNode, SelectedPaths } from './category-node'
+import type { CategoryNode, SelectedPaths, CategoryNodeRole } from './category-node'
 import type Family from './family'
 import type Promo from './promo'
+
 
 interface CommerceService extends ObsLineItemRef {
 
@@ -39,14 +40,35 @@ interface CommerceService extends ObsLineItemRef {
   selectPaths(value: SelectedPaths): Family[]
   selectPath(skuPath: string): Family[] 
 
-/*
-  peekPath(skuPath: string): {
+    /** 
+     * 'non-terminal': 
+     *    node is node at path
+     *    family is undefined
+     *    families is undefined
+     * 'terminal': 
+     *    node is node at path,
+     *    family is node is node at path (this node), 
+     *    families is undefined 
+     * 'terminal-w-families': 
+     *    node is node at path
+     *    family is undefined
+     *    families is the subnodes / families of this node
+     * 'family-w-siblings': 
+     *    node is parent of this family
+     *    family is this family
+     *    families is this family and siblings
+     * 'non-node': all undefined
+    */
+  peekAtNode(skuPath: string): {
+    role: CategoryNodeRole
     family: Family | undefined
-    siblingFamilies: Family[] | undefined
-    categoryNode: CategoryNode | undefined
-    isSku: boolean
+    families: Family[] | undefined
+    node: CategoryNode | undefined
   } 
-*/
+    /** @deprecated
+     *  Whether this path defines a Family, or if it has further levels 
+     * */
+  getNodeAtPath(skuPath: string): CategoryNode | undefined 
 
   get selectedPaths(): SelectedPaths // returns a copy
   
@@ -54,8 +76,6 @@ interface CommerceService extends ObsLineItemRef {
   get selectedFamilies(): Family[] 
   get hasSelection(): boolean
 
-    /** Whether this path defines a Family, or if it has further levels */
-  getNodeAtPath(skuPath: string): CategoryNode | undefined 
 
     /** 
      * Who are the subnodes selected at 'level'? 
