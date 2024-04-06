@@ -30,7 +30,8 @@
   "exports": {
     ".": "./index.ts",
     "./path-utils": "./service/path-utils.ts",
-    "./types": "./types/index.ts"
+    "./types": "./types/index.ts",
+    "./debug/": "./service/debug/"
   },
   "dependencies": {
     "ethers": "^6.11.1",
