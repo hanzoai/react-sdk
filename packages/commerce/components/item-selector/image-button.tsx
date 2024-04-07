@@ -16,6 +16,8 @@ import type { Dimensions } from '@hanzo/ui/types'
 import type { ItemSelectorProps, LineItem } from '../../types'
 import { formatCurrencyValue } from '../../util'
 
+const DEFAULT_CONSTRAINT = {h: 36, w: 72} // // Apple suggest 42px for clickability
+
 const ImageRadioGroupItem = React.forwardRef<
   React.ElementRef<typeof RadioGroupPrimitive.Item>,
   Omit<React.ComponentPropsWithoutRef<typeof RadioGroupPrimitive.Item>, 'value' | 'id'> & {
@@ -34,7 +36,8 @@ const ImageRadioGroupItem = React.forwardRef<
       ref={ref}
       className={cn(
         "ring-offset-background focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
-        className
+        className,
+        item.img?.rounded ? `rounded-${item.img?.rounded} overflow-hidden` : ''
       )}
       {...props}
       id={item.sku}
@@ -79,19 +82,24 @@ const ImageButtonItemSelector: React.FC<ItemSelectorProps> = observer(({
     className=''
   }) => (
     <div className={cn(
-      'flex items-center', 
+      'flex items-center',
       className, 
       itemClx,
     )}>
       <ImageRadioGroupItem 
         item={item} 
-        constrainTo={{h: 36, w: 72}} // Apple suggest 42px 
-        className={
-          'mr-2 ' +  (listBoxMode ?  '' : 
-          'border-transparent border-2 rounded-sm data-[state=checked]:border-foreground')
-        }
+        constrainTo={DEFAULT_CONSTRAINT} 
+        className={cn(
+          'mr-2',
+          selected ? 'hover:cursor-default' : 'hover:cursor-pointer',
+          (listBoxMode ?  '' : 'border-transparent border-2 rounded-sm data-[state=checked]:border-foreground')
+        )}
       />
-      <Label htmlFor={item.sku} className={selected && listBoxMode ? 'text-accent' : ''}>
+      <Label htmlFor={item.sku} className={cn(
+        'py-1', // for easier clicking
+        selected ? 'hover:cursor-default' : 'hover:cursor-pointer',
+        selected && listBoxMode ? 'text-accent' : ''
+      )}>
         <LabelText item={item} />
       </Label>
     </div>

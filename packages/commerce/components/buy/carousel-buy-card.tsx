@@ -132,7 +132,7 @@ const CarouselBuyCard: React.FC<{
 
   return (
     <div className={cn(
-      'px-4 md:px-6 pt-3 pb-4 flex flex-col items-center min-h-[60vh]', 
+      'px-4 md:px-6 pt-3 pb-4 flex flex-col gap-4 items-center min-h-[60vh]', 
       clx,
       scroll ? scrollHeightClx : 'h-auto'
     )}>
@@ -166,7 +166,7 @@ const CarouselBuyCard: React.FC<{
         size='default' 
         item={cmmc.currentItem}
         onQuantityChanged={onQuantityChanged} 
-        className={cn('min-w-[160px] mx-auto mt-4', (scroll ? 'shrink-0' : '') /*, addWidgetClx */)}
+        className={cn('min-w-[160px] mx-auto', (scroll ? 'shrink-0' : '') /*, addWidgetClx */)}
       />
     )} 
     </div >

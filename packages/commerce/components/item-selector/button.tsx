@@ -42,7 +42,8 @@ const ButtonItemSelector: React.FC<ItemSelectorProps> = observer(({
     className=''
   }) => (
     <div className={cn(
-      'flex items-center', 
+      'flex items-center ',
+      listBoxMode ? '' : 'justify-center',
       className, 
       itemClx,
     )}>
@@ -50,9 +51,12 @@ const ButtonItemSelector: React.FC<ItemSelectorProps> = observer(({
         value={item.sku} 
         larger
         id={item.sku} 
-        className={'mr-2 ' + (listBoxMode ?  'hidden' : '')}
+        className='hidden'
       />
-      <Label htmlFor={item.sku} className={selected ? 'text-accent' : ''}>
+      <Label htmlFor={item.sku} className={cn(
+        'block',
+        selected ? 'text-accent hover:cursor-default' : 'text-muted hover:cursor-pointer'
+      )}>
         <LabelText item={item} />
       </Label>
     </div>
@@ -72,8 +76,9 @@ const ButtonItemSelector: React.FC<ItemSelectorProps> = observer(({
 
     const outClx = [
       'h-10',
-      (listBoxMode ? 'border-b border-muted-3 py-1 pl-2' : 'mb-3'),
-      (selected && listBoxMode ? 'border border-foreground rounded-sm' : ''),
+      'border border-muted-3 rounded-lg py-1 px-2',
+      //(listBoxMode ? '' : 'mb-3'),
+      (selected ? 'border-foreground ' : 'hover:bg-level-2 border-muted-2'),
     ]
 
     return (showQuantity ? (
@@ -88,7 +93,7 @@ const ButtonItemSelector: React.FC<ItemSelectorProps> = observer(({
         selected={selected} 
         listBoxMode={listBoxMode} 
         className={cn(...outClx, 
-        listBoxMode ? '' : 'mb-1',
+        //listBoxMode ? '' : 'mb-1',
         clx)} 
       />
     ))
@@ -96,8 +101,8 @@ const ButtonItemSelector: React.FC<ItemSelectorProps> = observer(({
 
   return items.length > 1 ? (
     <RadioGroup
-      className={cn('flex flex-col gap-0', 
-        (scrollList ? 'shrink min-h-0' : ''), 
+      className={cn('flex flex-col', 
+        (scrollList ? 'shrink min-h-0 gap-0' : 'gap-1'), 
         clx,
       )}
       onValueChange={selectSku}
