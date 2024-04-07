@@ -57,9 +57,9 @@ interface CommerceService extends ObsLineItemRef {
      * 
      * 'multi-family': 
      *    item: undefined
+     *    node: node at path 
      *    family: undefined
      *    families: subnodes / families of this node
-     *    node: node at path 
      *    
      * 'non-outermost': 
      *    item: undefined
