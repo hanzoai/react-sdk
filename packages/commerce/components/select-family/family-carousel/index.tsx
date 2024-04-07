@@ -16,6 +16,7 @@ import {
   ApplyTypography,
   MediaStack
 } from '@hanzo/ui/primitives'
+import type { Dimensions } from '@hanzo/ui/types'
 
 import type { Family, LineItem, CategoryNode } from '../../../types'
 import { formatCurrencyValue } from '../../../util'
@@ -26,7 +27,7 @@ const FamilyCarousel: React.FC<{
   clx?: string
   itemClx?: string
   options?: CarouselOptions
-  mediaConstraint?: {w: number, h: number}
+  mediaConstraint?: Dimensions
   getBylineText?: (c: Family) => string
   variantOrientation?: 'vert' | 'horiz' 
   showVariantImage?: boolean

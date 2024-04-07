@@ -5,13 +5,13 @@ import Spline from '@splinetool/react-spline'
 
 import { cn } from '../util'
 import { type Block, type VideoBlock, VideoBlockComponent } from '../blocks'
-import type { ImageDef, MediaStackDef, VideoDef } from '../types'
+import type { MediaStackDef, Dimensions } from '../types'
 
 import Image from './image'
 
 const MediaStack: React.FC<{
   media: MediaStackDef,
-  constrainTo?: {w: number, h: number}
+  constrainTo?: Dimensions
   clx?: string
 }> = ({
   media: {img, video, animation},

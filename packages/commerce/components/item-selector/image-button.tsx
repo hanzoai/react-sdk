@@ -11,6 +11,7 @@ import {
   ScrollArea 
 } from '@hanzo/ui/primitives'
 import { cn } from '@hanzo/ui/util'
+import type { Dimensions } from '@hanzo/ui/types'
 
 import type { ItemSelectorProps, LineItem } from '../../types'
 import { formatCurrencyValue } from '../../util'
@@ -19,7 +20,7 @@ const ImageRadioGroupItem = React.forwardRef<
   React.ElementRef<typeof RadioGroupPrimitive.Item>,
   Omit<React.ComponentPropsWithoutRef<typeof RadioGroupPrimitive.Item>, 'value' | 'id'> & {
     item: LineItem,
-    constrainTo: {w: number, h: number}  
+    constrainTo: Dimensions  
   }
 >(({ 
   item,

@@ -4,6 +4,7 @@ import { reaction } from 'mobx'
 import { observer } from 'mobx-react-lite'
 
 import { cn } from '@hanzo/ui/util'
+import type { Dimensions } from '@hanzo/ui/types'
 
 import {
   type CarouselOptions,
@@ -21,7 +22,7 @@ import type { ItemSelectorProps, LineItem } from '../../types'
 import { formatCurrencyValue } from '../../util'
 
 interface CarouselItemSelectorPropsExt {
-  constrainTo: {w: number, h: number}
+  constrainTo: Dimensions
   options?: CarouselOptions 
     /** Do not show Family and / or Item title and Price */
   imageOnly?: boolean

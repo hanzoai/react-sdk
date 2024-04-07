@@ -9,12 +9,14 @@ import {
   ApplyTypography,
   MediaStack
 } from '@hanzo/ui/primitives'
+import type { Dimensions } from '@hanzo/ui/types'
+
 import type { Family } from '../../../types'
 
 const FamilySlide: React.FC<{
   family: Family
   clx?: string
-  mediaConstraint?: {w: number, h: number}
+  mediaConstraint?: Dimensions
   getBylineText?: (c: Family) => string
   variantOrientation?: 'vert' | 'horiz' 
   showVariantImage?: boolean

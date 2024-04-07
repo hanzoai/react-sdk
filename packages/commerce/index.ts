@@ -4,7 +4,8 @@ export type { StandaloneServiceOptions as ServiceOptions } from './service/impls
 export { 
   useSyncSkuParamWithCurrentItem, 
   getFacetValuesMutator, 
-  formatCurrencyValue 
+  formatCurrencyValue,
+  ProductMediaAccessor 
 } from './util'
 
 export * from './util/selection-ui-specifiers'
