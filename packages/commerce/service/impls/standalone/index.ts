@@ -43,9 +43,7 @@ export const getInstance = (
 
     // Client side, create the store only once in the client
   if (!instance) {
-    console.log("CLIENT SIDE INIT ...")
     if (uiSpecs) {
-      console.log("CLIENT SIDE INIT OF SPEC...")
       initSelectionUI(uiSpecs)
     }
     //_log("NEW INSTANCE FOR CLIENT")

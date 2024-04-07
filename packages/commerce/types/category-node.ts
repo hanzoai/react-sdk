@@ -23,11 +23,10 @@ interface CategoryNode {
 }
 
 type CategoryNodeRole = 
-  'non-terminal' | 
-  'terminal' | 
-  'terminal-w-families' | 
-  'family-w-siblings' | 
-  'non-node' 
+  'single-family' | 
+  'family-in-multi-family' | 
+  'multi-family' | 
+  'non-outermost' 
 
   // Which facets tokens are 'on' at each level
 type SelectedPaths = Record<number, string[]>

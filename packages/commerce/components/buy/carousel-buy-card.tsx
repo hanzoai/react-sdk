@@ -53,6 +53,7 @@ const CarouselBuyCard: React.FC<{
 
   const inst = useRef<{
     role: CategoryNodeRole
+    item: LineItem | undefined
     family: Family | undefined
     families: Family[] | undefined
     node: CategoryNode 
@@ -62,11 +63,11 @@ const CarouselBuyCard: React.FC<{
 
   useEffect(() => {
 
-    const peek = cmmc.peekAtNode(skuPath)
-    if (peek.role === 'non-node') {
-      throw new Error(`BuyCard: skuPath ${skuPath} isn't in the node tree!`)
+    const peek = cmmc.peekDownPath(skuPath)
+    if (typeof peek === 'string') {
+      throw new Error(peek)
     }
-    else if (peek.role === 'non-terminal') {
+    if (peek.role === 'non-outermost') {
       throw new Error(`BuyCard: skuPath ${skuPath} isn't an outermost tree node or product family!`)
     }
 
@@ -83,9 +84,14 @@ const CarouselBuyCard: React.FC<{
       uiSpec: getSelectionUISpecifier(skuPath),
     }
 
+    if (peek.family && !peek.families) {
+      const currItem = peek.item ?? peek.family.products[0]
+      cmmc.setCurrentItem(currItem.sku)
+    }
+
   }, [])
 
-  const singleFamily = () => (inst.current?.role === 'terminal')
+  const singleFamily = () => (inst.current?.role === 'single-family')
 
   const familyItems = singleFamily() ? inst.current?.family?.products as LineItem[] : undefined  
   let Selector: ComponentType<ItemSelectorProps> = CarouselItemSelector // for compiler

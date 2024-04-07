@@ -27,6 +27,7 @@ import {
 
 import ActualLineItem, { type ActualLineItemSnapshot } from './actual-line-item'
 import { getParentPath } from '../../../service/path-utils'
+import { getErrorMessage } from '../../../util'
 import sep from '../../sep'
 
 type StandaloneServiceOptions = {
@@ -119,80 +120,102 @@ class StandaloneService
     return level === toks.length ? node : undefined 
   } 
 
-  peekAtNode(skuPath: string): {
+  peekDownPath(skuPath: string): {
     role: CategoryNodeRole
     family: Family | undefined
     families: Family[] | undefined
     node: CategoryNode | undefined
-  } {
+    item: LineItem | undefined
+  } | string /* OR error string */ {
+
     const toks = skuPath.split(sep.tok)
     let level: number
     let node: CategoryNode | undefined = this._rootNode
     let parent: CategoryNode | undefined = undefined
-    for (level = 1; level < toks.length && node && node.subNodes; level++) {
-      parent = node
-      node = node!.subNodes.find((sn) => (sn.skuToken === toks[level])) 
-      if (!node) {
-        throw new Error(`service.peekAtNode: traversing '${skuPath}'... no CategoryNode at '${toks[level]}'!`)
-      }
-    }
-    const atEnd = level === toks.length
 
-    let role: CategoryNodeRole = 'non-node' 
+    for (level = 1; level < toks.length && node && node.subNodes; level++) {
+        // https://stackoverflow.com/questions/62367492/inference-problem-referenced-directly-or-indirectly-in-its-own-initializer
+      const _node: CategoryNode | undefined = 
+        node!.subNodes.find((sn) => (sn.skuToken === toks[level])) 
+      if (!_node) {
+        return `service.peekAtNode: traversing '${skuPath}'... no CategoryNode at '${toks[level]}'!`
+      }
+      parent = node
+      node = _node
+    }
+
+    const atEnd = level === toks.length
+    const possibleSKU = level === toks.length - 1
+
+    let role: CategoryNodeRole = 'non-outermost'
     let families: Family[] | undefined = undefined
     let family: Family | undefined = undefined
-    if (atEnd && node) {
-      if (!node.subNodes) {
-        if (parent?.terminal) {
-          role = 'family-w-siblings'  
-          const fam = this._familyMap.get(skuPath)
+    let item: LineItem | undefined = undefined
+    let error: string | undefined = undefined
+
+    try {
+      if (node.subNodes && atEnd && node.terminal) {
+        role = 'multi-family'
+        families = node.subNodes.map((sub) => {
+          const familyId = skuPath + sep.tok + sub.skuToken
+          const fam = this._familyMap.get(familyId)
           if (!fam) {
-            throw new Error(`service.peekAtNode: '${skuPath}' graphs as a Family w siblings, but no corresponding family exists!`)
+            throw new Error(`service.peekAtNode: No Family under for CategoryNode '${skuPath}' with id ${familyId}!`)
+          }
+          return fam
+        })
+      }
+      else if (!node.subNodes && (atEnd || possibleSKU)) {
+        const _skuPath = (possibleSKU) ? getParentPath(skuPath) : skuPath
+        if (parent?.terminal) {
+          role = 'family-in-multi-family'  
+          const fam = this._familyMap.get(_skuPath)
+          if (!fam) {
+            throw new Error(`service.peekAtNode: '${_skuPath}' graphs as a Family under a multi-family node, but no such family exists!`)
           }
           family = fam
-          const parentPath = getParentPath(skuPath)
+          const parentPath = getParentPath(_skuPath)
             // get all siblings (subnodes of parent)
-          families = parent.subNodes!.map((sub) => {
-            const familyId = parentPath + sep.tok + sub.skuToken
+          families = parent.subNodes!.map((sn) => {
+            const familyId = parentPath + sep.tok + sn.skuToken
             const fam = this._familyMap.get(familyId)
             if (!fam) {
-              throw new Error(`service.peekAtNode: No sibling Family for '${skuPath}' with id '${familyId}'!`)
+              throw new Error(`service.peekAtNode: No sibling Family for '${_skuPath}' with id '${familyId}'!`)
             }
             return fam
           })
           node = parent
         }
         else {
-          role = 'terminal'  
-          const fam = this._familyMap.get(skuPath)
+          role = 'single-family'  
+          const fam = this._familyMap.get(_skuPath)
           if (!fam) {
-            throw new Error(`service.peekAtNode: '${skuPath}' graphs as terminal CategoryNode and Family, but no corresponding family exists!`)
+            throw new Error(`service.peekAtNode: '${_skuPath}' graphs as a single Family, but no such family exists!`)
           }
           family = fam
         }
-      }
-      else {
-        if (node.terminal) {
-          role = 'terminal-w-families'
-          families = node.subNodes.map((sub) => {
-            const familyId = skuPath + sep.tok + sub.skuToken
-            const fam = this._familyMap.get(familyId)
-            if (!fam) {
-              throw new Error(`service.peekAtNode: No sub Family for CategoryNode '${skuPath}' with id ${familyId}!`)
-            }
-            return fam
-          })
-        }
-        else {
-          role = 'non-terminal'
+        if (possibleSKU) {
+          const skuToTry = family.id + sep.tok + toks[toks.length - 1]
+          const _item = family.products.find((p) => (p.sku === skuToTry)) 
+          if (_item) {
+            item = _item as LineItem  
+          }
+          else {
+            throw new Error(`service.peekAtNode: '${skuPath}' graphs as LineItem in Family '${family.id}', but no such sku exists there!`)
+          }
         }
       }
     }
-    return {
+    catch (e) {
+      error = getErrorMessage(e)
+    }
+
+    return error ?? {
       role,
       family,
       families,
-      node
+      node,
+      item
     }
   } 
 

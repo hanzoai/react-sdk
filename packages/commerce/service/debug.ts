@@ -1,4 +1,4 @@
-import type { CategoryNode,  CategoryNodeRole, Family } from '../types'
+import type { CategoryNode,  CategoryNodeRole, Family, LineItem } from '../types'
 
   // Note recursion
 export const categoryNodeDump = (node: CategoryNode, level: number = 0): void => {
@@ -15,17 +15,27 @@ export const selectedFamiliesDump = (result: Family[]): string => {
   return JSON.stringify(toDisplay, null, 2)
 }
 
-export const peekAtNodeDump = (result : {
+export const peekDownPathDump = (result : {
     role: CategoryNodeRole
     family: Family | undefined
     families: Family[] | undefined
     node: CategoryNode | undefined
-}): string => {
+    item: LineItem | undefined
+} | string): string => {
+
+  if (typeof result === 'string') {
+    return result
+  }
+
   const toDisplay = {
     role: result.role,
+    item: result.item ? result.item.sku : 'UNDEF',
     family: result.family ? result.family.id : 'UNDEF',
     families: result.families ? result.families.map((f) => (f.id)) : 'UNDEF',
-    node: result.node ? (result.node.skuToken + ': ' + result.node.label) : 'UNDEF'
+    node: result.node ? 
+      (result.node.skuToken + (result.node.label ? (': ' + result.node.label) : '')) 
+      : 
+      'UNDEF'
   }
   return JSON.stringify(toDisplay, null, 2)
 }

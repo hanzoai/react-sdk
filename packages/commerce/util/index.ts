@@ -63,3 +63,5 @@ export { default as processSquareCardPayment } from './square-payment'
 export { default as ObsStringMutator } from './obs-string-mutator'
 
 export * from './selection-ui-specifiers'
+
+export { getErrorMessage } from './error'

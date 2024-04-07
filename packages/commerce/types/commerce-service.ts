@@ -40,31 +40,42 @@ interface CommerceService extends ObsLineItemRef {
   selectPaths(value: SelectedPaths): Family[]
   selectPath(skuPath: string): Family[] 
 
-    /** 
-     * 'terminal': 
-     *    node is node at path,
-     *    family is node is node at path (this node), 
-     *    families is undefined 
-     * 'terminal-w-families': 
-     *    node is node at path
-     *    family is undefined
-     *    families is the subnodes / families of this node
-     * 'family-w-siblings': 
-     *    node is parent of this family
-     *    family is this family
-     *    families is this family and siblings
-     * 'non-terminal': 
-     *    node is node at path
-     *    family is undefined
-     *    families is undefined
-     * 'non-node': all undefined
+    /**
+     * With role as ...
+     *  
+     * 'single-family': 
+     *    item: item with skuPath as SKU, otherwise undefined
+     *    node: node at path (or item's parent node),
+     *    family: node at path as family (or item's parent node as family), 
+     *    families: undefined 
+     * 
+     * 'family-in-multi-family': 
+     *    item: item with skuPath as SKU, otherwise undefined
+     *    node: parent node of this family (or parent node of item's family)
+     *    family: this family (or item's family)
+     *    families: this family (or item's family) and siblings
+     * 
+     * 'multi-family': 
+     *    item: undefined
+     *    family: undefined
+     *    families: subnodes / families of this node
+     *    node: node at path 
+     *    
+     * 'non-outermost': 
+     *    item: undefined
+     *    node: node at path
+     *    family: undefined
+     *    families: undefined
+     * 
     */
-  peekAtNode(skuPath: string): {
+  peekDownPath(skuPath: string): {
     role: CategoryNodeRole
     family: Family | undefined
     families: Family[] | undefined
     node: CategoryNode | undefined
-  } 
+    item: LineItem | undefined
+  } | string // or error string
+
     /** @deprecated
      *  Whether this path defines a Family, or if it has further levels 
      * */
