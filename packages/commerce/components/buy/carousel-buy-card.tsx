@@ -14,7 +14,8 @@ import type {
   Family, 
   CategoryNode,
   CategoryNodeRole,
-  SelectionUISpecifier, 
+  SelectionUISpecifier,
+  ItemSelectorOptions, 
 } from '../../types'
 
 import { useCommerce } from '../../service/context'
@@ -23,7 +24,6 @@ import { ObsStringMutator, getSelectionUISpecifier } from '../../util'
 
 import { 
   CarouselItemSelector, 
-  ImageButtonItemSelector, 
   ButtonItemSelector 
 } from '../item-selector'
 
@@ -93,19 +93,17 @@ const CarouselBuyCard: React.FC<{
 
   const singleFamily = () => (inst.current?.role === 'single-family')
 
-  const familyItems = singleFamily() ? inst.current?.family?.products as LineItem[] : undefined  
+  const familyItems = singleFamily() ? [
+    ...inst.current!.family!.products,
+    //...inst.current!.family!.products
+  ] as LineItem[] : undefined  
+
   let Selector: ComponentType<ItemSelectorProps> = CarouselItemSelector // for compiler
+  let selOptions: ItemSelectorOptions | undefined
   if (singleFamily()) {
-    const selType = inst.current?.uiSpec.singleFamily  
-    Selector = (selType === 'buttons' ? 
-      ButtonItemSelector
-      :
-      ((selType === 'image-buttons') ? 
-        ImageButtonItemSelector  
-        :
-        CarouselItemSelector
-      )
-    )
+    const spec = inst.current?.uiSpec.singleFamily  
+    Selector = (spec?.type === 'buttons') ? ButtonItemSelector : CarouselItemSelector
+    selOptions = spec?.options
   }
 
   const TitleArea: React.FC<{
@@ -126,9 +124,9 @@ const CarouselBuyCard: React.FC<{
   )
 
   const scrollAfter = 5
-  const scrollHeightClx = 'h-[80vh]'
+  const scrollHeightClx = 'h-[50vh]'
   const scroll = !!(familyItems && familyItems.length > scrollAfter)
-  const showItemMedia = inst.current?.uiSpec.singleFamily !== 'carousel'
+  const showItemMedia = inst.current?.uiSpec.singleFamily?.type !== 'carousel'
 
   return (
     <div className={cn(
@@ -149,8 +147,9 @@ const CarouselBuyCard: React.FC<{
           items={familyItems}
           selectedItemRef={cmmc}
           selectSku={cmmc.setCurrentItem.bind(cmmc)}
-          scrollList={scroll}
-          showFamily={false}
+          scrollable={scroll}
+          mobile={mobile}
+          options={selOptions}
         />  
       )}
     </>) : (

@@ -6,16 +6,7 @@ interface ItemSelector {
   selectSku: (sku: string) => void 
 }
 
-interface _ItemSelectorCompProps {
-  clx?: string
-  itemClx?: string
-  soleItemClx?: string
-    /** type-specific props for ItemSelector's.
-     * eg, Carousel options.
-     */
-  ext?: any
-    /** List selectors will scroll.  Used internally */
-  scrollList: boolean
+type ItemSelectorOptions = {
     /** 
      * Whether the item label includes the Family name.
      * eg, 'Minted Bar, 1oz' vs '1oz'
@@ -26,10 +17,34 @@ interface _ItemSelectorCompProps {
      * Show the current item quantity along with title and price.
      * default: false
      */
-  showQuantity?: boolean    
+  showQuantity?: boolean   
+
+    /** default: true */
+  showPrice?: boolean
+
+    /** default: false */
+  imageButtons?: boolean  
+
+    /** default: false */
+  horizButtons?: boolean  
 }
 
-type ItemSelectorCompProps = Omit<_ItemSelectorCompProps, 'scrollList'>
+interface _ItemSelectorCompProps {
+  clx?: string
+  itemClx?: string
+  soleItemClx?: string
+    /** type-specific props for ItemSelector's.
+     * eg, Carousel options.
+     */
+  ext?: any
+    /** List selectors will scroll.  Used internally */
+  scrollable: boolean
+  options?: ItemSelectorOptions
+
+  mobile?: boolean 
+}
+
+type ItemSelectorCompProps = Omit<_ItemSelectorCompProps, 'scrollable'>
 
 interface ItemSelectorProps extends 
   ItemSelector, _ItemSelectorCompProps {}
@@ -37,5 +52,6 @@ interface ItemSelectorProps extends
 export {
   type ItemSelector,
   type ItemSelectorCompProps,
+  type ItemSelectorOptions,
   type ItemSelectorProps
 }

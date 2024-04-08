@@ -242,12 +242,7 @@ const BuyCard: React.FC<{
         selectedItemRef={cmmc}
         selectSku={selectSku}
         {...selectorProps}
-        scrollList={scroll}
-        showFamily={selectorProps.showFamily ? 
-          selectorProps.showFamily
-          :
-          (allVariants && !inst.current?.requestedFamily)
-        }
+        scrollable={scroll}
       />  
     )}
     {(cmmc.currentItem) && (

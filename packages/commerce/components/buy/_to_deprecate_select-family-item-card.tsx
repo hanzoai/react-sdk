@@ -55,8 +55,7 @@ const SelectFamilyItemCard: React.FC<React.HTMLAttributes<HTMLDivElement> & Item
           selectedItemRef={selItemRef}  
           selectSku={selectSku}
           clx='mt-2'
-          showQuantity={false}
-          scrollList={false}
+          scrollable={false}
           itemClx='flex flex-row gap-2.5 items-center'
         />
       </div>

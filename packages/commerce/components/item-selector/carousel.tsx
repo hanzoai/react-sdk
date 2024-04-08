@@ -32,10 +32,10 @@ const CarouselItemSelector: React.FC<ItemSelectorProps> = observer(({
   items,
   selectSku,
   selectedItemRef: itemRef,
-  scrollList, // ignored
+  scrollable, // ignored
   clx='',
   itemClx='',
-  showFamily=false,
+  options={},
   ext={
     options: {loop: true},
     constrainTo: {w: 250, h: 250},
@@ -43,7 +43,9 @@ const CarouselItemSelector: React.FC<ItemSelectorProps> = observer(({
   } satisfies CarouselItemSelectorPropsExt
 }) => {
 
-  const { options, constrainTo, imageOnly} = ext
+  const showFamily = 'showFamily' in options ? options.showFamily : false
+
+  const { options: carouselOptions, constrainTo, imageOnly} = ext
 
   const elbaApiRef = useRef<CarouselApi | undefined>(undefined)
   const dontRespondRef = useRef<boolean>(false)
@@ -92,7 +94,7 @@ const CarouselItemSelector: React.FC<ItemSelectorProps> = observer(({
   )
 
   return ( 
-    <Carousel options={options} className={cn('w-full px-2', clx)} onCarouselSelect={onSelect} setApi={setApi}>
+    <Carousel options={carouselOptions} className={cn('w-full px-2', clx)} onCarouselSelect={onSelect} setApi={setApi}>
       <CarouselContent>
       {items.map((item, index) => (
         <CarouselItem key={index} className={cn('p-2 flex flex-col justify-center items-center', itemClx)}>

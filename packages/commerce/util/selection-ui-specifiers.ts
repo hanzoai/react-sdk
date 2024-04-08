@@ -4,9 +4,9 @@ import sep from '../service/sep'
 const DEFAULT = {
   multiFamily: {
     family: 'carousel',
-    inSlide: 'buttons'
+    inSlide: { type: 'buttons' }
   },
-  singleFamily: 'carousel'
+  singleFamily: { type: 'carousel' }
 } satisfies SelectionUISpecifier
 
 const map = new Map<string, SelectionUISpecifier>()
