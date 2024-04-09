@@ -1,15 +1,12 @@
 'use client'
 import React, { useRef, useEffect, type ComponentType } from 'react'
-import { reaction, type IReactionDisposer } from 'mobx'
 import { observer } from 'mobx-react-lite'
 
 import { cn } from '@hanzo/ui/util'
 import { ApplyTypography, MediaStack, Skeleton } from '@hanzo/ui/primitives'
 
 import type { 
-  SelectedPaths, 
   ItemSelectorProps, 
-  ItemSelectorCompProps,
   LineItem, 
   Family, 
   CategoryNode,
@@ -29,6 +26,11 @@ import {
 
 import AddToCartWidget from './add-to-cart-widget'
 
+const SCROLL = {
+  scrollAfter: 5,
+  scrollHeightClx: 'h-[65vh]'
+}
+
 const CarouselBuyCard: React.FC<{
   skuPath: string
   clx?: string
@@ -37,33 +39,34 @@ const CarouselBuyCard: React.FC<{
 }> = observer(({
   skuPath,
   clx='',
-  /*
-  selectorProps={
-    clx: '',
-    soleItemClx: '',
-    itemClx: '',
-    ext: {}
-  },
-  */
   mobile=false,
   onQuantityChanged,
 }) => {
 
   const cmmc = useCommerce()
 
-  const inst = useRef<{
+  const r = useRef<{
     role: CategoryNodeRole
     item: LineItem | undefined
     family: Family | undefined
     families: Family[] | undefined
     node: CategoryNode 
-    familyTokenMutator: ObsStringMutator | undefined
     uiSpec: SelectionUISpecifier
+    single?: {
+      items: LineItem[]
+      Selector: ComponentType<ItemSelectorProps>
+      selOptions: ItemSelectorOptions | undefined
+      scrollable: boolean
+      showItemMedia: boolean
+    } 
+    multiple?: {
+      familyTokenMutator: ObsStringMutator | undefined
+    }
   } | undefined>(undefined)
 
   useEffect(() => {
 
-    const peek = cmmc.peekDownPath(skuPath)
+    const peek = cmmc.peek(skuPath)
     if (typeof peek === 'string') {
       throw new Error(peek)
     }
@@ -71,40 +74,45 @@ const CarouselBuyCard: React.FC<{
       throw new Error(`BuyCard: skuPath ${skuPath} isn't an outermost tree node or product family!`)
     }
 
-    let familyTokenMutator: ObsStringMutator | undefined = undefined
-    if (peek.families) {
-      const initialFamily = peek.family ? peek.family : peek.families[0]
-      familyTokenMutator = new ObsStringMutator(pathUtils.lastToken(initialFamily.id))
-    }
+    const uiSpec = getSelectionUISpecifier(skuPath)
 
-    inst.current = {
+    r.current = {
       ...peek,
       node: peek.node!, // else exception was thrown.
-      familyTokenMutator: familyTokenMutator,
-      uiSpec: getSelectionUISpecifier(skuPath),
+      uiSpec,
     }
 
-    if (peek.family && !peek.families) {
-      const currItem = peek.item ?? peek.family.products[0]
+    if (peek.role === 'single-family') {
+
+      const singleSpec = uiSpec.singleFamily 
+      const Selector: ComponentType<ItemSelectorProps> = 
+        (singleSpec?.type === 'buttons') ? ButtonItemSelector : CarouselItemSelector
+      const selOptions = singleSpec?.options
+      const items = peek.family!.products as LineItem[]
+
+      r.current.single = {
+        items,
+        Selector,
+        selOptions,
+        scrollable: !!(items.length > SCROLL.scrollAfter),
+        showItemMedia: singleSpec?.type !== 'carousel'
+      }
+
+      const currItem = peek.item ?? peek.family!.products[0]
+      cmmc.setCurrentItem(currItem.sku)
+    }
+    else {
+      const initialFamily = peek.family ? peek.family : peek.families![0]
+      const familyTokenMutator = new ObsStringMutator(pathUtils.lastToken(initialFamily.id))
+      r.current.multiple = {
+        familyTokenMutator    
+      }
+      const currItem = peek.item ?? initialFamily.products[0]
       cmmc.setCurrentItem(currItem.sku)
     }
 
+
   }, [])
-
-  const singleFamily = () => (inst.current?.role === 'single-family')
-
-  const familyItems = singleFamily() ? [
-    ...inst.current!.family!.products,
-    //...inst.current!.family!.products
-  ] as LineItem[] : undefined  
-
-  let Selector: ComponentType<ItemSelectorProps> = CarouselItemSelector // for compiler
-  let selOptions: ItemSelectorOptions | undefined
-  if (singleFamily()) {
-    const spec = inst.current?.uiSpec.singleFamily  
-    Selector = (spec?.type === 'buttons') ? ButtonItemSelector : CarouselItemSelector
-    selOptions = spec?.options
-  }
 
   const TitleArea: React.FC<{
     title: string
@@ -123,40 +131,39 @@ const CarouselBuyCard: React.FC<{
     </ApplyTypography>
   )
 
-  const scrollAfter = 5
-  const scrollHeightClx = 'h-[50vh]'
-  const scroll = !!(familyItems && familyItems.length > scrollAfter)
-  const showItemMedia = inst.current?.uiSpec.singleFamily?.type !== 'carousel'
-
   return (
     <div className={cn(
       'px-4 md:px-6 pt-3 pb-4 flex flex-col gap-4 items-center min-h-[60vh]', 
       clx,
-      scroll ? scrollHeightClx : 'h-auto'
+      r.current?.single?.scrollable ? SCROLL.scrollHeightClx : 'h-auto'
     )}>
-    {singleFamily() ? (<>
-      <TitleArea title={inst.current?.family?.title ?? ''} clx=''/>
-      {(showItemMedia && cmmc.currentItem ) && (
-        <MediaStack media={cmmc.currentItem} constrainTo={{w: 200, h: 200}} clx={(scroll ? 'shrink-0' : '')}/>
+    {r.current?.single ? (<>
+      <TitleArea title={r.current?.family?.title ?? ''} clx=''/>
+      {(r.current.single.showItemMedia && cmmc.currentItem ) && (
+        <MediaStack 
+          media={cmmc.currentItem} 
+          constrainTo={{w: 200, h: 200}} 
+          clx={(r.current.single.scrollable ? 'shrink-0' : '')}
+        />
       )}
-      {(showItemMedia && !cmmc.currentItem ) && (
-        <Skeleton className={'w-[200px] h-[200px] ' + (scroll ? 'shrink-0' : '')}/>
+      {(r.current.single.showItemMedia && !cmmc.currentItem ) && (
+        <Skeleton className={'w-[200px] h-[200px] ' + (r.current.single.scrollable ? 'shrink-0' : '')}/>
       )}
-      {familyItems && (
-        <Selector 
-          items={familyItems}
+      {r.current.single.items && (
+        <r.current.single.Selector 
+          items={r.current.single.items}
           selectedItemRef={cmmc}
           selectSku={cmmc.setCurrentItem.bind(cmmc)}
-          scrollable={scroll}
+          scrollable={r.current.single.scrollable}
           mobile={mobile}
-          options={selOptions}
+          options={r.current.single.selOptions}
         />  
       )}
-    </>) : (
+    </>) : ( 
       <TitleArea 
-        title={inst.current?.node.label ?? ''} 
-        byline={inst.current?.node.subNodesLabel ?? ''} 
-        clx={'mb-2 ' + (scroll ? 'shrink-0' : '')}
+        title={r.current?.node.label ?? ''} 
+        byline={r.current?.node.subNodesLabel} 
+        clx={'mb-2 '}
         bylineClx='!text-center font-bold text-muted mt-3'
       />
     ) /* TODO: THE GRAND SELECTOR */ }
@@ -165,7 +172,7 @@ const CarouselBuyCard: React.FC<{
         size='default' 
         item={cmmc.currentItem}
         onQuantityChanged={onQuantityChanged} 
-        className={cn('min-w-[160px] mx-auto', (scroll ? 'shrink-0' : '') /*, addWidgetClx */)}
+        className={cn('min-w-[160px] mx-auto', (r.current?.single?.scrollable ? 'shrink-0' : '') /*, addWidgetClx */)}
       />
     )} 
     </div >

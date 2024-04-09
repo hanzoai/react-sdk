@@ -120,7 +120,7 @@ class StandaloneService
     return level === toks.length ? node : undefined 
   } 
 
-  peekDownPath(skuPath: string): {
+  peek(skuPath: string): {
     role: CategoryNodeRole
     family: Family | undefined
     families: Family[] | undefined

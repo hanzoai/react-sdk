@@ -21,13 +21,62 @@ import {
 import type { ItemSelectorProps, LineItem } from '../../types'
 import { formatCurrencyValue } from '../../util'
 
+import QuantityIndicator from '../quantity-indicator'
+
+const DEFAULT_CONSTRAINT = {w: 250, h: 250}
+
 interface CarouselItemSelectorPropsExt {
   constrainTo: Dimensions
   options?: CarouselOptions 
     /** Do not show Family and / or Item title and Price */
   imageOnly?: boolean
 }
-  
+
+const ItemSlide: React.FC<{
+  item: LineItem,
+  constrainTo: Dimensions
+  imageOnly: boolean
+  showFamily: boolean
+  showPrice: boolean
+  showQuantity: boolean
+  clx?: string
+}> = ({
+  item,
+  constrainTo,
+  showFamily,
+  imageOnly,
+  showPrice,
+  showQuantity,
+  clx=''
+}) => {
+
+  return (
+    <CarouselItem className={cn('p-2 flex flex-col justify-center items-center', clx)}>
+      {!imageOnly && (
+        <ApplyTypography className='flex flex-col items-center !gap-2 [&>*]:!m-0'>
+          {showFamily && (<h4>{item.familyTitle}</h4>)}
+          <h6>{item.optionLabel}</h6>
+          {item.byline && (<p>{item.byline}</p>)}
+        </ApplyTypography>
+      )}
+      <MediaStack media={item} constrainTo={constrainTo} clx='' />
+      {!imageOnly && (showPrice || showQuantity) && (
+        <ApplyTypography className='flex flex-row items-center !gap-2 [&>*]:!m-0'>
+          {showPrice && (<p>{formatCurrencyValue(item.price)}</p>)}
+          {showQuantity && (
+            <QuantityIndicator 
+              item={item} 
+              clx='h-[26px] ml-1' 
+              iconClx={'fill-foreground'}
+              digitClx='not-typography font-semibold text-primary-fg leading-none font-sans text-xs' 
+            />
+          )}
+        </ApplyTypography>
+      )}
+    </CarouselItem>
+  ) 
+}
+
 const CarouselItemSelector: React.FC<ItemSelectorProps> = observer(({ 
   items,
   selectSku,
@@ -38,14 +87,18 @@ const CarouselItemSelector: React.FC<ItemSelectorProps> = observer(({
   options={},
   ext={
     options: {loop: true},
-    constrainTo: {w: 250, h: 250},
+    constrainTo: DEFAULT_CONSTRAINT,
     imageOnly: false 
   } satisfies CarouselItemSelectorPropsExt
 }) => {
 
-  const showFamily = 'showFamily' in options ? options.showFamily : false
+  const showFamily = 'showFamily' in options ? options.showFamily! : false
+  const showPrice = 'showPrice' in options ? options.showPrice! : true
+  const showQuantity = 'showQuantity' in options ? options.showQuantity! : false
 
-  const { options: carouselOptions, constrainTo, imageOnly} = ext
+  const carouselOptions = 'options' in ext ? ext.options : undefined
+  const constrainTo = 'constrainTo' in ext ? ext.constrainTo : DEFAULT_CONSTRAINT
+  const imageOnly = 'imageOnly' in ext ? ext.imageOnly : false
 
   const elbaApiRef = useRef<CarouselApi | undefined>(undefined)
   const dontRespondRef = useRef<boolean>(false)
@@ -79,28 +132,22 @@ const CarouselItemSelector: React.FC<ItemSelectorProps> = observer(({
     )
   }, [])
 
-  const ItemInfo: React.FC<{
-    item: LineItem
-    clx?: string
-  }> = ({
-    item,
-    clx
-  }) => (
-    <ApplyTypography className={cn(clx, 'flex flex-col items-center !gap-2 [&>*]:!m-0')}>
-      {showFamily && (<h4>{item.familyTitle}</h4>)}
-      <p>{item.optionLabel}</p>
-      <p>{formatCurrencyValue(item.price)}</p>
-    </ApplyTypography>
-  )
-
   return ( 
     <Carousel options={carouselOptions} className={cn('w-full px-2', clx)} onCarouselSelect={onSelect} setApi={setApi}>
       <CarouselContent>
-      {items.map((item, index) => (
-        <CarouselItem key={index} className={cn('p-2 flex flex-col justify-center items-center', itemClx)}>
-          <MediaStack media={item} constrainTo={constrainTo} clx='' />
-          {!imageOnly && (<ItemInfo item={item} clx=''/>)}
-        </CarouselItem>
+      {items.map((item) => (
+        <ItemSlide 
+          key={item.sku} 
+          item={item}
+          {...{
+            showFamily,
+            showPrice,
+            showQuantity,
+            constrainTo,
+            imageOnly
+          }}
+          clx={itemClx}
+        />
       ))}
       </CarouselContent>
       <CarouselPrevious className='left-1'/>

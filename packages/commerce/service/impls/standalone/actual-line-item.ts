@@ -30,11 +30,13 @@ class ActualLineItem
   optionLabel: string
   familyTitle: string
   familyId: string  
+  byline?: string
   desc?: string
   price: number
   img?: ImageDef 
   video?: VideoDef 
-  animation?: string 
+  animation?: string
+  optionImg?: ImageDef
   timeAdded: number = 0 // timeAdded of being added to cart
 
   constructor(prod: Product, snap?: ActualLineItemSnapshot) {
@@ -44,11 +46,13 @@ class ActualLineItem
     this.optionLabel = prod.optionLabel
     this.familyTitle = prod.familyTitle
     this.familyId = prod.familyId
+    this.byline = prod.byline
     this.desc = prod.desc
     this.price = prod.price
     this.img = prod.img
     this.video = prod.video
     this.animation = prod.animation
+    this.optionImg = prod.optionImg
 
     if (snap) {
       this.qu = snap.quantity
@@ -106,12 +110,6 @@ class ActualLineItem
       }
     }
   }
-
-  inFamily(id: string): boolean {
-      // TODO: will break for level one (which is ok for lux, but not generally)
-    return this.sku.includes(`-${id}-`)
-  }
-
 }
 
 export {

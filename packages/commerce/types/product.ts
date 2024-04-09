@@ -7,6 +7,7 @@ interface Product extends MediaStackDef {
   optionLabel: string
   familyId: string  // skuPath, eg LXB-AU-B
   familyTitle: string
+  byline?: string
   desc?: string
   price: number
     // image to by uses as an image button in a list of choices

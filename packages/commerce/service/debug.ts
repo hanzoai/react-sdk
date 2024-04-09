@@ -15,7 +15,7 @@ export const selectedFamiliesDump = (result: Family[]): string => {
   return JSON.stringify(toDisplay, null, 2)
 }
 
-export const peekDownPathDump = (result : {
+export const peekDump = (result : {
     role: CategoryNodeRole
     family: Family | undefined
     families: Family[] | undefined
