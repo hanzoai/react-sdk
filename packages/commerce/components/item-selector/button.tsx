@@ -33,6 +33,8 @@ const ImageRadioGroupItem = React.forwardRef<
   ...props 
 }, ref) => {
 
+  const img = item.optionImg ? item.optionImg : item.img
+
   return (
     <RadioGroupPrimitive.Item
       ref={ref}
@@ -41,14 +43,14 @@ const ImageRadioGroupItem = React.forwardRef<
         'focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50',
         className,
         'overflow-hidden',
-        item.img?.rounded ? `rounded-${item.img?.rounded}` : 'rounded-sm'
+        img?.rounded ? `rounded-${img.rounded}` : 'rounded-sm'
       )}
       {...props}
       id={item.sku}
       value={item.sku}
     >
-      {item.img ? (
-        <Image def={item.img} constrainTo={constrainTo} preload className=''/>
+      {img ? (
+        <Image def={img} constrainTo={constrainTo} preload className=''/>
       ) : ( // placeholder so things align
         <div style={{height: constrainTo.h, width: constrainTo.w}}/>
       )}
@@ -73,6 +75,7 @@ const ButtonItemSelector: React.FC<ItemSelectorProps> = observer(({
   const showFamily = 'showFamily' in options ? options.showFamily : false
   const showPrice = 'showPrice' in options ? options.showPrice : true
   const showQuantity = 'showQuantity' in options ? options.showQuantity : false
+  const horizButtons = 'horizButtons' in options ? options.horizButtons : false
 
   const labelAndPrice = (item : LineItem) => (
     (showFamily ? (item.familyTitle + ', ' + item.optionLabel) : item.optionLabel) + 
@@ -102,7 +105,7 @@ const ButtonItemSelector: React.FC<ItemSelectorProps> = observer(({
       bgClx += 'hover:bg-level-2' 
     }
 
-    const outerClx = ['h-10 py-2 flex items-center', textClx, justifyClx, paddingClx, bgClx, borderClx]
+    const outerClx = ['h-10 py-2 flex items-center', justifyClx, paddingClx, bgClx, borderClx]
 
     return (
       <div className={cn(...outerClx, itemClx )}>
@@ -136,8 +139,9 @@ const ButtonItemSelector: React.FC<ItemSelectorProps> = observer(({
  
   return items.length > 1 ? (
     <RadioGroup
-      className={cn('flex flex-col', 
+      className={cn('flex', 
         (scrollable ? 'shrink min-h-0 gap-0' : (mobile ? 'gap-3' : 'gap-1')), 
+        (horizButtons ? 'flex-row gap-0' : 'flex-col'),
         (mobile && !imageButtons) ? 'min-w-pr-50' : '',
         clx,
       )}

@@ -9,6 +9,7 @@ import type { Dimensions } from '@hanzo/ui/types'
 
 import type { FamilyCarouselSlideOptions, Family, LineItem, ItemSelector } from '../../../types'
 import { ButtonItemSelector } from '../..'
+import { cn } from '@hanzo/ui/util'
 
 const FamilySlide: React.FC<Omit<ItemSelector, 'items'> & {
   family: Family
@@ -55,10 +56,10 @@ const FamilySlide: React.FC<Omit<ItemSelector, 'items'> & {
   */
 
   return (
-    <div className={clx}>
+    <div className={cn('flex flex-col items-center gap-4', clx)}>
       {title && (
-        <ApplyTypography className={''}>
-          <h6>{title}</h6>
+        <ApplyTypography className='flex flex-col items-center !gap-1 [&>*]:!m-0'>
+          <h6 className='font-bold text-lg'>{title}</h6>
           {byline && (<p className={''}>{byline}</p>)}
         </ApplyTypography>
       )}
@@ -73,6 +74,7 @@ const FamilySlide: React.FC<Omit<ItemSelector, 'items'> & {
         scrollable={false}
         mobile={mobile}
         options={options}
+        itemClx='text-sm'
       />
     </div>
   )

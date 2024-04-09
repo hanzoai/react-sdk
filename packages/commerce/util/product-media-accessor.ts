@@ -35,8 +35,8 @@ class ProductMediaAccessor {
     (this._data.anim) ? this._data.anim[key] : undefined
   )
 
-  spreadableAnim = (key: string): { anim?: AnimationDef } => (
-    (this._data.anim) ? {anim: this._data.anim[key]} : {}
+  spreadableAnim = (key: string): { animation?: AnimationDef } => (
+    (this._data.anim) ? {animation: this._data.anim[key]} : {}
   )
 
   mediaStack = (key: string): MediaStackDef => ({
