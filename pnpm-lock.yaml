@@ -320,7 +320,7 @@ importers:
         specifier: ^2.3.4
         version: link:../auth
       '@hanzo/ui':
-        specifier: ^3.4.2
+        specifier: ^3.5.0
         version: link:../ui
       '@hookform/resolvers':
         specifier: ^3.3.4
@@ -1048,6 +1048,10 @@ packages:
     peerDependencies:
       '@effect-ts/otel-node': '*'
     peerDependenciesMeta:
+      '@effect-ts/core':
+        optional: true
+      '@effect-ts/otel':
+        optional: true
       '@effect-ts/otel-node':
         optional: true
     dependencies:

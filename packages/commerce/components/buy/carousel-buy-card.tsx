@@ -127,7 +127,7 @@ const CarouselBuyCard: React.FC<{
 
   return (
     <div className={cn(
-      'px-4 md:px-6 pt-3 pb-4 flex flex-col gap-4 items-center min-h-[60vh]', 
+      'px-4 md:px-6 pt-3 pb-4 flex flex-col gap-4 items-center min-h-[40vh]', 
       clx,
       r.current?.single?.scrollable ? SCROLL.scrollHeightClx : 'h-auto'
     )}>
