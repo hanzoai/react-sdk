@@ -102,7 +102,7 @@ const ButtonItemSelector: React.FC<ItemSelectorProps> = observer(({
       bgClx += 'hover:bg-level-2' 
     }
 
-    const outerClx = ['h-10 py-2 flex items-center', textClx, cursorClx, justifyClx, paddingClx, bgClx, borderClx]
+    const outerClx = ['h-10 py-2 flex items-center', textClx, justifyClx, paddingClx, bgClx, borderClx]
 
     return (
       <div className={cn(...outerClx, itemClx )}>
