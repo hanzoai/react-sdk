@@ -181,6 +181,7 @@ const CarouselBuyCard: React.FC<{
           size='default' 
           item={cmmc.currentItem}
           onQuantityChanged={onQuantityChanged} 
+          variant={cmmc.cartEmpty ? 'primary' : 'outline'}
           className='min-w-[160px] w-full sm:max-w-[320px]' 
         />
         {!cmmc.cartEmpty && (

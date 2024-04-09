@@ -2,7 +2,7 @@
 import React from 'react'
 import { observer } from 'mobx-react-lite'
 
-import { Button, toast, type ButtonSizes } from '@hanzo/ui/primitives'
+import { Button, toast, type ButtonSizes, type ButtonVariants } from '@hanzo/ui/primitives'
 import { cn } from '@hanzo/ui/util'
 
 import { Icons } from '../Icons'
@@ -11,15 +11,15 @@ import { sendFBEvent, sendGAEvent } from '../../util/analytics'
 
 const AddToCartWidget: React.FC<{ 
   item: LineItem
-  ghost?: boolean
   disabled?: boolean
   className?: string
   buttonClx?: string
   size?: ButtonSizes
+  variant?: 'minimal' | 'primary' | 'outline'
   onQuantityChanged?: (sku: string, oldV: number, newV: number) => void
 }> = observer(({
   item,
-  ghost=false,
+  variant='primary',
   disabled=false,
   className='',
   buttonClx='',
@@ -31,12 +31,19 @@ const AddToCartWidget: React.FC<{
     // no need to safelist, since its used widely
   const ROUNDED_CLX = ` rounded-${ROUNDED_VAL} `
 
-  const iconClx = ghost ? 'h-4 w-4 md:h-3 md:w-3 text-muted-3 hover:text-foreground' : 'h-5 w-7 px-1 opacity-80'
-  const digitClx = ghost ? 'px-2 md:px-0.5 text-foreground ' : 'sm:px-2 font-semibold text-primary-fg '
+  const ghost = variant === 'minimal'
+  const outline = variant === 'outline'
+  const primary = variant === 'primary'
+
+  let iconClx = ghost ? 'h-4 w-4 md:h-3 md:w-3 text-muted-3 ' : 'h-5 w-7 px-1 opacity-70 '
+  iconClx += ghost ? 'group-hover:text-foreground' : 'group-hover:opacity-100'
+
+  let digitClx = ghost ? 'px-2 md:px-0.5 ' : 'sm:px-2 font-semibold '
+  digitClx += (ghost || outline) ? 'text-foreground ' : 'text-primary-fg '
 
   if (disabled) {
     return (
-      <div className={cn('flex flex-row items-stretch' + ROUNDED_CLX +  (ghost ? 'bg-transparent' : 'bg-primary'), className)}>
+      <div className={cn('flex flex-row items-stretch' + ROUNDED_CLX +  (!primary ? 'bg-transparent' : 'bg-primary'), className)}>
         <div className={'text-sm flex items-center cursor-default ' + digitClx} >{item.quantity}</div>
       </div>
     )
@@ -91,13 +98,24 @@ const AddToCartWidget: React.FC<{
   }
 
   return ( item.isInCart ? (
-    <div className={cn('flex flex-row items-stretch justify-between ' + ROUNDED_CLX + (ghost ? 'bg-transparent' : 'bg-primary'), className)}>
+    <div className={cn(
+      'flex flex-row items-stretch justify-between ',
+      ROUNDED_CLX,
+      (primary ? 'bg-primary' : 'bg-transparent'), 
+      (outline ? 'border border-muted' : ''),
+      className
+    )}>
       <Button
         aria-label={'Remove a ' + item.title + ' from the cart'}
         size={size}
-        variant={ghost ? 'ghost' : 'primary'}
+        variant={primary ? 'primary' : 'ghost'}
         rounded={ghost ? 'full' : ROUNDED_VAL}
-        className={cn('lg:min-w-0 lg:px-2 grow justify-start', (ghost ? 'px-1' : 'px-2'), buttonClx)}
+        className={cn(
+          'lg:min-w-0 lg:px-2 grow justify-start group', 
+          (ghost ? 'px-1' : 'px-2'), 
+          (outline ? 'hover:bg-transparent' : ''),
+          buttonClx
+        )}
         key='left'
         onClick={dec}
       >
@@ -111,9 +129,14 @@ const AddToCartWidget: React.FC<{
       <Button
         aria-label={'Add another ' + item.title + ' to the cart'}
         size={size}
-        variant={ghost ? 'ghost' : 'primary'}
+        variant={primary ? 'primary' : 'ghost'}
         rounded={ghost ? 'full' : ROUNDED_VAL}
-        className={cn('lg:min-w-0 lg:px-2 grow justify-end', (ghost ? 'px-1' : 'px-2'), buttonClx)}
+        className={cn(
+          'lg:min-w-0 lg:px-2 grow justify-end group', 
+          (ghost ? 'px-1' : 'px-2'), 
+          (outline ? 'hover:bg-transparent' : ''),
+          buttonClx
+        )}
         onClick={inc}
         key='right'
       >
@@ -124,7 +147,7 @@ const AddToCartWidget: React.FC<{
     <Button
       aria-label={'Add a ' + item.title + ' to cart'}
       size={size}
-      variant='primary'
+      variant={variant as ButtonVariants}
       rounded={ROUNDED_VAL}
       className={cn(buttonClx, className)}
       onClick={inc}
