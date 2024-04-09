@@ -19,10 +19,8 @@ import { useCommerce } from '../../service/context'
 import * as pathUtils from '../../service/path-utils'
 import { ObsStringMutator, getSelectionUISpecifier } from '../../util'
 
-import { 
-  CarouselItemSelector, 
-  ButtonItemSelector 
-} from '../item-selector'
+import { CarouselItemSelector, ButtonItemSelector } from '../item-selector'
+import FamilyCarousel from '../select-family/family-carousel'
 
 import AddToCartWidget from './add-to-cart-widget'
 
@@ -30,6 +28,8 @@ const SCROLL = {
   scrollAfter: 5,
   scrollHeightClx: 'h-[65vh]'
 }
+
+const MEDIA_CONSTRAINT = {w: 200, h: 200}
 
 const CarouselBuyCard: React.FC<{
   skuPath: string
@@ -61,9 +61,6 @@ const CarouselBuyCard: React.FC<{
       scrollable: boolean
       showItemMedia: boolean
     } 
-    multiple?: {
-      familyTokenMutator: ObsStringMutator | undefined
-    }
   } | undefined>(undefined)
 
   useEffect(() => {
@@ -105,14 +102,9 @@ const CarouselBuyCard: React.FC<{
     }
     else {
       const initialFamily = peek.family ? peek.family : peek.families![0]
-      const familyTokenMutator = new ObsStringMutator(pathUtils.lastToken(initialFamily.id))
-      r.current.multiple = {
-        familyTokenMutator    
-      }
       const currItem = peek.item ?? initialFamily.products[0]
       cmmc.setCurrentItem(currItem.sku)
     }
-
 
   }, [])
 
@@ -144,7 +136,7 @@ const CarouselBuyCard: React.FC<{
       {(r.current.single.showItemMedia && cmmc.currentItem ) && (
         <MediaStack 
           media={cmmc.currentItem} 
-          constrainTo={{w: 200, h: 200}} 
+          constrainTo={MEDIA_CONSTRAINT} 
           clx={(r.current.single.scrollable ? 'shrink-0' : '')}
         />
       )}
@@ -161,14 +153,25 @@ const CarouselBuyCard: React.FC<{
           options={r.current.single.selOptions}
         />  
       )}
-    </>) : ( 
-      <TitleArea 
-        title={r.current?.node.label ?? ''} 
-        byline={r.current?.node.subNodesLabel} 
-        clx={'mb-2 '}
-        bylineClx='!text-center font-bold text-muted mt-3'
-      />
-    ) /* TODO: THE GRAND SELECTOR */ }
+    </>) : (<>
+      {r.current?.uiSpec.multiFamily?.showParentTitle && (
+        <TitleArea 
+          title={r.current?.node.label ?? ''} 
+          byline={r.current?.node.subNodesLabel} 
+          clx={'mb-2 '}
+          bylineClx='!text-center font-bold text-muted mt-3'
+        />
+      )}
+      {r.current?.families && ( // safegaurd for first render etc.
+        <FamilyCarousel 
+          families={r.current?.families}
+          clx='w-full'
+          slideOptions={r.current?.uiSpec.multiFamily?.slide.options}
+          mediaConstraint={MEDIA_CONSTRAINT}
+          mobile={mobile}
+        />
+      )}
+    </>)}
     {(cmmc.currentItem) && (
       <div className={cn(
         'self-stretch mt-4 flex flex-col items-center gap-3',
@@ -195,5 +198,14 @@ const CarouselBuyCard: React.FC<{
     </div >
   )
 })
+
+/* Above family carousel
+      <TitleArea 
+        title={r.current?.node.label ?? ''} 
+        byline={r.current?.node.subNodesLabel} 
+        clx={'mb-2 '}
+        bylineClx='!text-center font-bold text-muted mt-3'
+      />
+*/
 
 export default CarouselBuyCard

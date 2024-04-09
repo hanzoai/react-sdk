@@ -3,8 +3,11 @@ import sep from '../service/sep'
 
 const DEFAULT = {
   multiFamily: {
-    family: 'carousel',
-    inSlide: { type: 'buttons' }
+    familySelector: 'carousel',
+    showParentTitle: false, 
+    slide: { 
+      type: 'buttons' 
+    }
   },
   singleFamily: { type: 'carousel' }
 } satisfies SelectionUISpecifier

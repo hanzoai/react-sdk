@@ -1,79 +1,87 @@
 'use client'
-import React, { useCallback, useEffect, useRef } from 'react'
-import { reaction } from 'mobx'
-import { observer } from 'mobx-react-lite'
+import React, { useCallback, useRef } from 'react'
 
 import { cn } from '@hanzo/ui/util'
 
 import {
-  type CarouselOptions,
   type CarouselApi,
   Carousel,
   CarouselContent,
   CarouselItem,
   CarouselPrevious,
   CarouselNext,
-  ApplyTypography,
-  MediaStack
 } from '@hanzo/ui/primitives'
 import type { Dimensions } from '@hanzo/ui/types'
 
-import type { Family, LineItem, CategoryNode } from '../../../types'
-import { formatCurrencyValue } from '../../../util'
+import type { Family, FamilyCarouselSlideOptions } from '../../../types'
 
+import FamilySlide from './slide'
+import {
+  SlideState,
+  FamilyCarouselState
+} from './state'
+
+import { useCommerce } from '../../..'
 
 const FamilyCarousel: React.FC<{
-  skuPath: string
+  families: Family[]
   clx?: string
   itemClx?: string
-  options?: CarouselOptions
+  slideOptions?: FamilyCarouselSlideOptions
   mediaConstraint?: Dimensions
-  getBylineText?: (c: Family) => string
-  variantOrientation?: 'vert' | 'horiz' 
-  showVariantImage?: boolean
-  showVariantPrice?: boolean
-  onQuantityChanged?: (sku: string, oldV: number, newV: number) => void
   mobile?: boolean
-}> = observer(({ 
-  skuPath,
+}> = ({ 
+  families,
   clx='',
   itemClx='',
-  options={loop: true},
+  slideOptions, 
   mediaConstraint={w: 250, h: 250},
-  variantOrientation='vert',
-  showVariantImage=true,
-  showVariantPrice=true,
-  onQuantityChanged,
   mobile=false,
 }) => {
 
-  const elbaApiRef = useRef<CarouselApi | undefined>(undefined)
-  const setApi = (api: CarouselApi) => {elbaApiRef.current = api}
+  const cmmc = useCommerce()
+  const stateRef = useRef<FamilyCarouselState>(
+    new FamilyCarouselState(families, cmmc.setCurrentItem.bind(cmmc))
+  )
 
   const onSelect = useCallback((emblaApi: CarouselApi) => {
     const index = emblaApi.selectedScrollSnap()
     if (index !== -1) {
-      //selectSku(items[index].sku)
-      // cmmc.selectPath
+      stateRef.current.setCurrentFamily(families[index].id)
     }
-  }, [])
-
-  const TEST = ["one", "two", "three"]
+  }, [stateRef.current])
 
   return ( 
-    <Carousel options={options} className={cn('w-full px-2', clx)} onCarouselSelect={onSelect} setApi={setApi}>
+    <Carousel 
+      className={cn('px-2', clx)}
+      options={{loop: false}}  
+      onCarouselSelect={onSelect} 
+    >
       <CarouselContent>
-
-      {/*items.map((item, index) => (
-        <CarouselItem key={index} className={cn('p-2 flex flex-col justify-center items-center', itemClx)}>
-          <FamilySlide cat
-        </CarouselItem>
-      ))*/}
+      {families.map((family) => {
+        const slideState = stateRef.current.getSlideState(family.id)
+        if (!slideState) {
+          throw new Error(`FamilyCarousel: no SlideState for family '${family.id}'!`)
+        }
+        return (
+          <CarouselItem key={family.id} className='p-2 flex flex-col justify-center items-center'>
+            <FamilySlide 
+              family={family}
+              selectedItemRef={slideState}
+              selectSku={slideState.selectSku.bind(slideState)}
+              mediaConstraint={mediaConstraint}
+              options={slideOptions}
+              mobile={mobile}
+              clx={itemClx}
+            />
+          </CarouselItem>
+        )}
+      )}
       </CarouselContent>
       <CarouselPrevious className='left-1'/>
       <CarouselNext className='right-1'/>
     </Carousel>
   )
-})
+}
 
 export default FamilyCarousel

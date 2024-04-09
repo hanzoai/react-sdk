@@ -67,7 +67,7 @@ const ItemSlide: React.FC<{
             <QuantityIndicator 
               item={item} 
               clx='h-[26px] ml-1' 
-              iconClx={'fill-foreground'}
+              iconClx='fill-foreground'
               digitClx='not-typography font-semibold text-primary-fg leading-none font-sans text-xs' 
             />
           )}

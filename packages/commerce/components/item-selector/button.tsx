@@ -66,8 +66,7 @@ const ButtonItemSelector: React.FC<ItemSelectorProps> = observer(({
   soleItemClx='',
   scrollable=false,
   mobile=false,
-  options={},
-  ext={}
+  options={}
 }) => {
 
   const imageButtons = 'imageButtons' in options ? options.imageButtons : false
