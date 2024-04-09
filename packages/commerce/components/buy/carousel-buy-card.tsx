@@ -3,7 +3,7 @@ import React, { useRef, useEffect, type ComponentType } from 'react'
 import { observer } from 'mobx-react-lite'
 
 import { cn } from '@hanzo/ui/util'
-import { ApplyTypography, MediaStack, Skeleton } from '@hanzo/ui/primitives'
+import { ApplyTypography, Button, MediaStack, Skeleton } from '@hanzo/ui/primitives'
 
 import type { 
   ItemSelectorProps, 
@@ -35,11 +35,13 @@ const CarouselBuyCard: React.FC<{
   skuPath: string
   clx?: string
   mobile?: boolean
+  handleCheckout: () => void
   onQuantityChanged?: (sku: string, oldV: number, newV: number) => void
 }> = observer(({
   skuPath,
   clx='',
   mobile=false,
+  handleCheckout,
   onQuantityChanged,
 }) => {
 
@@ -147,7 +149,7 @@ const CarouselBuyCard: React.FC<{
         />
       )}
       {(r.current.single.showItemMedia && !cmmc.currentItem ) && (
-        <Skeleton className={'w-[200px] h-[200px] ' + (r.current.single.scrollable ? 'shrink-0' : '')}/>
+        <Skeleton className={'w-[200px] h-[200px] my-4 ' + (r.current.single.scrollable ? 'shrink-0' : '')}/>
       )}
       {r.current.single.items && (
         <r.current.single.Selector 
@@ -168,12 +170,27 @@ const CarouselBuyCard: React.FC<{
       />
     ) /* TODO: THE GRAND SELECTOR */ }
     {(cmmc.currentItem) && (
-      <AddToCartWidget 
-        size='default' 
-        item={cmmc.currentItem}
-        onQuantityChanged={onQuantityChanged} 
-        className={cn('min-w-[160px] mx-auto', (r.current?.single?.scrollable ? 'shrink-0' : '') /*, addWidgetClx */)}
-      />
+      <div className={cn(
+        'self-stretch mt-4 flex flex-col items-center gap-3',
+        (r.current?.single?.scrollable ? 'shrink-0' : '')
+      )}>
+        <AddToCartWidget 
+          size='default' 
+          item={cmmc.currentItem}
+          onQuantityChanged={onQuantityChanged} 
+          className='min-w-[160px] w-full sm:max-w-[320px]' 
+        />
+        {!cmmc.cartEmpty && (
+          <Button 
+            onClick={handleCheckout} 
+            variant='primary' 
+            rounded='lg' 
+            className='min-w-[160px] w-full sm:max-w-[320px]'
+          >
+            Checkout
+          </Button>
+        )}
+      </div>
     )} 
     </div >
   )

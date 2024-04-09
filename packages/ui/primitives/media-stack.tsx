@@ -11,7 +11,7 @@ import Image from './image'
 import VideoPlayer from './video-player'
 
 const MediaStack: React.FC<{
-  media: MediaStackDef,
+  media: MediaStackDef
   constrainTo?: Dimensions
   clx?: string
 }> = ({
@@ -19,7 +19,6 @@ const MediaStack: React.FC<{
   constrainTo: cnst = {w: 250, h: 250},
   clx=''
 }) => {
-
 
 
     // Order of precedence: 3D > MP4 > Image
@@ -56,7 +55,7 @@ const MediaStack: React.FC<{
     <Image
       def={img}
       constrainTo={cnst} 
-      className={cn('m-auto', clx)}
+      className={cn('mx-auto', clx)}
     />
   ) : (
     <div style={{width: cnst.w, height: cnst.h}} className={cn('bg-level-2', clx)} />

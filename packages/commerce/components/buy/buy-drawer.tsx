@@ -1,5 +1,6 @@
 'use client'
 import React, { useState, type ReactNode } from 'react'
+import { useRouter } from 'next/navigation'
 
 import { X as LucideX} from 'lucide-react'
 
@@ -33,6 +34,7 @@ const BuyDrawer: React.FC<{
 }) => {
 
   const [open, setOpen] = useState<boolean>(false)
+  const router = useRouter()
 
   return (
     <Drawer open={open} onOpenChange={setOpen} >
@@ -44,6 +46,7 @@ const BuyDrawer: React.FC<{
       >
         <CarouselBuyCard 
           skuPath={skuPath} 
+          handleCheckout={() => {router.push('/checkout')}} 
           mobile={mobile} 
           clx={cn('w-full', cardClx)}
         />
@@ -65,16 +68,6 @@ const BuyDrawer: React.FC<{
 export default BuyDrawer
 
 /*
-
-        <FamilyCar
-          skuPath={skuPath} 
-          mobile={mobile} 
-          onQuantityChanged={onQuantityChanged} 
-          clx={cn('w-full', cardClx)}
-
-        />
-
-
   <BuyCard 
     skuPath={skuPath} 
     scrollAfter={spec.selector === 'carousel' ? 999 : undefined}

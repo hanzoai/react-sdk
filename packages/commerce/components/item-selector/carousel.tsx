@@ -59,7 +59,7 @@ const ItemSlide: React.FC<{
           {item.byline && (<p>{item.byline}</p>)}
         </ApplyTypography>
       )}
-      <MediaStack media={item} constrainTo={constrainTo} clx='' />
+      <MediaStack media={item} constrainTo={constrainTo} clx='my-4' />
       {!imageOnly && (showPrice || showQuantity) && (
         <ApplyTypography className='flex flex-row items-center !gap-2 [&>*]:!m-0'>
           {showPrice && (<p>{formatCurrencyValue(item.price)}</p>)}
