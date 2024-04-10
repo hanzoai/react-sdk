@@ -3,23 +3,31 @@ import React from 'react'
 
 import Spline from '@splinetool/react-spline'
 
-import { cn, constrain } from '../util'
-import { type Block, type VideoBlock, VideoBlockComponent } from '../blocks'
+import { cn, constrain, spreadToTransform } from '../util'
 import type { MediaStackDef, Dimensions } from '../types'
 
 import Image from './image'
 import VideoPlayer from './video-player'
+
+
 
 const MediaStack: React.FC<{
   media: MediaStackDef
   constrainTo?: Dimensions
   clx?: string
 }> = ({
-  media: {img, video, animation},
+  media,
   constrainTo: cnst = {w: 250, h: 250},
   clx=''
 }) => {
+  const {img, video, animation, mediaTransform} = media
 
+  if ((media as unknown as any).sku === 'LXM-CN-1B') {
+    console.log("1B...", mediaTransform)
+  }
+
+
+  const transform = mediaTransform ?? {}
 
     // Order of precedence: 3D > MP4 > Image
   if (animation) {
@@ -31,7 +39,8 @@ const MediaStack: React.FC<{
         style={{
             // // !aspect-[12/10] 
           width: (6/5 * (typeof cnst.h === 'number' ? cnst.h as number : parseInt(cnst.h as string)) ),
-          height: cnst.h
+          height: cnst.h,
+          ...spreadToTransform(transform)
         }}
       />
     )
@@ -41,12 +50,13 @@ const MediaStack: React.FC<{
     const dim = constrain(video.dim.md, cnst)
     return (
       <VideoPlayer 
-        className={cn('mx-auto', clx)} 
+        className={clx} 
         sources={video.sources} 
         width={dim.w} 
         height={dim.h} 
         style={{
-          minHeight: dim.h // prevents layout jumps
+          minHeight: dim.h, // prevents layout jumps
+          ...spreadToTransform(transform)
         }}
         {...video.videoProps} 
       />
@@ -56,7 +66,8 @@ const MediaStack: React.FC<{
     <Image
       def={img}
       constrainTo={cnst} 
-      className={cn('mx-auto', clx)}
+      className={clx}
+      transform={transform}
     />
   ) : (
     <div style={{width: cnst.w, height: cnst.h}} className={cn('bg-level-2', clx)} />
