@@ -73,14 +73,14 @@ const ButtonItemSelector: React.FC<ItemSelectorProps> = observer(({
 }) => {
 
   const imageButtons = 'imageButtons' in options ? options.imageButtons : false
-  const showFamily = 'showFamily' in options ? options.showFamily : false
+  const showFamilyInOption = 'showFamilyInOption' in options ? options.showFamilyInOption : false
   const showPrice = 'showPrice' in options ? options.showPrice : true
   const showQuantity = 'showQuantity' in options ? options.showQuantity : false
   const horizButtons = 'horizButtons' in options ? options.horizButtons : false
 
   const labelAndPrice = (item : LineItem) => (
-    (showFamily ? (item.familyTitle + ', ' + item.optionLabel) : item.optionLabel) + 
-    (showPrice ? ((showFamily ? ': ' : ', ') + formatCurrencyValue(item.price)) : '')
+    (showFamilyInOption ? (item.familyTitle + ', ' + item.optionLabel) : item.optionLabel) + 
+    (showPrice ? ((showFamilyInOption ? ': ' : ', ') + formatCurrencyValue(item.price)) : '')
   )
 
   const Item: React.FC<{ 

@@ -113,8 +113,8 @@ const CarouselBuyCard: React.FC<{
   }, [skuPath])
 
   const TitleArea: React.FC<{
-    title: string
-    byline?: string
+    title: string | undefined
+    byline?: string | undefined
     clx?: string
     bylineClx?: string
   }> = ({
@@ -122,21 +122,32 @@ const CarouselBuyCard: React.FC<{
     byline,
     clx='',
     bylineClx='' 
-  }) => (
-    <ApplyTypography className={clx}>
-      <h3>{title}</h3>
+  }) => ( title || byline ? (
+    <ApplyTypography className={cn('flex flex-col items-center !gap-0 [&>*]:!m-0 ', clx)}>
+      <h4>{title}</h4>
       {byline && (<h6 className={bylineClx}>{byline}</h6>)}
     </ApplyTypography>
+    ) : null
   )
 
   return (
     <div className={cn(
-      'px-4 md:px-6 pt-3 pb-4 flex flex-col gap-4 items-center min-h-[40vh]', 
+      'px-4 md:px-6 pt-3 pb-4 flex flex-col gap-1 items-center min-h-[40vh]', 
       clx,
       r.current?.single?.scrollable ? SCROLL.scrollHeightClx : 'h-auto'
     )}>
     {r.current?.single ? (<>
-      <TitleArea title={r.current?.family?.title ?? ''} clx=''/>
+      <TitleArea 
+          // default: false
+        title={r.current.uiSpec.singleFamily?.options?.showFamilyTitle ? 
+          r.current?.family?.title : undefined} 
+          // only if title is shown. default: false
+        byline={
+          (r.current.uiSpec.singleFamily?.options?.showFamilyTitle &&
+          r.current.uiSpec.singleFamily?.options?.showFamilyByline) ? 
+          r.current?.family?.byline : undefined} 
+        clx=''
+      />
       {(r.current.single.showItemMedia && cmmc.currentItem ) && (
         <MediaStack 
           media={cmmc.currentItem} 

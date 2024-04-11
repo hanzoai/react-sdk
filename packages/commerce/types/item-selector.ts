@@ -12,7 +12,17 @@ type ItemSelectorOptions = {
      * eg, 'Minted Bar, 1oz' vs '1oz'
      * default: false.
      */
-  showFamily?: boolean
+  showFamilyInOption?: boolean
+
+    /** default: true */
+  showFamilyTitle?: boolean
+    /** only if title shown 
+     * default: false */
+  showFamilyByline?: boolean
+
+    /** default: true if it exists */
+  showByline?: boolean
+
     /**
      * Show the current item quantity along with title and price.
      * default: false
@@ -22,10 +32,10 @@ type ItemSelectorOptions = {
     /** default: true */
   showPrice?: boolean
 
-    /** default: false */
+    /** (button selector only) default: false */
   imageButtons?: boolean  
 
-    /** default: false */
+    /** (button selector only) default: false */
   horizButtons?: boolean  
 }
 
@@ -37,8 +47,10 @@ interface _ItemSelectorCompProps {
      * eg, Carousel options.
      */
   ext?: any
-    /** List selectors will scroll.  Used internally */
-  scrollable: boolean
+    /** List selectors will scroll.  
+     * Used internally
+     * default: false */
+  scrollable? : boolean
   options?: ItemSelectorOptions
 
   mobile?: boolean 
