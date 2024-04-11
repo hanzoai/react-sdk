@@ -22,11 +22,6 @@ const MediaStack: React.FC<{
 }) => {
   const {img, video, animation, mediaTransform} = media
 
-  if ((media as unknown as any).sku === 'LXM-CN-1B') {
-    console.log("1B...", mediaTransform)
-  }
-
-
   const transform = mediaTransform ?? {}
 
     // Order of precedence: 3D > MP4 > Image
@@ -46,7 +41,6 @@ const MediaStack: React.FC<{
     )
   } 
   if (video) {
-
     const dim = constrain(video.dim.md, cnst)
     return (
       <VideoPlayer 
@@ -72,7 +66,6 @@ const MediaStack: React.FC<{
   ) : (
     <div style={{width: cnst.w, height: cnst.h}} className={cn('bg-level-2', clx)} />
   )
-
 }
 
 export default MediaStack

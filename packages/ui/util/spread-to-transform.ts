@@ -4,7 +4,6 @@ export default (t: MediaTransform) => {
 
   let transformStrings: string[] = [] 
   const scaleVal = 'scale' in t ? t.scale : undefined
-  console.log("TRANS scaleVal: ", scaleVal)
   if (scaleVal) {
     if (typeof scaleVal === 'number') {
       transformStrings.push(`scale(${scaleVal})`)   
@@ -20,7 +19,6 @@ export default (t: MediaTransform) => {
       throw new Error("parsing MediaTransform: Unrecognized value for 'scale'!")
     }
   }
-
 
   return transformStrings.length > 0 ? { transform: transformStrings.join(' ') } : {}
 }
