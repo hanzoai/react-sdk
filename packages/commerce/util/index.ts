@@ -66,3 +66,5 @@ export { default as ProductMediaAccessor } from './product-media-accessor'
 export * from './selection-ui-specifiers'
 
 export { getErrorMessage } from './error'
+
+export { default as accessOptionValues } from './item-selector-options-accessor'

@@ -6,22 +6,28 @@ interface ItemSelector {
   selectSku: (sku: string) => void 
 }
 
+  // NOTE: if a field is added here, it should also
+  // be added to util/item-selector-options-accessor.ts
 type ItemSelectorOptions = {
+
+    /** default: true */
+  showFamilyTitle?: boolean
+
+    /** only if title shown 
+     * default: false */
+  showFamilyByline?: boolean
+
     /** 
      * Whether the item label includes the Family name.
      * eg, 'Minted Bar, 1oz' vs '1oz'
      * default: false.
      */
   showFamilyInOption?: boolean
-
-    /** default: true */
-  showFamilyTitle?: boolean
-    /** only if title shown 
-     * default: false */
-  showFamilyByline?: boolean
-
     /** default: true if it exists */
   showByline?: boolean
+
+    /** default: true */
+  showPrice?: boolean
 
     /**
      * Show the current item quantity along with title and price.
@@ -29,14 +35,14 @@ type ItemSelectorOptions = {
      */
   showQuantity?: boolean   
 
-    /** default: true */
-  showPrice?: boolean
-
     /** (button selector only) default: false */
   imageButtons?: boolean  
 
     /** (button selector only) default: false */
   horizButtons?: boolean  
+
+    /** (carousel selector only) default: false */
+  showSlider?: boolean
 }
 
 interface _ItemSelectorCompProps {

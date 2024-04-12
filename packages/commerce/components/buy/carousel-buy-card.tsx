@@ -189,7 +189,7 @@ const CarouselBuyCard: React.FC<{
     </>)}
     {(cmmc.currentItem) && (
       <div className={cn(
-        'self-stretch mt-4 flex flex-col items-center gap-3',
+        'self-stretch mt-8 flex flex-col items-center gap-3',
         (r.current?.single?.scrollable ? 'shrink-0' : '')
       )}>
         <AddToCartWidget 

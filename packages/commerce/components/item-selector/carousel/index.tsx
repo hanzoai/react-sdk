@@ -1,5 +1,5 @@
 'use client'
-import React, { useCallback, useEffect, useRef } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { reaction } from 'mobx'
 import { observer } from 'mobx-react-lite'
 
@@ -7,6 +7,7 @@ import { cn } from '@hanzo/ui/util'
 import type { Dimensions } from '@hanzo/ui/types'
 
 import {
+  ApplyTypography,
   type CarouselOptions,
   type CarouselApi,
   Carousel,
@@ -14,14 +15,14 @@ import {
   CarouselItem,
   CarouselPrevious,
   CarouselNext,
-  ApplyTypography,
-  MediaStack
+  MediaStack,
 } from '@hanzo/ui/primitives'
 
-import type { ItemSelectorProps, LineItem } from '../../types'
-import { formatCurrencyValue } from '../../util'
+import type { ItemSelectorProps, LineItem } from '../../../types'
+import { formatCurrencyValue, accessOptionValues } from '../../../util'
 
-import QuantityIndicator from '../quantity-indicator'
+import QuantityIndicator from '../../quantity-indicator'
+import ItemCarouselSlider from './slider'
 
 const DEFAULT_CONSTRAINT = {w: 250, h: 250}
 
@@ -60,19 +61,26 @@ const CarouselItemSelector: React.FC<ItemSelectorProps> = observer(({
   } satisfies CarouselItemSelectorPropsExt
 }) => {
 
-  const showPrice = 'showPrice' in options ? options.showPrice! : true
-  const showQuantity = 'showQuantity' in options ? options.showQuantity! : false
-  const showFamilyInOption = 'showFamilyInOption' in options ? options.showFamilyInOption! : false
-  const showByline = 'showByline' in options ? options.showByline! : true
+  const {
+    showPrice, 
+    showQuantity,
+    showFamilyInOption,
+    showByline,
+    showSlider
+  } = accessOptionValues(options)
+
+  const elbaApiRef = useRef<CarouselApi | undefined>(undefined)
+  const scrollToRef = useRef<((index: number) => void) | undefined>(undefined)
+  const dontRespondRef = useRef<boolean>(false)
+  const itemsRef = useRef<LineItem[] | undefined>(undefined)
+
+  const setApi = (api: CarouselApi) => {elbaApiRef.current = api}
+  const setScrollTo = (scrollTo: (index: number) => void) => { scrollToRef.current = scrollTo}
 
   const carouselOptions = 'options' in ext ? ext.options : undefined
   const constrainTo = 'constrainTo' in ext ? ext.constrainTo : DEFAULT_CONSTRAINT
   const imageOnly = 'imageOnly' in ext ? ext.imageOnly : false
 
-  const elbaApiRef = useRef<CarouselApi | undefined>(undefined)
-  const dontRespondRef = useRef<boolean>(false)
-
-  const setApi = (api: CarouselApi) => {elbaApiRef.current = api}
 
   const onSelect = useCallback((emblaApi: CarouselApi) => {
     if (dontRespondRef.current) {
@@ -80,18 +88,27 @@ const CarouselItemSelector: React.FC<ItemSelectorProps> = observer(({
       return
     }
     const index = emblaApi.selectedScrollSnap()
-    if (index !== -1) {
-      selectSku(items[index].sku)
+    if (index !== -1 && itemsRef.current) {
+      selectSku(itemsRef.current[index].sku)
+      if (scrollToRef.current) {
+        scrollToRef.current(index)
+      }
     }
     dontRespondRef.current = false
-  }, [])
+  }, [scrollToRef.current ])
 
   useEffect(() => {
+    if (showSlider) {
+      itemsRef.current = items.sort((a: LineItem, b: LineItem): number => (a.price - b.price))
+    }
+    else {
+      itemsRef.current = items
+    }
     return reaction(
-      () => ({item: itemRef.item}),
-      ({item}) => {
-        if (elbaApiRef.current) {
-          const index = items.findIndex((el) => (el.sku === item?.sku))  
+      () => (itemRef.item),
+      (item) => {
+        if (elbaApiRef.current && itemsRef.current) {
+          const index = itemsRef.current.findIndex((el) => (el.sku === item?.sku))  
           if (index !== -1) {
             dontRespondRef.current = true
             elbaApiRef.current.scrollTo(index) 
@@ -119,19 +136,32 @@ const CarouselItemSelector: React.FC<ItemSelectorProps> = observer(({
     }
   }
 
+  const onScrollIndexChange = (index: number) => {
+    dontRespondRef.current = true
+    selectSku(itemsRef.current![index].sku)
+    elbaApiRef.current?.scrollTo(index) 
+  }
+
   return ( 
     <div className={cn('w-full flex flex-col items-center', clx)}>
-      <Carousel options={carouselOptions} className={'w-full px-2' + debugBorder('r')} onCarouselSelect={onSelect} setApi={setApi}>
+      <Carousel 
+        options={showSlider ? {...carouselOptions, loop: false} : carouselOptions } 
+        className={'w-full px-2' + debugBorder('r')} 
+        onCarouselSelect={onSelect} 
+        setApi={setApi}
+      >
         <CarouselContent>
-        {items.map((item) => (
+        {itemsRef.current?.map((item) => (
           <ItemSlide key={item.sku} item={item} constrainTo={constrainTo} clx={itemClx} />
         ))}
         </CarouselContent>
-        <CarouselPrevious className='left-1'/>
-        <CarouselNext className='right-1'/>
+        {!showSlider && (<>
+          <CarouselPrevious className='left-1'/>
+          <CarouselNext className='right-1'/>
+        </>)}
       </Carousel>
      
-      {(!imageOnly && itemRef.item) && (
+      {(!imageOnly && itemRef.item) && (<>
         <ApplyTypography className='flex flex-col items-center [&>*]:!m-0 !gap-1 '>
           <div className={
               'flex items-center gap-1 [&>*]:!m-0 ' + debugBorder('g') + 
@@ -157,7 +187,15 @@ const CarouselItemSelector: React.FC<ItemSelectorProps> = observer(({
           </div>
           {showByline && itemRef.item.byline && (<p>{itemRef.item.byline}</p>)}
         </ApplyTypography>
-      )}
+        {showSlider && (
+          <ItemCarouselSlider 
+            clx='mt-5 w-[320px]' 
+            numStops={itemsRef.current ? itemsRef.current.length : 0}  
+            setScrollTo={setScrollTo}
+            onIndexChange={onScrollIndexChange}
+          />
+        )}
+      </>)}
     </div>
   )
 })
