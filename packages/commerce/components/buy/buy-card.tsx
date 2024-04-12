@@ -18,7 +18,7 @@ import { useCommerce } from '../../service/context'
 import * as pathUtils from '../../service/path-utils'
 import { getFacetValuesMutator, ObsStringMutator } from '../../util'
 
-import LevelNodesWidget from '../select-family/level-nodes-widget'
+import NodeTabs from '../node-selector/node-tabs'
 import AddToCartWidget from './add-to-cart-widget'
 
 const BuyCard: React.FC<{
@@ -205,7 +205,7 @@ const BuyCard: React.FC<{
           <h6 className='!text-center font-bold text-muted mt-3'>{inst.current!.requestedNode.subNodesLabel}</h6>
         )}
       </ApplyTypography>
-      <LevelNodesWidget
+      <NodeTabs
         className={cn(
           'grid gap-0 align-stretch justify-normal ' + `grid-cols-${inst.current.requestedNode.subNodes!.length}`, 
           'border-b-2 rounded-lg border-level-3 mb-4 -mr-2 -ml-2 max-w-[460px] h-10', // height is needed for iPhone bug

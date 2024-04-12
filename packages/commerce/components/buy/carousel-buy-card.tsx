@@ -19,7 +19,7 @@ import { useCommerce } from '../../service/context'
 import { getSelectionUISpecifier } from '../../util'
 
 import { CarouselItemSelector, ButtonItemSelector } from '../item-selector'
-import FamilyCarousel from '../select-family/family-carousel'
+import FamilyCarousel from '../node-selector/family-carousel'
 
 import AddToCartWidget from './add-to-cart-widget'
 
