@@ -18,8 +18,7 @@ const ItemCarouselSlider: React.FC<{
   const [index, setIndex] = useState<number>(0)
   useEffect(() => { setScrollTo(setIndex) }, [setScrollTo])
 
-  const onValueChange = (v: number[]) => { setIndex(v[0]) }
-  const onValueCommit = (v: number[]) => { onIndexChange(v[0]) }
+  const onValueChange = (v: number[]) => { setIndex(v[0]); onIndexChange(v[0]) }
 
   return ( 
     <Slider 
@@ -34,7 +33,6 @@ const ItemCarouselSlider: React.FC<{
       step={1} 
       value={[index]}
       onValueChange={onValueChange}
-      onValueCommit={onValueCommit}
     />
   )
 }

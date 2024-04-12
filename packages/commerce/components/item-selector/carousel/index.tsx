@@ -164,8 +164,8 @@ const CarouselItemSelector: React.FC<ItemSelectorProps> = observer(({
       {(!imageOnly && itemRef.item) && (<>
         <ApplyTypography className='flex flex-col items-center [&>*]:!m-0 !gap-1 '>
           <div className={
-              'flex items-center gap-1 [&>*]:!m-0 ' + debugBorder('g') + 
-              (showFamilyInOption ? 'flex-col' : 'flex-row')
+            'flex items-center gap-1 [&>*]:!m-0 ' + debugBorder('g') + 
+            (showFamilyInOption ? 'flex-col' : 'flex-row')
           }>
             <h6 className='font-semibold'>
               {optionLabel() + (showPrice && !showFamilyInOption ? ',' : '')}
