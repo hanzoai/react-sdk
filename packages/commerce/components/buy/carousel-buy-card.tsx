@@ -22,14 +22,15 @@ import type {
   CategoryNode,
   CategoryNodeRole,
   SelectionUISpecifier,
-  ItemSelectorOptions, 
+  ItemSelectorOptions,
+  MultiFamilySelectorProps, 
 } from '../../types'
 
 import { useCommerce } from '../../service/context'
 import { getSelectionUISpecifier, accessOptionValues } from '../../util'
 
 import { CarouselItemSelector, ButtonItemSelector } from '../item-selector'
-import FamilyCarousel from '../node-selector/family-carousel'
+import { FamilyCarousel, AllVariantsCarousel } from '../node-selector'
 
 import AddToCartWidget from './add-to-cart-widget'
 
@@ -80,7 +81,12 @@ const CarouselBuyCard: React.FC<{
       selOptions: ItemSelectorOptions | undefined
       scrollable: boolean
       showItemMedia: boolean
-    } 
+    }
+    multi?: {
+      Selector: ComponentType<MultiFamilySelectorProps>
+      itemOptions: ItemSelectorOptions | undefined
+      initialFamilyId: string
+    }  
   } | undefined>(undefined)
 
   const [changeMeToRerender, setChangeMeToRerender] = useState<boolean>(false)
@@ -140,6 +146,16 @@ const CarouselBuyCard: React.FC<{
         // TODO: Does this ever need to be sorted??
       const currItem = peek.item ?? initialFamily.products[0]
       cmmc.setCurrentItem(currItem.sku)
+
+      r.current.multi = {
+        Selector:  (uiSpec.multiFamily?.type === 'family-carousel') ? 
+          FamilyCarousel 
+          : 
+          AllVariantsCarousel,
+        itemOptions: uiSpec.multiFamily?.options,
+        initialFamilyId: initialFamily.id
+      }
+
     }
 
       // Must do this since Dialog code takes this comp out of the React shadow DOM
@@ -152,6 +168,17 @@ const CarouselBuyCard: React.FC<{
     clx='',
   }) => {
 
+    if (!r.current) return null
+
+    const options = (r.current.uiSpec.singleFamily) ?
+      r.current.uiSpec.singleFamily.options : r.current.uiSpec.multiFamily!.options  
+
+    const { showFamilyTitle, showFamilyByline } = accessOptionValues(options)
+
+    const title = showFamilyTitle ? r.current.family?.title : undefined
+    const byline = showFamilyTitle && showFamilyByline ? r.current.family?.byline :  undefined
+
+    /*
     let title: string | undefined
     let byline: string | undefined
 
@@ -161,16 +188,17 @@ const CarouselBuyCard: React.FC<{
       byline = showFamilyTitle && showFamilyByline ? r.current?.family?.byline :  undefined
     }
     else {
-      /* 
-        Could also be:
-          title = {r.current?.node.label ?? ''} 
-          byline = {r.current?.node.subNodesLabel} 
-      */
       title =  r.current?.uiSpec.multiFamily?.showParentTitle 
         ? 
         r.current?.family?.parentTitle : undefined,
       byline = undefined
     }
+    */
+      /* 
+        Could also be:
+          title = {r.current?.node.label ?? ''} 
+          byline = {r.current?.node.subNodesLabel} 
+      */
 
     return ( title || byline ? (
       <ApplyTypography className={cn('flex flex-col items-center !gap-0 [&>*]:!m-0 ', clx)}>
@@ -220,6 +248,27 @@ const CarouselBuyCard: React.FC<{
     )}
   </>)
 
+  const MultiFamilyUI: React.FC<{      
+    Selector: ComponentType<MultiFamilySelectorProps>
+    itemOptions: ItemSelectorOptions | undefined
+    families: Family[]
+    initialFamilyId: string
+  }> = ({
+    Selector,
+    itemOptions,
+    families,
+    initialFamilyId
+  }) => (
+    <Selector 
+      families={families}
+      initialFamilyId={initialFamilyId}
+      clx='w-full'
+      itemOptions={itemOptions}
+      mediaConstraint={MEDIA_CONSTRAINT}
+      mobile={mobile}
+    />
+  )
+
   const Buttons: React.FC<{clx?: string}> = observer(({
     clx=''
   }) => (cmmc.currentItem ? (
@@ -252,14 +301,8 @@ const CarouselBuyCard: React.FC<{
       <TitleArea clx='' />
       {r.current?.single ? ( 
         <SingleFamilyUI {...r.current.single} /> 
-      ) : (r.current?.families && /* safegaurd for first render, etc. */ ( 
-        <FamilyCarousel 
-          families={r.current?.families}
-          clx='w-full'
-          slideOptions={r.current?.uiSpec.multiFamily?.slide.options}
-          mediaConstraint={MEDIA_CONSTRAINT}
-          mobile={mobile}
-        />
+      ) : (r.current?.multi && r.current.families && /* safegaurd for first render, etc. */ (
+        <MultiFamilyUI {...r.current.multi} families={r.current.families} />
       ))}
       <Buttons clx={cn(
         'self-stretch mt-8 flex flex-col items-center gap-3',

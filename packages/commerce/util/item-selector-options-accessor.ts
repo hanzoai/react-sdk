@@ -16,6 +16,7 @@ export default (options: ItemSelectorOptions | undefined = {}): Required<ItemSel
   const showSlider = 'showSlider' in options ? options.showSlider! : true
 
   const sort = 'sort' in options ? options.sort! : 'none'
+  const title = 'title' in options ? options.title! : 'short'
 
   return {
     showFamilyInOption,
@@ -27,6 +28,7 @@ export default (options: ItemSelectorOptions | undefined = {}): Required<ItemSel
     buttonType,
     horizButtons,
     showSlider,
-    sort
+    sort,
+    title
   }
 }

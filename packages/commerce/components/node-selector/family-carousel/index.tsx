@@ -11,37 +11,27 @@ import {
   CarouselPrevious,
   CarouselNext,
 } from '@hanzo/ui/primitives'
-import type { Dimensions } from '@hanzo/ui/types'
 
-import type { Family, FamilyCarouselSlideOptions } from '../../../types'
+import type { MultiFamilySelectorProps } from '../../../types'
 
 import FamilySlide from './slide'
-import {
-  SlideState,
-  FamilyCarouselState
-} from './state'
+import { FamilyCarouselState } from './state'
 
 import { useCommerce } from '../../..'
 
-const FamilyCarousel: React.FC<{
-  families: Family[]
-  clx?: string
-  itemClx?: string
-  slideOptions?: FamilyCarouselSlideOptions
-  mediaConstraint?: Dimensions
-  mobile?: boolean
-}> = ({ 
+const FamilyCarousel: React.FC<MultiFamilySelectorProps> = ({ 
   families,
+  initialFamilyId,
   clx='',
   itemClx='',
-  slideOptions, 
+  itemOptions, 
   mediaConstraint={w: 250, h: 250},
   mobile=false,
 }) => {
 
   const cmmc = useCommerce()
   const stateRef = useRef<FamilyCarouselState>(
-    new FamilyCarouselState(families, cmmc.setCurrentItem.bind(cmmc))
+    new FamilyCarouselState(families, initialFamilyId, cmmc.setCurrentItem.bind(cmmc))
   )
 
   const onSelect = useCallback((emblaApi: CarouselApi) => {
@@ -70,7 +60,7 @@ const FamilyCarousel: React.FC<{
               selectedItemRef={slideState}
               selectSku={slideState.selectSku.bind(slideState)}
               mediaConstraint={mediaConstraint}
-              options={slideOptions}
+              options={itemOptions}
               mobile={mobile}
               clx={itemClx}
             />

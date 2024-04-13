@@ -49,11 +49,15 @@ class FamilyCarouselState {
   _map = new Map<string, SlideState>()
   _syncSku: (sku: string) => void
 
-  constructor(fams: Family[], syncSkuToCurrentSlide: (sku: string) => void) {
+  constructor(
+    fams: Family[], 
+    initialFamilyId: string,
+    syncSkuToCurrentSlide: (sku: string) => void
+  ) {
 
-    fams.forEach((f, index) => {this._map.set(f.id, new SlideState(
+    fams.forEach((f) => {this._map.set(f.id, new SlideState(
       f,
-      (index === 0),
+      (f.id === initialFamilyId),
       syncSkuToCurrentSlide
     ))})
     this._syncSku = syncSkuToCurrentSlide

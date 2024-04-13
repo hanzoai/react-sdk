@@ -1,37 +1,25 @@
 import type { ItemSelectorOptions } from './item-selector'
-type SelectorType = 'buttons' | 'carousel' 
 
-interface FamilyCarouselSlideOptions extends ItemSelectorOptions {
-    /** 
-     * default: short
-     * 'short': product.shortTitle if defined
-     * 'long': always us product.title, even if .shortTitle is defined
-     * 'none': do not show title AND BYLINE
-     */
-  title?: 'none' | 'long' | 'short'
-    /** default: true */ 
-  showByline?: boolean
-}
+type SingleFamilySelector = 'buttons' | 'carousel' 
+type MultiFamilySelector = 'family-carousel' | 'all-variants-carousel'
 
 interface SelectionUISpecifier {
   multiFamily?: {
-    familySelector: 'carousel'
+    type: MultiFamilySelector
       /** Should title of parent node of families.
        * default: true */ 
     showParentTitle: boolean 
-    slide: {
-      type: 'buttons'
-      options?: FamilyCarouselSlideOptions
-    }
+    options?: ItemSelectorOptions
   }
   singleFamily?: {
-    type: SelectorType
+    type: SingleFamilySelector
     options?: ItemSelectorOptions
   } 
 }
 
 export {
   type SelectionUISpecifier,
-  type FamilyCarouselSlideOptions,
-  type SelectorType
+  type ItemSelectorOptions,
+  type SingleFamilySelector,
+  type MultiFamilySelector
 }

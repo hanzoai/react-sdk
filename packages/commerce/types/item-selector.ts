@@ -13,6 +13,16 @@ type ItemButton = 'text' | 'image-and-text' | 'image'
   // be added to util/item-selector-options-accessor.ts
 type ItemSelectorOptions = {
 
+    /** 
+     * default: short
+     * 'short': product.shortTitle if defined
+     * 'long': always us product.title, even if .shortTitle is defined
+     * 'none': do not show title AND BYLINE
+     * 
+     * (NOTE: *not* the same as buttonType = 'none')
+     */
+  title?: 'none' | 'long' | 'short'
+
     /** default: true */
   showFamilyTitle?: boolean
 

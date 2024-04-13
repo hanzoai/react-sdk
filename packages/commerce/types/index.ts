@@ -4,6 +4,7 @@ export type { default as CommerceService } from './commerce-service'
 export type { default as Product } from './product'
 export type { default as Promo } from './promo'
 export type { default as TokenSeparators } from './token-separators'
+export type { default as MultiFamilySelectorProps } from './multi-family-selector-props'
 
 export * from './checkout'
 export * from './item-selector'
