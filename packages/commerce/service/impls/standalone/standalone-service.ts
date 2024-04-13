@@ -160,7 +160,7 @@ class StandaloneService
     let error: string | undefined = undefined
 
     try {
-      if (node.subNodes && atEnd && node.terminal) {
+      if (node.subNodes && atEnd && node.outermost) {
         role = 'multi-family'
         families = node.subNodes.map((sub) => {
           const familyId = skuPath + sep.tok + sub.skuToken
@@ -173,7 +173,7 @@ class StandaloneService
       }
       else if (!node.subNodes && (atEnd || possibleSKU)) {
         const _skuPath = (possibleSKU) ? getParentPath(skuPath) : skuPath
-        if (parent?.terminal) {
+        if (parent?.outermost) {
           role = 'family-in-multi-family'  
           const fam = this._familyMap.get(_skuPath)
           if (!fam) {
