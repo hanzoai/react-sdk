@@ -1,9 +1,19 @@
 'use client'
-import React, { useRef, useEffect, type ComponentType, useState } from 'react'
-import { observer } from 'mobx-react-lite'
+import React, { 
+  useRef, 
+  useEffect, 
+  type ComponentType, 
+  useState 
+} from 'react'
+import { observer, Observer } from 'mobx-react-lite'
 
 import { cn } from '@hanzo/ui/util'
-import { ApplyTypography, Button, MediaStack, Skeleton } from '@hanzo/ui/primitives'
+import { 
+  ApplyTypography, 
+  Button, 
+  MediaStack, 
+  Skeleton 
+} from '@hanzo/ui/primitives'
 
 import type { 
   ItemSelectorProps, 
@@ -16,7 +26,7 @@ import type {
 } from '../../types'
 
 import { useCommerce } from '../../service/context'
-import { getSelectionUISpecifier } from '../../util'
+import { getSelectionUISpecifier, accessOptionValues } from '../../util'
 
 import { CarouselItemSelector, ButtonItemSelector } from '../item-selector'
 import FamilyCarousel from '../node-selector/family-carousel'
@@ -30,13 +40,24 @@ const SCROLL = {
 
 const MEDIA_CONSTRAINT = {w: 200, h: 200}
 
+const sortItems = (items: LineItem[], sort: 'asc' | 'desc' | 'none'): LineItem[] => (
+
+  (sort === 'asc') ? 
+    items.sort((a: LineItem, b: LineItem): number => (a.price - b.price))
+    :
+    ((sort === 'desc') ?   
+      items.sort((a: LineItem, b: LineItem): number => (b.price - a.price ))
+      :
+      items)
+)
+
 const CarouselBuyCard: React.FC<{
   skuPath: string
   clx?: string
   mobile?: boolean
   handleCheckout: () => void
   onQuantityChanged?: (sku: string, oldV: number, newV: number) => void
-}> = observer(({
+}> = ({
   skuPath,
   clx='',
   mobile=false,
@@ -74,6 +95,7 @@ const CarouselBuyCard: React.FC<{
       throw new Error(`BuyCard: skuPath ${skuPath} isn't an outermost tree node or product family!`)
     }
 
+
     const uiSpec = getSelectionUISpecifier(skuPath)
 
     r.current = {
@@ -84,24 +106,38 @@ const CarouselBuyCard: React.FC<{
 
     if (peek.role === 'single-family') {
 
+      const sort = (): 'none' | 'asc' | 'desc' => {
+        if (!uiSpec.singleFamily?.options) {
+          return 'none'
+        }
+        const options = uiSpec.singleFamily.options
+        const showSlider = 'showSlider' in options ? options.showSlider! : true
+        return ('sort' in options) ? 
+          options.sort!
+          :
+          (showSlider ? 'asc' : 'none')
+      }
+
+
       const items = peek.family!.products as LineItem[]
       const Selector: ComponentType<ItemSelectorProps> = 
         (uiSpec.singleFamily?.type === 'buttons') ? ButtonItemSelector : CarouselItemSelector
       const selOptions = uiSpec.singleFamily?.options
 
       r.current.single = {
-        items,
+        items: sortItems(items, sort()),
         Selector,
         selOptions,
         scrollable: !!(items.length > SCROLL.scrollAfter),
         showItemMedia: uiSpec.singleFamily?.type !== 'carousel'
       }
 
-      const currItem = peek.item ?? peek.family!.products[0]
+      const currItem = peek.item ?? r.current.single.items[0]
       cmmc.setCurrentItem(currItem.sku)
     }
     else {
       const initialFamily = peek.family ? peek.family : peek.families![0]
+        // TODO: Does this ever need to be sorted??
       const currItem = peek.item ?? initialFamily.products[0]
       cmmc.setCurrentItem(currItem.sku)
     }
@@ -112,23 +148,100 @@ const CarouselBuyCard: React.FC<{
 
   }, [skuPath])
 
-  const TitleArea: React.FC<{
-    title: string | undefined
-    byline?: string | undefined
-    clx?: string
-    bylineClx?: string
-  }> = ({
-    title,
-    byline,
+  const TitleArea: React.FC<{ clx?: string }> = ({
     clx='',
-    bylineClx='' 
-  }) => ( title || byline ? (
-    <ApplyTypography className={cn('flex flex-col items-center !gap-0 [&>*]:!m-0 ', clx)}>
-      <h4>{title}</h4>
-      {byline && (<h6 className={bylineClx}>{byline}</h6>)}
-    </ApplyTypography>
-    ) : null
-  )
+  }) => {
+
+    let title: string | undefined
+    let byline: string | undefined
+
+    if (r.current?.uiSpec.singleFamily) {
+      const { showFamilyTitle, showFamilyByline } = accessOptionValues(r.current?.uiSpec.singleFamily.options)
+      title = showFamilyTitle ? r.current.family?.title : undefined,
+      byline = showFamilyTitle && showFamilyByline ? r.current?.family?.byline :  undefined
+    }
+    else {
+      /* 
+        Could also be:
+          title = {r.current?.node.label ?? ''} 
+          byline = {r.current?.node.subNodesLabel} 
+      */
+      title =  r.current?.uiSpec.multiFamily?.showParentTitle 
+        ? 
+        r.current?.family?.parentTitle : undefined,
+      byline = undefined
+    }
+
+    return ( title || byline ? (
+      <ApplyTypography className={cn('flex flex-col items-center !gap-0 [&>*]:!m-0 ', clx)}>
+        <h4>{title}</h4>
+        {byline && (<h6 className=''>{byline}</h6>)}
+      </ApplyTypography>
+      ) : null
+    )
+  }
+
+  const SingleFamilyUI: React.FC<{
+    items: LineItem[]
+    Selector: ComponentType<ItemSelectorProps>
+    selOptions: ItemSelectorOptions | undefined
+    scrollable: boolean
+    showItemMedia: boolean
+  }> = ({
+    items,
+    Selector,
+    selOptions,
+    scrollable,
+    showItemMedia
+  }) => (<>
+    {(showItemMedia && cmmc.currentItem ) && (
+      <Observer>
+        {() => (
+          <MediaStack 
+            media={cmmc.currentItem!} 
+            constrainTo={MEDIA_CONSTRAINT} 
+            clx={'mb-2 ' + (scrollable ? 'shrink-0' : '')}
+          />
+        )}
+      </Observer>
+    )}
+    {(showItemMedia && !cmmc.currentItem ) && (
+      <Skeleton className={'w-[200px] h-[200px] my-2 ' + (scrollable ? 'shrink-0' : '')}/>
+    )}
+    {items && (
+      <Selector 
+        items={items}
+        selectedItemRef={cmmc}
+        selectSku={cmmc.setCurrentItem.bind(cmmc)}
+        scrollable={scrollable}
+        mobile={mobile}
+        options={selOptions}
+      />  
+    )}
+  </>)
+
+  const Buttons: React.FC<{clx?: string}> = observer(({
+    clx=''
+  }) => (cmmc.currentItem ? (
+    <div className={clx}>
+      <AddToCartWidget 
+        item={cmmc.currentItem}
+        onQuantityChanged={onQuantityChanged} 
+        variant={cmmc.cartEmpty ? 'primary' : 'outline'}
+        className='min-w-[160px] w-full sm:max-w-[320px]' 
+      />
+      {!cmmc.cartEmpty && (
+        <Button 
+          onClick={handleCheckout} 
+          variant='primary' 
+          rounded='lg' 
+          className='min-w-[160px] w-full sm:max-w-[320px]'
+        >
+          Checkout
+        </Button>
+      )}
+    </div>
+  ) : null))
 
   return (
     <div className={cn(
@@ -136,48 +249,10 @@ const CarouselBuyCard: React.FC<{
       clx,
       r.current?.single?.scrollable ? SCROLL.scrollHeightClx : 'h-auto'
     )}>
-    {r.current?.single ? (<>
-      <TitleArea 
-          // default: false
-        title={r.current.uiSpec.singleFamily?.options?.showFamilyTitle ? 
-          r.current?.family?.title : undefined} 
-          // only if title is shown. default: false
-        byline={
-          (r.current.uiSpec.singleFamily?.options?.showFamilyTitle &&
-          r.current.uiSpec.singleFamily?.options?.showFamilyByline) ? 
-          r.current?.family?.byline : undefined} 
-        clx=''
-      />
-      {(r.current.single.showItemMedia && cmmc.currentItem ) && (
-        <MediaStack 
-          media={cmmc.currentItem} 
-          constrainTo={MEDIA_CONSTRAINT} 
-          clx={(r.current.single.scrollable ? 'shrink-0' : '')}
-        />
-      )}
-      {(r.current.single.showItemMedia && !cmmc.currentItem ) && (
-        <Skeleton className={'w-[200px] h-[200px] my-4 ' + (r.current.single.scrollable ? 'shrink-0' : '')}/>
-      )}
-      {r.current.single.items && (
-        <r.current.single.Selector 
-          items={r.current.single.items}
-          selectedItemRef={cmmc}
-          selectSku={cmmc.setCurrentItem.bind(cmmc)}
-          scrollable={r.current.single.scrollable}
-          mobile={mobile}
-          options={r.current.single.selOptions}
-        />  
-      )}
-    </>) : (<>
-      {r.current?.uiSpec.multiFamily?.showParentTitle && (
-        <TitleArea 
-          title={r.current?.node.label ?? ''} 
-          byline={r.current?.node.subNodesLabel} 
-          clx={'mb-2 '}
-          bylineClx='!text-center font-bold text-muted mt-3'
-        />
-      )}
-      {r.current?.families && ( // safegaurd for first render etc.
+      <TitleArea clx='' />
+      {r.current?.single ? ( 
+        <SingleFamilyUI {...r.current.single} /> 
+      ) : (r.current?.families && /* safegaurd for first render, etc. */ ( 
         <FamilyCarousel 
           families={r.current?.families}
           clx='w-full'
@@ -185,34 +260,13 @@ const CarouselBuyCard: React.FC<{
           mediaConstraint={MEDIA_CONSTRAINT}
           mobile={mobile}
         />
-      )}
-    </>)}
-    {(cmmc.currentItem) && (
-      <div className={cn(
+      ))}
+      <Buttons clx={cn(
         'self-stretch mt-8 flex flex-col items-center gap-3',
         (r.current?.single?.scrollable ? 'shrink-0' : '')
-      )}>
-        <AddToCartWidget 
-          size='default' 
-          item={cmmc.currentItem}
-          onQuantityChanged={onQuantityChanged} 
-          variant={cmmc.cartEmpty ? 'primary' : 'outline'}
-          className='min-w-[160px] w-full sm:max-w-[320px]' 
-        />
-        {!cmmc.cartEmpty && (
-          <Button 
-            onClick={handleCheckout} 
-            variant='primary' 
-            rounded='lg' 
-            className='min-w-[160px] w-full sm:max-w-[320px]'
-          >
-            Checkout
-          </Button>
-        )}
-      </div>
-    )} 
+      )}/>
     </div >
   )
-})
+}
 
 export default CarouselBuyCard

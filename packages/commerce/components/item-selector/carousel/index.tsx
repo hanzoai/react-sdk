@@ -66,13 +66,12 @@ const CarouselItemSelector: React.FC<ItemSelectorProps> = observer(({
     showQuantity,
     showFamilyInOption,
     showByline,
-    showSlider
+    showSlider,
   } = accessOptionValues(options)
-
+    
   const elbaApiRef = useRef<CarouselApi | undefined>(undefined)
   const scrollToRef = useRef<((index: number) => void) | undefined>(undefined)
   const dontRespondRef = useRef<boolean>(false)
-  const itemsRef = useRef<LineItem[] | undefined>(undefined)
 
   const setApi = (api: CarouselApi) => {elbaApiRef.current = api}
   const setScrollTo = (scrollTo: (index: number) => void) => { scrollToRef.current = scrollTo}
@@ -81,15 +80,14 @@ const CarouselItemSelector: React.FC<ItemSelectorProps> = observer(({
   const constrainTo = 'constrainTo' in ext ? ext.constrainTo : DEFAULT_CONSTRAINT
   const imageOnly = 'imageOnly' in ext ? ext.imageOnly : false
 
-
   const onSelect = useCallback((emblaApi: CarouselApi) => {
     if (dontRespondRef.current) {
       dontRespondRef.current = false
       return
     }
     const index = emblaApi.selectedScrollSnap()
-    if (index !== -1 && itemsRef.current) {
-      selectSku(itemsRef.current[index].sku)
+    if (index !== -1) {
+      selectSku(items[index].sku)
       if (scrollToRef.current) {
         scrollToRef.current(index)
       }
@@ -98,17 +96,11 @@ const CarouselItemSelector: React.FC<ItemSelectorProps> = observer(({
   }, [scrollToRef.current ])
 
   useEffect(() => {
-    if (showSlider) {
-      itemsRef.current = items.sort((a: LineItem, b: LineItem): number => (a.price - b.price))
-    }
-    else {
-      itemsRef.current = items
-    }
     return reaction(
       () => (itemRef.item),
       (item) => {
-        if (elbaApiRef.current && itemsRef.current) {
-          const index = itemsRef.current.findIndex((el) => (el.sku === item?.sku))  
+        if (elbaApiRef.current) {
+          const index = items.findIndex((el) => (el.sku === item?.sku))  
           if (index !== -1) {
             dontRespondRef.current = true
             elbaApiRef.current.scrollTo(index) 
@@ -117,7 +109,6 @@ const CarouselItemSelector: React.FC<ItemSelectorProps> = observer(({
       }  
     )
   }, [])
-
 
   const optionLabel = () => (
     showFamilyInOption ? 
@@ -138,7 +129,7 @@ const CarouselItemSelector: React.FC<ItemSelectorProps> = observer(({
 
   const onScrollIndexChange = (index: number) => {
     dontRespondRef.current = true
-    selectSku(itemsRef.current![index].sku)
+    selectSku(items![index].sku)
     elbaApiRef.current?.scrollTo(index) 
   }
 
@@ -151,7 +142,7 @@ const CarouselItemSelector: React.FC<ItemSelectorProps> = observer(({
         setApi={setApi}
       >
         <CarouselContent>
-        {itemsRef.current?.map((item) => (
+        {items.map((item) => (
           <ItemSlide key={item.sku} item={item} constrainTo={constrainTo} clx={itemClx} />
         ))}
         </CarouselContent>
@@ -190,7 +181,7 @@ const CarouselItemSelector: React.FC<ItemSelectorProps> = observer(({
         {showSlider && (
           <ItemCarouselSlider 
             clx='mt-5 w-[320px]' 
-            numStops={itemsRef.current ? itemsRef.current.length : 0}  
+            numStops={items.length}  
             setScrollTo={setScrollTo}
             onIndexChange={onScrollIndexChange}
           />

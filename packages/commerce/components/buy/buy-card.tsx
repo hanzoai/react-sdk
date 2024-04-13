@@ -247,7 +247,6 @@ const BuyCard: React.FC<{
     )}
     {(cmmc.currentItem) && (
       <AddToCartWidget 
-        size='default' 
         item={cmmc.currentItem}
         onQuantityChanged={onQuantityChanged} 
         className={cn('min-w-[160px] mx-auto mt-4', (scroll ? 'shrink-0' : ''), addWidgetClx)}

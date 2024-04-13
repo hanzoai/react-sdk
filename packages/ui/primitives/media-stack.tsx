@@ -9,8 +9,6 @@ import type { MediaStackDef, Dimensions } from '../types'
 import Image from './image'
 import VideoPlayer from './video-player'
 
-
-
 const MediaStack: React.FC<{
   media: MediaStackDef
   constrainTo?: Dimensions

@@ -16,7 +16,8 @@ interface FamilyCarouselSlideOptions extends ItemSelectorOptions {
 interface SelectionUISpecifier {
   multiFamily?: {
     familySelector: 'carousel'
-      /** default: true */ 
+      /** Should title of parent node of families.
+       * default: true */ 
     showParentTitle: boolean 
     slide: {
       type: 'buttons'

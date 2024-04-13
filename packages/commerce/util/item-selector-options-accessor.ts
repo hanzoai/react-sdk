@@ -11,9 +11,11 @@ export default (options: ItemSelectorOptions | undefined = {}): Required<ItemSel
   const showPrice = 'showPrice' in options ? options.showPrice! : true
   const showQuantity = 'showQuantity' in options ? options.showQuantity! : false
 
-  const imageButtons = 'imageButtons' in options ? options.imageButtons! : false
+  const buttonType = 'buttonType' in options ? options.buttonType! : 'text'
   const horizButtons = 'horizButtons' in options ? options.horizButtons! : false
   const showSlider = 'showSlider' in options ? options.showSlider! : true
+
+  const sort = 'sort' in options ? options.sort! : 'none'
 
   return {
     showFamilyInOption,
@@ -22,8 +24,9 @@ export default (options: ItemSelectorOptions | undefined = {}): Required<ItemSel
     showByline,
     showPrice,
     showQuantity,
-    imageButtons,
+    buttonType,
     horizButtons,
-    showSlider
+    showSlider,
+    sort
   }
 }

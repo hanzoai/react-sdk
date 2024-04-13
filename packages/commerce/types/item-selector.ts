@@ -6,6 +6,9 @@ interface ItemSelector {
   selectSku: (sku: string) => void 
 }
 
+  /** default: 'text' */
+type ItemButton = 'text' | 'image-and-text' | 'image' 
+
   // NOTE: if a field is added here, it should also
   // be added to util/item-selector-options-accessor.ts
 type ItemSelectorOptions = {
@@ -35,14 +38,23 @@ type ItemSelectorOptions = {
      */
   showQuantity?: boolean   
 
-    /** (button selector only) default: false */
-  imageButtons?: boolean  
+  buttonType?: ItemButton  
 
     /** (button selector only) default: false */
   horizButtons?: boolean  
 
-    /** (carousel selector only) default: false */
+    /** (carousel selector only) 
+     * affects sort.  See below.
+     * default: false */
   showSlider?: boolean
+
+    /** 
+     * Sort by cost. 
+     * If it's a carousel selector and 'showSlider' is true, 
+     * defaults to 'asc', unless another value is explicitly specified.
+     * Otherwise, defaults to 'none' 
+     * */
+  sort?: 'none' | 'asc' | 'desc' 
 }
 
 interface _ItemSelectorCompProps {

@@ -28,7 +28,6 @@ const Image: React.FC<{
     svgFillClass: _svgFillClass,
   } = def
 
-
   const toSpread: any = {}
   if (fullWidth) {
     toSpread.style = {
@@ -65,8 +64,6 @@ const Image: React.FC<{
 
   const svgFillClass = _svgFillClass ?? ''
 
-  console.log("STYLE: ", toSpread.style)
-
   return (fullWidth) ? (
     <div className='relative flex flex-col items-center justify-center w-full'>
       <NextImage 
@@ -93,4 +90,3 @@ const Image: React.FC<{
 }
 
 export default Image
-
