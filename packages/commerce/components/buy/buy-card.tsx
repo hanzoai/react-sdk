@@ -18,7 +18,7 @@ import { useCommerce } from '../../service/context'
 import * as pathUtils from '../../service/path-utils'
 import { getFacetValuesMutator, ObsStringMutator } from '../../util'
 
-import NodeTabs from '../node-selector/node-tabs'
+import NodeTabs from '../multi-family/node-tabs'
 import AddToCartWidget from './add-to-cart-widget'
 
 const BuyCard: React.FC<{

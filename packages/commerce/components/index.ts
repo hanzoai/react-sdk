@@ -14,4 +14,4 @@ export { default as ProductCard } from './item/product-card'
 export { Icons } from './Icons'
 
 export * from './item-selector'
-export * from './node-selector'
+export * from './multi-family'
