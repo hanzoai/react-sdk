@@ -5,7 +5,6 @@ import type { ItemSelectorOptions } from './item-selector'
 
 interface MultiFamilySelectorProps {
   families: Family[]
-  initialFamilyId: string
   clx?: string
   itemClx?: string
   itemOptions?: ItemSelectorOptions

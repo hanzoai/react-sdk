@@ -170,7 +170,7 @@ const BuyCard: React.FC<{
     }
   }
 
-  const famTitle = inst.current?.requestedFamily ? inst.current.requestedFamily.title : cmmc.selectedFamilies?.[0]?.title
+  const famTitle = inst.current?.requestedFamily ? inst.current.requestedFamily.title : cmmc.selectedFamilies[0].title
 
   const itemsToShow = (!cmmc.hasSelection) ? undefined : 
     allVariants ? cmmc.selectedItems : cmmc.selectedFamilies[0].products as LineItem[]

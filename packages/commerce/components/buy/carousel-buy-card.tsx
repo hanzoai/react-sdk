@@ -140,6 +140,8 @@ const CarouselBuyCard: React.FC<{
       const initialFamily = peek.family ? peek.family : peek.families![0]
         // TODO: Does this ever need to be sorted??
       const currItem = peek.item ?? initialFamily.products[0]
+
+          // sets currentFamily as well
       cmmc.setCurrentItem(currItem.sku)
 
       r.current.multi = {
@@ -161,16 +163,13 @@ const CarouselBuyCard: React.FC<{
     Selector: ComponentType<MultiFamilySelectorProps>
     itemOptions: ItemSelectorOptions | undefined
     families: Family[]
-    initialFamilyId: string
   }> = ({
     Selector,
     itemOptions,
     families,
-    initialFamilyId
   }) => (
     <Selector 
       families={families}
-      initialFamilyId={initialFamilyId}
       clx='w-full'
       itemOptions={itemOptions}
       mediaConstraint={MEDIA_CONSTRAINT}

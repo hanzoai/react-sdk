@@ -1,5 +1,5 @@
 'use client'
-import React, { useCallback, useEffect, useRef } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { observable, reaction, type IObservableValue } from 'mobx'
 import { observer } from 'mobx-react-lite'
 
@@ -23,9 +23,11 @@ import QuantityIndicator from '../../quantity-indicator'
 import { useCommerce } from '../../..'
 import TitleAndByline from '../title-and-byline'
 
-const debugBorder = (c: 'r' | 'g' | 'b'): string => {
-  return ''
+const debugBorder = (c: 'r' | 'g' | 'b', disable: boolean = true): string => {
 
+  if (disable) {
+    return ''
+  }
   switch (c) {
     case 'r': return ' border border-[#ffaaaa] '
     case 'g': return ' border border-[#aaffaa] '
@@ -37,7 +39,6 @@ const DEFAULT_CONSTRAINT = {w: 250, h: 250}
 
 const AllVariantsCarousel: React.FC<MultiFamilySelectorProps> = ({ 
   families,
-  initialFamilyId,
   clx='',
   itemClx='',
   itemOptions,
@@ -48,10 +49,8 @@ const AllVariantsCarousel: React.FC<MultiFamilySelectorProps> = ({
   const cmmc = useCommerce()
   const elbaApiRef = useRef<CarouselApi | undefined>(undefined)
   const itemsRef = useRef<LineItem[] | undefined>(undefined)
-  const familyStartIndexMapRef = useRef<Map<string, number>>(new Map<string, number>())
   const dontRespondRef = useRef<boolean>(false)
-  const currentFamilyObsRef = useRef<IObservableValue<string>>(observable.box(initialFamilyId))
-
+  const [changeMeToRerender, setChangeMeToRerender] = useState<boolean>(false)
   const setApi = (api: CarouselApi) => {elbaApiRef.current = api}
   
   const onSelect = useCallback((emblaApi: CarouselApi) => {
@@ -63,8 +62,8 @@ const AllVariantsCarousel: React.FC<MultiFamilySelectorProps> = ({
     if (index !== -1) {
       const item = itemsRef.current?.[index]
       cmmc.setCurrentItem(item?.sku)
-      if (item && item.familyId !== currentFamilyObsRef.current.get()) {
-        currentFamilyObsRef.current.set(item.familyId)
+      if (item && item.familyId !== cmmc.currentFamily?.id) {
+        cmmc.setCurrentFamily(item.familyId)
       }
     }
     dontRespondRef.current = false
@@ -72,21 +71,16 @@ const AllVariantsCarousel: React.FC<MultiFamilySelectorProps> = ({
 
   useEffect(() => {
 
-    const allItems: LineItem[] = []
-    families.forEach((fam) => {
-      const items = fam.products as LineItem[]
-      familyStartIndexMapRef.current.set(fam.id, allItems.length)
-      allItems.push(...items)
-    })
-    itemsRef.current = allItems
+    itemsRef.current = families.map((fam) => (fam.products as LineItem[])).flat()
+    setChangeMeToRerender(!changeMeToRerender)
 
     return reaction(
       () => (cmmc.currentItem),
       (item) => {
         if (elbaApiRef.current) {
-          const index = itemsRef.current!.findIndex((_item: LineItem) => (_item.sku === item?.sku))  
-          if (index !== -1) {
-            // no need to sync family, since ui only allows selecting within a family            
+          const index = itemsRef.current?.findIndex((_item: LineItem) => (_item.sku === item?.sku))  
+          if (index && index !== -1) {
+              // no need to sync family, since ui only allows selecting within a family            
             dontRespondRef.current = true
             elbaApiRef.current.scrollTo(index) 
           }
@@ -95,12 +89,13 @@ const AllVariantsCarousel: React.FC<MultiFamilySelectorProps> = ({
     )
   }, [])
 
-
+/*
   const onScrollIndexChange = (index: number) => {
     dontRespondRef.current = true
-    cmmc.setCurrentItem(itemsRef.current?.[index].sku)
+    cmmc.setCurrentItem(items?.[index].sku)
     elbaApiRef.current?.scrollTo(index) 
   }
+*/
 
   const MyTitleAndByline: React.FC<{clx?: string}> = observer(({
     clx=''
