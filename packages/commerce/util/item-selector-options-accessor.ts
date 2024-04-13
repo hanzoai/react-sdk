@@ -2,7 +2,7 @@ import type { ItemSelectorOptions } from '../types'
 
 export default (options: ItemSelectorOptions | undefined = {}): Required<ItemSelectorOptions> => {
 
-  const showFamilyTitle = 'showFamilyTitle' in options ? options.showFamilyTitle! : true
+  const familyTitle = 'familyTitle' in options ? options.familyTitle! : 'short'
   const showFamilyByline = 'showFamilyByline' in options ? options.showFamilyByline! : false
 
   const showFamilyInOption = 'showFamilyInOption' in options ? options.showFamilyInOption! : false
@@ -16,11 +16,10 @@ export default (options: ItemSelectorOptions | undefined = {}): Required<ItemSel
   const showSlider = 'showSlider' in options ? options.showSlider! : true
 
   const sort = 'sort' in options ? options.sort! : 'none'
-  const title = 'title' in options ? options.title! : 'short'
 
   return {
     showFamilyInOption,
-    showFamilyTitle, 
+    familyTitle,
     showFamilyByline,
     showByline,
     showPrice,
@@ -29,6 +28,5 @@ export default (options: ItemSelectorOptions | undefined = {}): Required<ItemSel
     horizButtons,
     showSlider,
     sort,
-    title
   }
 }

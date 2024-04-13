@@ -12,12 +12,12 @@ import {
   CarouselNext,
 } from '@hanzo/ui/primitives'
 
-import type { MultiFamilySelectorProps } from '../../../types'
+import type { MultiFamilySelectorProps } from '../../../../types'
 
 import FamilySlide from './slide'
 import { FamilyCarouselState } from './state'
 
-import { useCommerce } from '../../..'
+import { useCommerce } from '../../../..'
 
 const FamilyCarousel: React.FC<MultiFamilySelectorProps> = ({ 
   families,

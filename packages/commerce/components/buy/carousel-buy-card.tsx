@@ -5,15 +5,10 @@ import React, {
   type ComponentType, 
   useState 
 } from 'react'
-import { observer, Observer } from 'mobx-react-lite'
+import { observer } from 'mobx-react-lite'
 
 import { cn } from '@hanzo/ui/util'
-import { 
-  ApplyTypography, 
-  Button, 
-  MediaStack, 
-  Skeleton 
-} from '@hanzo/ui/primitives'
+import { Button } from '@hanzo/ui/primitives'
 
 import type { 
   ItemSelectorProps, 
@@ -27,10 +22,11 @@ import type {
 } from '../../types'
 
 import { useCommerce } from '../../service/context'
-import { getSelectionUISpecifier, accessOptionValues } from '../../util'
+import { getSelectionUISpecifier } from '../../util'
 
 import { CarouselItemSelector, ButtonItemSelector } from '../item-selector'
-import { FamilyCarousel, AllVariantsCarousel } from '../multi-family'
+import SingleFamilySelector from './single-family-selector'
+import { FamilyCarousel, AllVariantsCarousel } from './multi-family'
 
 import AddToCartWidget from './add-to-cart-widget'
 
@@ -42,14 +38,15 @@ const SCROLL = {
 const MEDIA_CONSTRAINT = {w: 200, h: 200}
 
 const sortItems = (items: LineItem[], sort: 'asc' | 'desc' | 'none'): LineItem[] => (
-
-  (sort === 'asc') ? 
+  ((sort === 'asc') ? 
     items.sort((a: LineItem, b: LineItem): number => (a.price - b.price))
     :
     ((sort === 'desc') ?   
       items.sort((a: LineItem, b: LineItem): number => (b.price - a.price ))
       :
-      items)
+      items
+    )
+  )
 )
 
 const CarouselBuyCard: React.FC<{
@@ -101,7 +98,6 @@ const CarouselBuyCard: React.FC<{
       throw new Error(`BuyCard: skuPath ${skuPath} isn't an outermost tree node or product family!`)
     }
 
-
     const uiSpec = getSelectionUISpecifier(skuPath)
 
     r.current = {
@@ -123,7 +119,6 @@ const CarouselBuyCard: React.FC<{
           :
           (showSlider ? 'asc' : 'none')
       }
-
 
       const items = peek.family!.products as LineItem[]
       const Selector: ComponentType<ItemSelectorProps> = 
@@ -155,98 +150,12 @@ const CarouselBuyCard: React.FC<{
         itemOptions: uiSpec.multiFamily?.options,
         initialFamilyId: initialFamily.id
       }
-
     }
 
       // Must do this since Dialog code takes this comp out of the React shadow DOM
       // (only in prod apparently.)
     setChangeMeToRerender(!changeMeToRerender)
-
   }, [skuPath])
-
-  const TitleArea: React.FC<{ clx?: string }> = ({
-    clx='',
-  }) => {
-
-    if (!r.current) return null
-
-    const options = (r.current.uiSpec.singleFamily) ?
-      r.current.uiSpec.singleFamily.options : r.current.uiSpec.multiFamily!.options  
-
-    const { showFamilyTitle, showFamilyByline } = accessOptionValues(options)
-
-    const title = showFamilyTitle ? r.current.family?.title : undefined
-    const byline = showFamilyTitle && showFamilyByline ? r.current.family?.byline :  undefined
-
-    /*
-    let title: string | undefined
-    let byline: string | undefined
-
-    if (r.current?.uiSpec.singleFamily) {
-      const { showFamilyTitle, showFamilyByline } = accessOptionValues(r.current?.uiSpec.singleFamily.options)
-      title = showFamilyTitle ? r.current.family?.title : undefined,
-      byline = showFamilyTitle && showFamilyByline ? r.current?.family?.byline :  undefined
-    }
-    else {
-      title =  r.current?.uiSpec.multiFamily?.showParentTitle 
-        ? 
-        r.current?.family?.parentTitle : undefined,
-      byline = undefined
-    }
-    */
-      /* 
-        Could also be:
-          title = {r.current?.node.label ?? ''} 
-          byline = {r.current?.node.subNodesLabel} 
-      */
-
-    return ( title || byline ? (
-      <ApplyTypography className={cn('flex flex-col items-center !gap-0 [&>*]:!m-0 ', clx)}>
-        <h4>{title}</h4>
-        {byline && (<h6 className=''>{byline}</h6>)}
-      </ApplyTypography>
-      ) : null
-    )
-  }
-
-  const SingleFamilyUI: React.FC<{
-    items: LineItem[]
-    Selector: ComponentType<ItemSelectorProps>
-    selOptions: ItemSelectorOptions | undefined
-    scrollable: boolean
-    showItemMedia: boolean
-  }> = ({
-    items,
-    Selector,
-    selOptions,
-    scrollable,
-    showItemMedia
-  }) => (<>
-    {(showItemMedia && cmmc.currentItem ) && (
-      <Observer>
-        {() => (
-          <MediaStack 
-            media={cmmc.currentItem!} 
-            constrainTo={MEDIA_CONSTRAINT} 
-            clx={'mb-2 ' + (scrollable ? 'shrink-0' : '')}
-          />
-        )}
-      </Observer>
-    )}
-    {(showItemMedia && !cmmc.currentItem ) && (
-      <Skeleton className={'w-[200px] h-[200px] my-2 ' + (scrollable ? 'shrink-0' : '')}/>
-    )}
-    {items && (
-      <Selector 
-        items={items}
-        selectedItemRef={cmmc}
-        selectSku={cmmc.setCurrentItem.bind(cmmc)}
-        scrollable={scrollable}
-        mobile={mobile}
-        options={selOptions}
-      />  
-    )}
-  </>)
 
   const MultiFamilyUI: React.FC<{      
     Selector: ComponentType<MultiFamilySelectorProps>
@@ -298,9 +207,12 @@ const CarouselBuyCard: React.FC<{
       clx,
       r.current?.single?.scrollable ? SCROLL.scrollHeightClx : 'h-auto'
     )}>
-      <TitleArea clx='' />
       {r.current?.single ? ( 
-        <SingleFamilyUI {...r.current.single} /> 
+        <SingleFamilySelector 
+          {...r.current.single} 
+          mediaConstraint={MEDIA_CONSTRAINT}
+          mobile={mobile} 
+        /> 
       ) : (r.current?.multi && r.current.families && /* safegaurd for first render, etc. */ (
         <MultiFamilyUI {...r.current.multi} families={r.current.families} />
       ))}

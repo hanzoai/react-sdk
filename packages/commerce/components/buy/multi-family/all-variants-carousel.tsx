@@ -16,15 +16,26 @@ import {
   MediaStack,
 } from '@hanzo/ui/primitives'
 
-import type { MultiFamilySelectorProps, LineItem, Family } from '../../../types'
+import type { MultiFamilySelectorProps, LineItem } from '../../../types'
 import { formatCurrencyValue, accessOptionValues } from '../../../util'
 
 import QuantityIndicator from '../../quantity-indicator'
 import { useCommerce } from '../../..'
+import TitleAndByline from '../title-and-byline'
+
+const debugBorder = (c: 'r' | 'g' | 'b'): string => {
+  return ''
+
+  switch (c) {
+    case 'r': return ' border border-[#ffaaaa] '
+    case 'g': return ' border border-[#aaffaa] '
+    case 'b': return ' border border-[#aaaaff] '
+  }
+}
 
 const DEFAULT_CONSTRAINT = {w: 250, h: 250}
 
-const AllVariantsCarousel: React.FC<MultiFamilySelectorProps> = observer(({ 
+const AllVariantsCarousel: React.FC<MultiFamilySelectorProps> = ({ 
   families,
   initialFamilyId,
   clx='',
@@ -84,15 +95,6 @@ const AllVariantsCarousel: React.FC<MultiFamilySelectorProps> = observer(({
     )
   }, [])
 
-  const debugBorder = (c: 'r' | 'g' | 'b'): string => {
-     return ''
-
-    switch (c) {
-      case 'r': return ' border border-[#ffaaaa] '
-      case 'g': return ' border border-[#aaffaa] '
-      case 'b': return ' border border-[#aaaaff] '
-    }
-  }
 
   const onScrollIndexChange = (index: number) => {
     dontRespondRef.current = true
@@ -100,7 +102,24 @@ const AllVariantsCarousel: React.FC<MultiFamilySelectorProps> = observer(({
     elbaApiRef.current?.scrollTo(index) 
   }
 
-  const ItemInfo: React.FC = () => {
+  const MyTitleAndByline: React.FC<{clx?: string}> = observer(({
+    clx=''
+  }) => {
+    const { familyTitle, showFamilyByline } = accessOptionValues(itemOptions)
+    const title = (familyTitle === 'none' ? 
+      undefined 
+      : 
+      (familyTitle === 'long' ? 
+        cmmc.currentFamily?.title 
+        : 
+        (cmmc.currentFamily?.titleShort ?? cmmc.currentFamily?.title)
+      ) 
+    )
+    const byline = (familyTitle !== 'none') && showFamilyByline ? cmmc.currentFamily?.byline :  undefined
+    return ( <TitleAndByline clx={clx} title={title} byline={byline}/> )
+  })
+
+  const ItemInfo: React.FC = observer(() => {
 
     const {
       showPrice, 
@@ -116,37 +135,38 @@ const AllVariantsCarousel: React.FC<MultiFamilySelectorProps> = observer(({
         cmmc.currentItem!.optionLabel 
     )
 
-    return (cmmc.currentItem && (<>
+    return (cmmc.currentItem && (
       <ApplyTypography className='flex flex-col items-center [&>*]:!m-0 !gap-1 '>
+        <div className={
+          'flex items-center gap-1 [&>*]:!m-0 ' + debugBorder('g') + 
+          (showFamilyInOption ? 'flex-col' : 'flex-row')
+        }>
+          <h6 className='font-semibold'>
+            {optionLabel() + (showPrice && !showFamilyInOption ? ',' : '')}
+          </h6>
           <div className={
-            'flex items-center gap-1 [&>*]:!m-0 ' + debugBorder('g') + 
-            (showFamilyInOption ? 'flex-col' : 'flex-row')
+            'flex items-center gap-1 [&>*]:!m-0 flex-row ' +  debugBorder('b') +  
+            (showFamilyInOption ? 'w-full justify-between' : '')
           }>
-            <h6 className='font-semibold'>
-              {optionLabel() + (showPrice && !showFamilyInOption ? ',' : '')}
-            </h6>
-            <div className={
-              'flex items-center gap-1 [&>*]:!m-0 flex-row ' +  debugBorder('b') +  
-              (showFamilyInOption ? 'w-full justify-between' : '')
-            }>
-              {showPrice && (<p>{formatCurrencyValue(cmmc.currentItem.price)}</p>)}
-              {showQuantity && (
-                <QuantityIndicator 
-                  item={cmmc.currentItem} 
-                  clx='h-[22px] ml-4' 
-                  iconClx='fill-foreground'
-                  digitClx='not-typography font-semibold text-primary-fg leading-none font-sans text-xs' 
-                />
-              )}
-            </div>
+            {showPrice && (<p>{formatCurrencyValue(cmmc.currentItem.price)}</p>)}
+            {showQuantity && (
+              <QuantityIndicator 
+                item={cmmc.currentItem} 
+                clx='h-[22px] ml-4' 
+                iconClx='fill-foreground'
+                digitClx='not-typography font-semibold text-primary-fg leading-none font-sans text-xs' 
+              />
+            )}
           </div>
-          {showByline && cmmc.currentItem.byline && (<p>{cmmc.currentItem.byline}</p>)}
-        </ApplyTypography>
-    </>))
-  }
+        </div>
+        {showByline && cmmc.currentItem.byline && (<p>{cmmc.currentItem.byline}</p>)}
+      </ApplyTypography>
+    ))
+  })
 
   return ( 
     <div className={cn('w-full flex flex-col items-center', clx)}>
+      <MyTitleAndByline />
       <Carousel 
         options={{loop: true} } 
         className={'w-full px-2' + debugBorder('r')} 
@@ -163,11 +183,10 @@ const AllVariantsCarousel: React.FC<MultiFamilySelectorProps> = observer(({
         <CarouselPrevious className='left-1'/>
         <CarouselNext className='right-1'/>
       </Carousel>
-    
       <ItemInfo />
     </div>
   )
-})
+}
 
 export {
   AllVariantsCarousel as default 

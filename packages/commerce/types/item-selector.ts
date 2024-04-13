@@ -21,10 +21,7 @@ type ItemSelectorOptions = {
      * 
      * (NOTE: *not* the same as buttonType = 'none')
      */
-  title?: 'none' | 'long' | 'short'
-
-    /** default: true */
-  showFamilyTitle?: boolean
+  familyTitle?: 'none' | 'long' | 'short'
 
     /** only if title shown 
      * default: false */

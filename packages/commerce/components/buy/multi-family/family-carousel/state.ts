@@ -1,4 +1,4 @@
-import type { Family, LineItem, ObsLineItemRef, Product } from '../../../types'
+import type { Family, LineItem, ObsLineItemRef, Product } from '../../../../types'
 import { observable, action, computed, makeObservable } from 'mobx'
 
 class SlideState implements ObsLineItemRef {
