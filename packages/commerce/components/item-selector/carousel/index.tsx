@@ -19,7 +19,7 @@ import {
 } from '@hanzo/ui/primitives'
 
 import type { ItemSelectorProps, LineItem } from '../../../types'
-import { formatCurrencyValue, accessOptionValues } from '../../../util'
+import { formatCurrencyValue, accessItemOptions } from '../../../util'
 
 import QuantityIndicator from '../../quantity-indicator'
 import ItemCarouselSlider from './slider'
@@ -67,7 +67,7 @@ const CarouselItemSelector: React.FC<ItemSelectorProps> = observer(({
     showFamilyInOption,
     showByline,
     showSlider,
-  } = accessOptionValues(options)
+  } = accessItemOptions(options)
     
   const elbaApiRef = useRef<CarouselApi | undefined>(undefined)
   const scrollToRef = useRef<((index: number) => void) | undefined>(undefined)

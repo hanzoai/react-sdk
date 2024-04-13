@@ -14,7 +14,7 @@ import { cn } from '@hanzo/ui/util'
 import type { Dimensions } from '@hanzo/ui/types'
 
 import type { ItemSelectorProps, LineItem } from '../../types'
-import { accessOptionValues, formatCurrencyValue } from '../../util'
+import { accessItemOptions, formatCurrencyValue } from '../../util'
 
 import QuantityIndicator from '../quantity-indicator'
 
@@ -78,7 +78,7 @@ const ButtonItemSelector: React.FC<ItemSelectorProps> = observer(({
     showFamilyInOption,
     buttonType,
     horizButtons,
-  } = accessOptionValues(options)
+  } = accessItemOptions(options)
 
   const showImage = buttonType !== 'text'
   const showText = buttonType !== 'image' 

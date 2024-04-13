@@ -67,4 +67,5 @@ export * from './selection-ui-specifiers'
 
 export { getErrorMessage } from './error'
 
-export { default as accessOptionValues } from './item-selector-options-accessor'
+export { default as accessItemOptions } from './item-selector-options-accessor'
+export { default as accessMultiSelectorOptions } from './multi-family-selector-options-accessor'

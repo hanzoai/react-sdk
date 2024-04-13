@@ -17,10 +17,14 @@ import {
 } from '@hanzo/ui/primitives'
 
 import type { MultiFamilySelectorProps, LineItem } from '../../../types'
-import { formatCurrencyValue, accessOptionValues } from '../../../util'
+import { 
+  formatCurrencyValue, 
+  accessItemOptions, 
+  accessMultiSelectorOptions 
+} from '../../../util'
 
 import QuantityIndicator from '../../quantity-indicator'
-import { useCommerce } from '../../..'
+import { ButtonItemSelector, useCommerce } from '../../..'
 import TitleAndByline from '../title-and-byline'
 
 const debugBorder = (c: 'r' | 'g' | 'b', disable: boolean = true): string => {
@@ -39,9 +43,11 @@ const DEFAULT_CONSTRAINT = {w: 250, h: 250}
 
 const AllVariantsCarousel: React.FC<MultiFamilySelectorProps> = ({ 
   families,
+  parent,
   clx='',
   itemClx='',
   itemOptions,
+  selectorOptions,
   mediaConstraint=DEFAULT_CONSTRAINT,
   mobile=false, // not relavant to any children
 }) => {
@@ -74,6 +80,7 @@ const AllVariantsCarousel: React.FC<MultiFamilySelectorProps> = ({
     itemsRef.current = families.map((fam) => (fam.products as LineItem[])).flat()
     setChangeMeToRerender(!changeMeToRerender)
 
+      // This responds to the swatch clicks
     return reaction(
       () => (cmmc.currentItem),
       (item) => {
@@ -89,18 +96,16 @@ const AllVariantsCarousel: React.FC<MultiFamilySelectorProps> = ({
     )
   }, [])
 
-/*
-  const onScrollIndexChange = (index: number) => {
-    dontRespondRef.current = true
-    cmmc.setCurrentItem(items?.[index].sku)
-    elbaApiRef.current?.scrollTo(index) 
-  }
-*/
-
-  const MyTitleAndByline: React.FC<{clx?: string}> = observer(({
+  const Header: React.FC<{clx?: string}> = observer(({
     clx=''
   }) => {
-    const { familyTitle, showFamilyByline } = accessOptionValues(itemOptions)
+
+    const { showParentTitle, parentByline: parentBylineMode  } = accessMultiSelectorOptions(selectorOptions)
+    const { familyTitle, showFamilyByline } = accessItemOptions(itemOptions)
+
+    const parentTitleDisplay = showParentTitle ? parent.label : undefined
+    const parentBylineDisplay = (parentBylineMode === 'own-line') ? parent.subNodesLabel : ''
+
     const title = (familyTitle === 'none' ? 
       undefined 
       : 
@@ -110,18 +115,41 @@ const AllVariantsCarousel: React.FC<MultiFamilySelectorProps> = ({
         (cmmc.currentFamily?.titleShort ?? cmmc.currentFamily?.title)
       ) 
     )
-    const byline = (familyTitle !== 'none') && showFamilyByline ? cmmc.currentFamily?.byline :  undefined
-    return ( <TitleAndByline clx={clx} title={title} byline={byline}/> )
+
+    let titleLinePrefix = (parentBylineMode === 'none' || parentBylineMode ===  'own-line') ? '' : (parent.subNodesLabel ?? '')
+    if (titleLinePrefix.length > 0 && title && parentBylineMode === 'comma-sep') {
+        titleLinePrefix += ', '
+    }
+    else if (titleLinePrefix.length > 0 && title && parentBylineMode === 'colon-sep') {
+        titleLinePrefix += ': '
+    }
+    const titleDisplay = title ? (titleLinePrefix + title) : undefined
+    const bylineDisplay = (familyTitle !== 'none') && showFamilyByline ? cmmc.currentFamily?.byline :  undefined
+
+    return (
+      <ApplyTypography className={cn('flex flex-col items-center !gap-0 [&>*]:!m-0 ', clx)} >
+        {parentTitleDisplay && <h4>{parentTitleDisplay}</h4>}
+        {parentBylineDisplay && <h4>{parentBylineDisplay}</h4>}
+        {titleDisplay && <h4>{titleDisplay}</h4>}
+        {bylineDisplay && (<h6 >{bylineDisplay}</h6>)}
+      </ApplyTypography>
+    )
   })
 
-  const ItemInfo: React.FC = observer(() => {
+  const ItemInfo: React.FC<{
+    clx?: string
+    labelClx?: string
+  }> = observer(({
+    clx='',
+    labelClx=''
+  }) => {
 
     const {
       showPrice, 
       showQuantity,
       showFamilyInOption,
       showByline,
-    } = accessOptionValues(itemOptions)
+    } = accessItemOptions(itemOptions)
     
     const optionLabel = () => (
       showFamilyInOption ? 
@@ -131,12 +159,13 @@ const AllVariantsCarousel: React.FC<MultiFamilySelectorProps> = ({
     )
 
     return (cmmc.currentItem && (
-      <ApplyTypography className='flex flex-col items-center [&>*]:!m-0 !gap-1 '>
+      <ApplyTypography className={cn('flex flex-col items-center [&>*]:!m-0 !gap-1 ', clx)}>
         <div className={
-          'flex items-center gap-1 [&>*]:!m-0 ' + debugBorder('g') + 
+          'flex items-center gap-1 [&>*]:!m-0 ' + 
+          debugBorder('g') + 
           (showFamilyInOption ? 'flex-col' : 'flex-row')
         }>
-          <h6 className='font-semibold'>
+          <h6 className={cn('font-semibold', labelClx)}>
             {optionLabel() + (showPrice && !showFamilyInOption ? ',' : '')}
           </h6>
           <div className={
@@ -159,9 +188,34 @@ const AllVariantsCarousel: React.FC<MultiFamilySelectorProps> = ({
     ))
   })
 
+  const Swatches: React.FC<{
+    clx?: string
+  }> = observer(({
+    clx=''
+  }) => {
+    const { showItemSwatches } = accessMultiSelectorOptions(selectorOptions)
+    if (
+      !showItemSwatches || 
+      !cmmc.currentFamily || 
+      cmmc.currentFamily.products.length === 1
+    ) {
+      return null
+    }
+    return <ButtonItemSelector
+      items={cmmc.currentFamily.products as LineItem[]}
+      selectedItemRef={cmmc}
+      selectSku={cmmc.setCurrentItem.bind(cmmc)}
+      clx={clx}
+      options={{
+        buttonType: 'image',
+        horizButtons: true
+      }}      
+    />
+  })
+
   return ( 
     <div className={cn('w-full flex flex-col items-center', clx)}>
-      <MyTitleAndByline />
+      <Header />
       <Carousel 
         options={{loop: true} } 
         className={'w-full px-2' + debugBorder('r')} 
@@ -178,7 +232,8 @@ const AllVariantsCarousel: React.FC<MultiFamilySelectorProps> = ({
         <CarouselPrevious className='left-1'/>
         <CarouselNext className='right-1'/>
       </Carousel>
-      <ItemInfo />
+      <ItemInfo labelClx='!text-base font-medium'/>
+      <Swatches clx='mt-2'/> 
     </div>
   )
 }

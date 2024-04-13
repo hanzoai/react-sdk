@@ -8,7 +8,7 @@ import { useCommerce } from '../..'
 
 import type { ItemSelectorOptions, ItemSelectorProps, LineItem } from '../../types'
 import TitleAndByline from './title-and-byline'
-import { accessOptionValues } from '../../util'
+import { accessItemOptions } from '../../util'
 import { cn } from '@hanzo/ui/util'
 
 
@@ -42,7 +42,7 @@ const SingleFamilySelector: React.FC<{
   const MyTitleAndByline: React.FC<{clx?: string}> = observer(({
     clx=''
   }) => {
-    const { familyTitle, showFamilyByline } = accessOptionValues(selOptions)
+    const { familyTitle, showFamilyByline } = accessItemOptions(selOptions)
     const title = (familyTitle === 'none' ? 
       undefined 
       : 

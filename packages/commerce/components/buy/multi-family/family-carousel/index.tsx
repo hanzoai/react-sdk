@@ -21,17 +21,17 @@ import { useCommerce } from '../../../..'
 
 const FamilyCarousel: React.FC<MultiFamilySelectorProps> = ({ 
   families,
-  initialFamilyId,
   clx='',
   itemClx='',
   itemOptions, 
+  selectorOptions,
   mediaConstraint={w: 250, h: 250},
   mobile=false,
 }) => {
 
   const cmmc = useCommerce()
   const stateRef = useRef<FamilyCarouselState>(
-    new FamilyCarouselState(families, initialFamilyId, cmmc.setCurrentItem.bind(cmmc))
+    new FamilyCarouselState(families, cmmc.setCurrentItem.bind(cmmc))
   )
 
   const onSelect = useCallback((emblaApi: CarouselApi) => {

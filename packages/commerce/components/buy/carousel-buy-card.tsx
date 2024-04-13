@@ -18,7 +18,8 @@ import type {
   CategoryNodeRole,
   SelectionUISpecifier,
   ItemSelectorOptions,
-  MultiFamilySelectorProps, 
+  MultiFamilySelectorProps,
+  MultiFamilySelectorOptions, 
 } from '../../types'
 
 import { useCommerce } from '../../service/context'
@@ -81,6 +82,7 @@ const CarouselBuyCard: React.FC<{
     }
     multi?: {
       Selector: ComponentType<MultiFamilySelectorProps>
+      selectorOptions: MultiFamilySelectorOptions | undefined
       itemOptions: ItemSelectorOptions | undefined
       initialFamilyId: string
     }  
@@ -149,7 +151,8 @@ const CarouselBuyCard: React.FC<{
           FamilyCarousel 
           : 
           AllVariantsCarousel,
-        itemOptions: uiSpec.multiFamily?.options,
+        itemOptions: uiSpec.multiFamily?.itemOptions,
+        selectorOptions: uiSpec.multiFamily?.selectorOptions,
         initialFamilyId: initialFamily.id
       }
     }
@@ -161,17 +164,23 @@ const CarouselBuyCard: React.FC<{
 
   const MultiFamilyUI: React.FC<{      
     Selector: ComponentType<MultiFamilySelectorProps>
+    selectorOptions: MultiFamilySelectorOptions | undefined
     itemOptions: ItemSelectorOptions | undefined
     families: Family[]
+    parent: CategoryNode
   }> = ({
     Selector,
     itemOptions,
+    selectorOptions,
     families,
+    parent,
   }) => (
     <Selector 
       families={families}
+      parent={parent}
       clx='w-full'
       itemOptions={itemOptions}
+      selectorOptions={selectorOptions}
       mediaConstraint={MEDIA_CONSTRAINT}
       mobile={mobile}
     />
@@ -213,7 +222,7 @@ const CarouselBuyCard: React.FC<{
           mobile={mobile} 
         /> 
       ) : (r.current?.multi && r.current.families && /* safegaurd for first render, etc. */ (
-        <MultiFamilyUI {...r.current.multi} families={r.current.families} />
+        <MultiFamilyUI {...r.current.multi} families={r.current.families} parent={r.current.node}/>
       ))}
       <Buttons clx={cn(
         'self-stretch mt-8 flex flex-col items-center gap-3',
