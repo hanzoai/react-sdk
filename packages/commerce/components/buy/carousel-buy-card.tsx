@@ -168,17 +168,19 @@ const CarouselBuyCard: React.FC<{
     itemOptions: ItemSelectorOptions | undefined
     families: Family[]
     parent: CategoryNode
+    clx?: string
   }> = ({
     Selector,
     itemOptions,
     selectorOptions,
     families,
     parent,
+    clx=''
   }) => (
     <Selector 
       families={families}
       parent={parent}
-      clx='w-full'
+      clx={clx}
       itemOptions={itemOptions}
       selectorOptions={selectorOptions}
       mediaConstraint={MEDIA_CONSTRAINT}
@@ -222,7 +224,12 @@ const CarouselBuyCard: React.FC<{
           mobile={mobile} 
         /> 
       ) : (r.current?.multi && r.current.families && /* safegaurd for first render, etc. */ (
-        <MultiFamilyUI {...r.current.multi} families={r.current.families} parent={r.current.node}/>
+        <MultiFamilyUI 
+          {...r.current.multi} 
+          families={r.current.families} 
+          parent={r.current.node}
+          clx='max-w-[475px]'
+        />
       ))}
       <Buttons clx={cn(
         'self-stretch mt-8 flex flex-col items-center gap-3',

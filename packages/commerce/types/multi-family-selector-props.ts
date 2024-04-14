@@ -3,7 +3,8 @@ import type { Dimensions } from '@hanzo/ui/types'
 import type { Family } from './family'
 import type { ItemSelectorOptions } from './item-selector'
 import type { MultiFamilySelectorOptions } from './selection-ui-specifier'
-import type { CategoryNode } from '.'
+import type { CategoryNode } from './category-node'
+import type { LineItem } from './line-item'
 
 interface MultiFamilySelectorProps {
   families: Family[]

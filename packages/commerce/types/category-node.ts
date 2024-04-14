@@ -25,7 +25,8 @@ interface CategoryNode {
    * 
    * <Tabs title={parentNode.label + ': ' + parentNode.subNodesLabel} values={families.map((f) => (f.shortName))} />
    * 
-   *     
+   * ...which renders
+   *        
    * Lux Credit Levels:
    * Black   Elite   Founder   Sovereign 
   */
