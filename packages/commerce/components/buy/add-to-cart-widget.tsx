@@ -2,8 +2,8 @@
 import React from 'react'
 import { observer } from 'mobx-react-lite'
 
-import { Button, toast, type ButtonSizes, type ButtonVariants } from '@hanzo/ui/primitives'
-import { cn } from '@hanzo/ui/util'
+import { Button, buttonVariants } from '@hanzo/ui/primitives'
+import { cn, type VariantProps } from '@hanzo/ui/util'
 
 import { Icons } from '../Icons'
 import type { LineItem } from '../../types'
@@ -149,7 +149,7 @@ const AddToCartWidget: React.FC<{
     <Button
       aria-label={'Add a ' + item.title + ' to cart'}
       size={ghost ? 'xs' : 'default'}
-      variant={variant as ButtonVariants}
+      variant={variant === 'minimal' ? 'ghost' : (variant as VariantProps<typeof buttonVariants>['variant'])}
       rounded={ROUNDED_VAL}
       className={cn(buttonClx, className)}
       onClick={inc}

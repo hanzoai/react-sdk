@@ -24,8 +24,6 @@ export {
 export {
   default as Button,
   type ButtonProps,
-  type ButtonVariants,
-  type ButtonSizes,
   buttonVariants,
 } from './button'
 

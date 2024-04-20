@@ -1,5 +1,5 @@
 'use client'
-import React, { useEffect, useRef } from 'react'
+import React from 'react'
 import { observer } from 'mobx-react-lite'
 
 import * as RadioGroupPrimitive from "@radix-ui/react-radio-group"
@@ -16,7 +16,7 @@ import type { Dimensions } from '@hanzo/ui/types'
 import type { ItemSelectorProps, LineItem } from '../../types'
 import { accessItemOptions, formatCurrencyValue } from '../../util'
 
-import QuantityIndicator from '../quantity-indicator'
+import QuantityIndicator from './quantity-indicator'
 
 const DEFAULT_CONSTRAINT = {h: 36, w: 72} // // Apple suggest 42px for clickability
 

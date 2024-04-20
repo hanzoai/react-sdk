@@ -23,9 +23,7 @@
   "scripts": {
     "lat": "npm show @hanzo/commerce version",
     "pub": "npm publish",
-    "build": "tsc",
-    "tc": "tsc",
-    "clean": "rm -rf dist && rm -rf node_modules"
+    "tc": "tsc"
   },
   "exports": {
     ".": "./index.ts",
@@ -52,7 +50,7 @@
     "next": "14.1.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-hook-form": "7.50.1",
+    "react-hook-form": "^7.51.3",
     "zod": "3.21.4"
   },
   "devDependencies": {

@@ -23,7 +23,7 @@ import {
   accessMultiSelectorOptions 
 } from '../../../util'
 
-import QuantityIndicator from '../../quantity-indicator'
+import QuantityIndicator from '../../item-selector/quantity-indicator'
 import { ButtonItemSelector, useCommerce } from '../../..'
 
 const debugBorder = (c: 'r' | 'g' | 'b', disable: boolean = true): string => {
