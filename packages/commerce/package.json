@@ -2,7 +2,6 @@
   "name": "@hanzo/commerce",
   "version": "6.4.7",
   "description": "e-commerce framework.",
-  "type": "module",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
     "access": "public",
@@ -22,7 +21,7 @@
   ],
   "scripts": {
     "lat": "npm show @hanzo/commerce version",
-    "pub": "npm publish",
+    "pub": "npm publish", 
     "tc": "tsc"
   },
   "exports": {

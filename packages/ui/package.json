@@ -33,6 +33,14 @@
     "pub": "npm publish",
     "tc": "tsc"
   },
+  "exports": {
+    "./blocks": "./blocks/index.ts",
+    "./primitives": "./primitives/index.ts",
+    "./style/": "./style/*",
+    "./tailwind": "./tailwind/index.ts",
+    "./types": "./types/index.ts",
+    "./util": "./util/index.ts"
+  },
   "dependencies": {
     "@next/third-parties": "^14.1.0",
     "@radix-ui/react-accordion": "^1.1.2",
