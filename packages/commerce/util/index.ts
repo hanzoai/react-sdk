@@ -69,3 +69,5 @@ export { getErrorMessage } from './error'
 
 export { default as accessItemOptions } from './item-selector-options-accessor'
 export { default as accessMultiSelectorOptions } from './multi-family-selector-options-accessor'
+
+export { default as TwoWayMap } from './two-way-map'

@@ -21,7 +21,7 @@
   ],
   "scripts": {
     "lat": "npm show @hanzo/commerce version",
-    "pub": "npm publish", 
+    "pub": "npm publish",
     "tc": "tsc"
   },
   "exports": {
@@ -32,6 +32,7 @@
   },
   "dependencies": {
     "ethers": "^6.11.1",
+    "framer-motion": "^11.1.7",
     "next-usequerystate": "^1.17.0",
     "react-square-web-payments-sdk": "^3.2.1",
     "square": "^35.0.0"

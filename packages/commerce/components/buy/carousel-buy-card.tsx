@@ -92,6 +92,12 @@ const CarouselBuyCard: React.FC<{
 
   useEffect(() => {
 
+    if (skuPath.length === 0 ) {
+      // The component is being hidden (w an amination)
+      // keep things the same so no layout jump
+      return 
+    }
+
     const peek = cmmc.peek(skuPath)
     if (typeof peek === 'string') {
       throw new Error(peek)
@@ -194,6 +200,7 @@ const CarouselBuyCard: React.FC<{
     <div className={clx}>
       <AddToCartWidget 
         item={cmmc.currentItem}
+        registerAdd={false}
         onQuantityChanged={onQuantityChanged} 
         variant={cmmc.cartEmpty ? 'primary' : 'outline'}
         className='min-w-[160px] w-full sm:max-w-[320px]' 

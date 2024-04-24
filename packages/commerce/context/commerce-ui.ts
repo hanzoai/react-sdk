@@ -5,53 +5,62 @@ import {
   observable, 
 } from 'mobx'
 
+
+
 interface CommerceUI {
   showBuyOptions: (skuPath: string) => void
   hideBuyOptions: () => void
+  get buyOptionsSkuPath(): string | undefined
 
-  get buyOptionsShowing(): boolean
-
-  get skuPath(): string | undefined
-  clearSkuPath: () => void
+  addRecentSku(s: string): void 
+  removeRecentSku(s: string): void 
+  get recentSku(): string | undefined
 }
 
 class CommerceUIStore implements CommerceUI {
 
-  _skuPath: string | undefined = undefined
-  _optionsShowing: boolean = false
+  _buyOptionsSkuPath: string | undefined = undefined
+  _recentSkus: string[] = []
 
   constructor() {
     makeObservable(this, {
-      _skuPath: observable, 
-      _optionsShowing: observable,
+      _buyOptionsSkuPath: observable,
+      _recentSkus: observable.shallow, 
       showBuyOptions: action,
       hideBuyOptions: action,
-      buyOptionsShowing: computed,
-      skuPath: computed,
-      clearSkuPath: action
+      buyOptionsSkuPath: computed,
+      addRecentSku: action,
+      removeRecentSku: action,
+      recentSku: computed
     })
   }
 
   showBuyOptions = (skuPath: string): void => {
-    this._skuPath = skuPath
-    this._optionsShowing = true
+    this._buyOptionsSkuPath = skuPath
   } 
 
   hideBuyOptions = (): void => {
-    this._optionsShowing = false
+    this._buyOptionsSkuPath = undefined
   }
 
-  get buyOptionsShowing(): boolean {
-    return this._optionsShowing
+  get buyOptionsSkuPath(): string | undefined {
+    return this._buyOptionsSkuPath
   } 
 
-  get skuPath(): string | undefined {
-    return this._skuPath
+  addRecentSku = (s: string): void  => {
+    this.removeRecentSku(s)
+    this._recentSkus.push(s)
   } 
 
-  clearSkuPath = (): void => {
-    this._skuPath = undefined
-    this._optionsShowing = false
+  removeRecentSku = (s: string): void  => {
+    const i = this._recentSkus.indexOf(s)
+    if (i !== -1) {
+      this._recentSkus.splice(i, 1)
+    }
+  } 
+
+  get recentSku(): string | undefined {
+    return this._recentSkus.length === 0 ? undefined : this._recentSkus.slice(-1)[0]   
   }
 }
 

@@ -59,6 +59,7 @@ export {
 } from './command'
 
 export {
+  type DrawerProps,
   Drawer,
   DrawerPortal,
   DrawerOverlay,

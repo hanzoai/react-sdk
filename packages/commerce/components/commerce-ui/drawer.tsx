@@ -3,23 +3,30 @@ import React, {type PropsWithChildren } from 'react'
 
 import { X as LucideX} from 'lucide-react'
 
-import { Button, Drawer, DrawerContent } from '@hanzo/ui/primitives'
+import { Button, Drawer, DrawerContent, type DrawerProps } from '@hanzo/ui/primitives'
 import { cn } from '@hanzo/ui/util'
 
-const CommerceDrawer: React.FC<PropsWithChildren & {
-  open: boolean
-  setOpen: (b: boolean) => void
-  drawerClx?: string
-}> = ({
+const CommerceDrawer: React.FC<PropsWithChildren & 
+  Omit<DrawerProps, 'onOpenChange'> & 
+  {
+    setOpen: (b: boolean) => void
+    drawerClx?: string
+  }
+> = ({
   children,
   open,
   setOpen,
+  modal,
   drawerClx='',
+  ...rest
 }) => (
-  <Drawer open={open} onOpenChange={setOpen} >
-    <DrawerContent className={cn(
-      'rounded-t-xl mt-6 pb-12 h-auto min-h-[35vh] pt-6', 
-      'md:max-w-[550px] md:mx-auto lg:max-w-[50vw]', 
+    // @ts-ignore
+  <Drawer open={open} onOpenChange={setOpen} modal={modal} {...rest}>
+    <DrawerContent modal={modal} className={cn(
+      'rounded-t-xl mt-6 pb-12 pt-6',
+      'h-initial', 
+      // h-auto min-h-[35vh] 
+      //'md:max-w-[550px] md:mx-auto lg:max-w-[50vw]', 
       drawerClx
     )}>
       {children}

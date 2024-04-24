@@ -39,7 +39,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
       </CardTitle>
     </CardContent>
     <CardFooter className='p-4 flex flex-row justify-center'>
-      <AddToCartWidget item={item}/>
+      <AddToCartWidget item={item} />
     </CardFooter>
   </Card>
 )
