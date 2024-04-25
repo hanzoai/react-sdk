@@ -53,12 +53,16 @@ const sortItems = (items: LineItem[], sort: 'asc' | 'desc' | 'none'): LineItem[]
 const CarouselBuyCard: React.FC<{
   skuPath: string
   clx?: string
+  selectorClx?: string
+  buttonClx?: string
   mobile?: boolean
   handleCheckout: () => void
   onQuantityChanged?: (sku: string, oldV: number, newV: number) => void
 }> = ({
   skuPath,
   clx='',
+  selectorClx='',
+  buttonClx='',
   mobile=false,
   handleCheckout,
   onQuantityChanged,
@@ -92,7 +96,7 @@ const CarouselBuyCard: React.FC<{
 
   useEffect(() => {
 
-    if (skuPath.length === 0 ) {
+    if (!skuPath || skuPath.length === 0 ) {
       // The component is being hidden (w an amination)
       // keep things the same so no layout jump
       return 
@@ -203,14 +207,14 @@ const CarouselBuyCard: React.FC<{
         registerAdd={false}
         onQuantityChanged={onQuantityChanged} 
         variant={cmmc.cartEmpty ? 'primary' : 'outline'}
-        className='min-w-[160px] w-full sm:max-w-[320px]' 
+        className={buttonClx} 
       />
       {!cmmc.cartEmpty && (
         <Button 
           onClick={handleCheckout} 
           variant='primary' 
           rounded='lg' 
-          className='min-w-[160px] w-full sm:max-w-[320px]'
+          className={buttonClx}
         >
           Checkout
         </Button>
@@ -220,7 +224,7 @@ const CarouselBuyCard: React.FC<{
 
   return (
     <div className={cn(
-      'px-4 md:px-6 pt-3 pb-4 flex flex-col gap-1 items-center min-h-[40vh]', 
+      'px-4 md:px-6 pt-3 pb-4 flex flex-col gap-1 items-center', 
       clx,
       r.current?.single?.scrollable ? SCROLL.scrollHeightClx : 'h-auto'
     )}>
@@ -229,13 +233,14 @@ const CarouselBuyCard: React.FC<{
           {...r.current.single} 
           mediaConstraint={MEDIA_CONSTRAINT}
           mobile={mobile} 
+          clx={selectorClx}
         /> 
       ) : (r.current?.multi && r.current.families && /* safegaurd for first render, etc. */ (
         <MultiFamilyUI 
           {...r.current.multi} 
           families={r.current.families} 
           parent={r.current.node}
-          clx='max-w-[475px]'
+          clx={selectorClx}
         />
       ))}
       <Buttons clx={cn(

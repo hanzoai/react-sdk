@@ -24,9 +24,7 @@ const CommerceDrawer: React.FC<PropsWithChildren &
   <Drawer open={open} onOpenChange={setOpen} modal={modal} {...rest}>
     <DrawerContent modal={modal} className={cn(
       'rounded-t-xl mt-6 pb-12 pt-6',
-      'h-initial', 
-      // h-auto min-h-[35vh] 
-      //'md:max-w-[550px] md:mx-auto lg:max-w-[50vw]', 
+      'h-full', // has to be there for snap-points to work 
       drawerClx
     )}>
       {children}

@@ -45,7 +45,7 @@ const AddToCartWidget: React.FC<{
             ui.addRecentSku(item.sku)
           }
           else if (quantity === 0) {
-            ui.removeRecentSku(item.sku)
+           // ui.removeRecentSku(item.sku)
           }
         }  
       )
