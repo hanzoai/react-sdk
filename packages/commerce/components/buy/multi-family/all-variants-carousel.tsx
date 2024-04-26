@@ -208,8 +208,8 @@ const AllVariantsCarousel: React.FC<MultiFamilySelectorProps> = ({
     const { showItemSwatches } = accessMultiSelectorOptions(selectorOptions)
     if (
       !showItemSwatches || 
-      !cmmc.currentFamily || 
-      cmmc.currentFamily.products.length === 1
+      !cmmc.currentFamily 
+      //|| cmmc.currentFamily.products.length === 1
     ) {
       return null
     }

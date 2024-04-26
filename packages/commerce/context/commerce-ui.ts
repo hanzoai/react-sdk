@@ -4,6 +4,7 @@ import {
   makeObservable, 
   observable, 
 } from 'mobx'
+import type { CommerceService } from '../types'
 
 
 
@@ -21,8 +22,10 @@ class CommerceUIStore implements CommerceUI {
 
   _buyOptionsSkuPath: string | undefined = undefined
   _recentSkus: string[] = []
+  _service: CommerceService
 
-  constructor() {
+  constructor(s: CommerceService) {
+    this._service = s
     makeObservable(this, {
       _buyOptionsSkuPath: observable,
       _recentSkus: observable.shallow, 
@@ -36,6 +39,7 @@ class CommerceUIStore implements CommerceUI {
   }
 
   showBuyOptions = (skuPath: string): void => {
+    this._service.setCurrentItem(undefined)
     this._buyOptionsSkuPath = skuPath
   } 
 

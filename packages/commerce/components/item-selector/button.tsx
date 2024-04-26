@@ -78,6 +78,7 @@ const ButtonItemSelector: React.FC<ItemSelectorProps> = observer(({
     showFamilyInOption,
     buttonType,
     horizButtons,
+    showButtonIfOnlyOne
   } = accessItemOptions(options)
 
   const showImage = buttonType !== 'text'
@@ -148,7 +149,7 @@ const ButtonItemSelector: React.FC<ItemSelectorProps> = observer(({
     )
   })
  
-  return items.length > 1 ? (
+  return showButtonIfOnlyOne || items.length > 1 ? (
     <RadioGroup
       className={cn( 
         (scrollable ? 'shrink min-h-0 gap-0' : (mobile ? 'gap-3' : 'gap-1')), 

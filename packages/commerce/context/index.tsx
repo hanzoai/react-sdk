@@ -45,12 +45,14 @@ const CommerceProvider: React.FC<PropsWithChildren & {
 }) => {
 
     // TODO: Inject Promo fixture here from siteDef
-  const serviceRef = useRef<CommerceContextValue>({
-    service: getInstance(families, rootNode, options, uiSpecs),
-    ui: new CommerceUIStore()
+
+  const service = getInstance(families, rootNode, options, uiSpecs)
+  const valueRef = useRef<CommerceContextValue>({
+    service,
+    ui: new CommerceUIStore(service)
   })
   return (
-    <CommerceContext.Provider value={serviceRef.current}>
+    <CommerceContext.Provider value={valueRef.current}>
       {children}
     </CommerceContext.Provider>
   )
