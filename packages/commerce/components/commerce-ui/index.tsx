@@ -25,9 +25,10 @@ const CommerceUIComponent: React.FC = observer(() => {
   const router = useRouter()
   const isCheckout = usePathname() === '/checkout'
 
-  const handleCheckout = () => {router.push('/checkout')}
+  const handleCheckout = () => {
+    router.push('/checkout')}
 
-    // Should only ever be called to close
+    // Should only ever be called internally to close
   const reallyOnlyCloseDrawer = (b: boolean) => {
     if (!b ) {
       ui.hideBuyOptions()

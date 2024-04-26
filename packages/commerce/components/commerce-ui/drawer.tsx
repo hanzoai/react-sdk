@@ -23,8 +23,7 @@ const CommerceDrawer: React.FC<PropsWithChildren &
     // @ts-ignore
   <Drawer open={open} onOpenChange={setOpen} modal={modal} {...rest}>
     <DrawerContent modal={modal} className={cn(
-      'rounded-t-xl mt-6 pb-12 pt-6',
-      'h-full', // has to be there for snap-points to work 
+      'rounded-t-xl mt-6 pt-6',
       drawerClx
     )}>
       {children}
