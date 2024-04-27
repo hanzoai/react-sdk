@@ -14,7 +14,7 @@ import { cn } from '@hanzo/ui/util'
 import { formatCurrencyValue } from '../../util'
 import type { LineItem } from '../../types'
 
-import AddToCartWidget from '../buy/add-to-cart-widget'
+import AddToCartWidget from '../add-to-cart-widget'
 
 interface ProductCardProps extends React.HTMLAttributes<HTMLDivElement> {
   item: LineItem

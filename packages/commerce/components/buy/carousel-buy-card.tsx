@@ -8,7 +8,6 @@ import React, {
 import { observer } from 'mobx-react-lite'
 
 import { cn } from '@hanzo/ui/util'
-import { Button } from '@hanzo/ui/primitives'
 
 import type { 
   ItemSelectorProps, 
@@ -29,7 +28,8 @@ import { CarouselItemSelector, ButtonItemSelector } from '../item-selector'
 import SingleFamilySelector from './single-family-selector'
 import { FamilyCarousel, AllVariantsCarousel } from './multi-family'
 
-import AddToCartWidget from './add-to-cart-widget'
+import AddToCartWidget from '../add-to-cart-widget'
+import CheckoutButton from '../checkout-button'
 
 const SCROLL = {
   scrollAfter: 5,
@@ -210,14 +210,7 @@ const CarouselBuyCard: React.FC<{
         className={buttonClx} 
       />
       {!cmmc.cartEmpty && (
-        <Button 
-          onClick={handleCheckout} 
-          variant='primary' 
-          rounded='lg' 
-          className={buttonClx}
-        >
-          Checkout
-        </Button>
+        <CheckoutButton handleCheckout={handleCheckout} className={buttonClx} />
       )}
     </div>
   ) : null))

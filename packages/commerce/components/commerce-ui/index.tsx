@@ -13,12 +13,10 @@ import { useCommerce, useCommerceUI } from '../../context'
 
 import CommerceDrawer from './drawer'
 import CarouselBuyCard from '../buy/carousel-buy-card'
+import CheckoutButton from '../checkout-button'
 
-//const foo = observable.box(true)
 
 const CommerceUIComponent: React.FC = observer(() => {
-
-//  const drawerOpenRef = useRef<IObservableValue<boolean>>(observable.box(false))
 
   const ui = useCommerceUI()
   const cmmc = useCommerce()
@@ -50,6 +48,9 @@ const CommerceUIComponent: React.FC = observer(() => {
         selectorClx='max-w-[475px]'
       />
     </CommerceDrawer>
+    {!cmmc.cartEmpty && !isCheckout && (
+      <CheckoutButton handleCheckout={handleCheckout} variant='primary' rounded='lg' className='min-w-[160px] sm:max-w-[320px] w-full fixed bottom-[20px] left-0 right-0 mx-auto' />
+    )}
   </>)
 })
 
@@ -57,11 +58,6 @@ export default CommerceUIComponent
 
 
 /*
-    {stateRef.current.value === 'closed' && !cmmc.cartEmpty && !isCheckout && (
-      <Button onClick={handleCheckout} variant='primary' rounded='lg' className='w-[160px] absolute bottom-[20px]' style={{right: '60px'}}>
-        {`Checkout (${cmmc.cartQuantity})`}
-      </Button>
-    )}
 
 //       <AnimatePresence>
 

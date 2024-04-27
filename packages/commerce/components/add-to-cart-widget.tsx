@@ -6,10 +6,10 @@ import { observer } from 'mobx-react-lite'
 import { Button, buttonVariants } from '@hanzo/ui/primitives'
 import { cn, type VariantProps } from '@hanzo/ui/util'
 
-import { Icons } from '../Icons'
-import type { LineItem } from '../../types'
-import { sendFBEvent, sendGAEvent } from '../../util/analytics'
-import { useCommerceUI } from '../..'
+import Icons from './Icons'
+import type { LineItem } from '../types'
+import { sendFBEvent, sendGAEvent } from '../util/analytics'
+import { useCommerceUI } from '..'
 
 const AddToCartWidget: React.FC<{ 
   item: LineItem

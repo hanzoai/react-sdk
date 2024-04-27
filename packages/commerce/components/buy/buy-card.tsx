@@ -19,7 +19,7 @@ import * as pathUtils from '../../service/path-utils'
 import { getFacetValuesMutator, ObsStringMutator } from '../../util'
 
 import NodeTabs from '../node-tabs'
-import AddToCartWidget from './add-to-cart-widget'
+import AddToCartWidget from '../add-to-cart-widget'
 
 const BuyCard: React.FC<{
   skuPath: string
