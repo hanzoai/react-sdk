@@ -41,18 +41,12 @@ const AddToCartWidget: React.FC<{
       reactionDisposer.current = reaction(
         () => (item.quantity),
         (quantity: number, previous: number) => {
-          if (quantity > previous && quantity > 0) {
-            ui.addRecentSku(item.sku)
-          }
-          else if (quantity === 0) {
-           // ui.removeRecentSku(item.sku)
-          }
+          ui.skuQuantityChanged(item.sku, quantity, previous)
         }  
       )
     }
     return () => {
       if (reactionDisposer.current) {
-        ui.removeRecentSku(item.sku)
         reactionDisposer.current()
       }  
     }

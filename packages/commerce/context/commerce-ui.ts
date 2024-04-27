@@ -13,28 +13,29 @@ interface CommerceUI {
   hideBuyOptions: () => void
   get buyOptionsSkuPath(): string | undefined
 
-  addRecentSku(s: string): void 
-  removeRecentSku(s: string): void 
-  get recentSku(): string | undefined
+  skuQuantityChanged(sku: string, val: number, prevVal: number): void 
+  get activeSku(): string | undefined
 }
 
 class CommerceUIStore implements CommerceUI {
 
+  static readonly TIMEOUT = 2500
   _buyOptionsSkuPath: string | undefined = undefined
-  _recentSkus: string[] = []
+  _activeSku: string | undefined = undefined
+  _lastActivity: number | undefined = undefined
   _service: CommerceService
 
   constructor(s: CommerceService) {
     this._service = s
     makeObservable(this, {
       _buyOptionsSkuPath: observable,
-      _recentSkus: observable.shallow, 
+      _activeSku: observable, 
       showBuyOptions: action,
       hideBuyOptions: action,
       buyOptionsSkuPath: computed,
-      addRecentSku: action,
-      removeRecentSku: action,
-      recentSku: computed
+      skuQuantityChanged: action,
+      tick: action,
+      activeSku: computed
     })
   }
 
@@ -51,20 +52,40 @@ class CommerceUIStore implements CommerceUI {
     return this._buyOptionsSkuPath
   } 
 
-  addRecentSku = (s: string): void  => {
-    this.removeRecentSku(s)
-    this._recentSkus.push(s)
-  } 
+  tick = () => {
+    if (
+      this._lastActivity 
+      && 
+      (Date.now() - this._lastActivity >= CommerceUIStore.TIMEOUT)
+    ) {
+      this._activeSku = undefined
+      this._lastActivity = undefined
+    }
+  }
 
-  removeRecentSku = (s: string): void  => {
-    const i = this._recentSkus.indexOf(s)
-    if (i !== -1) {
-      this._recentSkus.splice(i, 1)
+  skuQuantityChanged = (sku: string, val: number, oldVal: number, ): void  => {
+
+    if (val === 0) {
+      if (this._activeSku === sku) {
+        this._activeSku = undefined
+        this._lastActivity = undefined
+      }
+      // otherwise ignore
+    }
+    else if (val < oldVal) {
+      if (this._activeSku === sku) {
+        this._lastActivity = Date.now()
+      }
+      // otherwise ignore
+    }
+    else {
+        this._activeSku = sku
+        this._lastActivity = Date.now()
     }
   } 
 
-  get recentSku(): string | undefined {
-    return this._recentSkus.length === 0 ? undefined : this._recentSkus.slice(-1)[0]   
+  get activeSku(): string | undefined {
+    return this._activeSku
   }
 }
 

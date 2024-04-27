@@ -3,7 +3,8 @@ import React, {
   createContext, 
   useContext, 
   useRef, 
-  type PropsWithChildren 
+  type PropsWithChildren, 
+  useEffect
 } from 'react'
 
 // https://dev.to/ivandotv/mobx-server-side-rendering-with-next-js-4m18
@@ -44,13 +45,19 @@ const CommerceProvider: React.FC<PropsWithChildren & {
   uiSpecs
 }) => {
 
-    // TODO: Inject Promo fixture here from siteDef
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      (valueRef.current.ui as CommerceUIStore).tick()   
+    }, 250)  
+    return () => {clearInterval(intervalId)}
+  }, [])
 
+    // TODO: Inject Promo fixture here from siteDef
   const service = getInstance(families, rootNode, options, uiSpecs)
-  const valueRef = useRef<CommerceContextValue>({
-    service,
-    ui: new CommerceUIStore(service)
-  })
+  const ui = new CommerceUIStore(service)
+
+  const valueRef = useRef<CommerceContextValue>({service, ui})
+
   return (
     <CommerceContext.Provider value={valueRef.current}>
       {children}
@@ -63,3 +70,4 @@ export {
   useCommerceUI, 
   CommerceProvider
 }
+
