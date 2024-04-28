@@ -78,6 +78,7 @@ const CheckoutButton: React.FC<ButtonProps & {
   handleCheckout: () => void
   showQuantity?: boolean
   animateOnQuantityChange?: boolean
+  centerText?: boolean
 }> = ({
   handleCheckout,
   variant='primary',
@@ -85,6 +86,7 @@ const CheckoutButton: React.FC<ButtonProps & {
   className,
   showQuantity=true,
   animateOnQuantityChange=true,
+  centerText=true,
   ...rest
 }) => {
 
@@ -94,9 +96,13 @@ const CheckoutButton: React.FC<ButtonProps & {
       onClick={handleCheckout} 
       variant={variant}
       rounded={rounded}
-      className={cn(className, 'flex justify-between items-stretch', showQuantity ? '!px-2' : '')}
+      className={cn(
+        className, 
+        'flex justify-between items-stretch', 
+        showQuantity ? (centerText ? 'px-2' : 'px-3') : ''
+      )}
     >
-      {showQuantity && (
+      {showQuantity && centerText && (
         <IconAndQuantity 
           clx='invisible'
           iconClx='fill-fg-primary'
