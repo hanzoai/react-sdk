@@ -1,6 +1,6 @@
 import { observable, action, computed, makeObservable } from 'mobx'
 
-import type { LineItem, ObsLineItemRef } from '../../types'
+import type { LineItem, ObsLineItemRef } from '../types'
 
 class LineItemRef implements ObsLineItemRef {
 

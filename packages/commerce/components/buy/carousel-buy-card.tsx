@@ -29,7 +29,6 @@ import SingleFamilySelector from './single-family-selector'
 import { FamilyCarousel, AllVariantsCarousel } from './multi-family'
 
 import AddToCartWidget from '../add-to-cart-widget'
-import CheckoutButton from '../checkout-button'
 
 const SCROLL = {
   scrollAfter: 5,
@@ -52,19 +51,19 @@ const sortItems = (items: LineItem[], sort: 'asc' | 'desc' | 'none'): LineItem[]
 
 const CarouselBuyCard: React.FC<{
   skuPath: string
+  checkoutButton: React.ReactNode
   clx?: string
   selectorClx?: string
-  buttonClx?: string
+  addBtnClx?: string
   mobile?: boolean
-  handleCheckout: () => void
   onQuantityChanged?: (sku: string, oldV: number, newV: number) => void
 }> = ({
   skuPath,
+  checkoutButton,
   clx='',
   selectorClx='',
-  buttonClx='',
+  addBtnClx='',
   mobile=false,
-  handleCheckout,
   onQuantityChanged,
 }) => {
 
@@ -207,11 +206,9 @@ const CarouselBuyCard: React.FC<{
         registerAdd={false}
         onQuantityChanged={onQuantityChanged} 
         variant={cmmc.cartEmpty ? 'primary' : 'outline'}
-        className={buttonClx} 
+        className={addBtnClx} 
       />
-      {!cmmc.cartEmpty && (
-        <CheckoutButton handleCheckout={handleCheckout} className={buttonClx} />
-      )}
+      {!cmmc.cartEmpty && checkoutButton}
     </div>
   ) : null))
 
