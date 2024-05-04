@@ -74,4 +74,5 @@ export const capitalize = (str: string): string => (
 )
 
 export { default as spreadToTransform } from './spread-to-transform'
+export * from './step-animation'
 
