@@ -405,6 +405,9 @@ importers:
 
   packages/ui:
     dependencies:
+      '@hanzo/vaul-fork':
+        specifier: ^0.99.1
+        version: 0.99.1(@types/react-dom@18.3.0)(@types/react@18.3.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@hookform/resolvers':
         specifier: ^3.3.2
         version: 3.3.4(react-hook-form@7.51.4(react@18.3.1))
@@ -552,9 +555,6 @@ importers:
       validator:
         specifier: ^13.11.0
         version: 13.11.0
-      vaul:
-        specifier: ^0.9.0
-        version: 0.9.0(@types/react-dom@18.3.0)(@types/react@18.3.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       zod:
         specifier: 3.21.4
         version: 3.21.4
@@ -1312,6 +1312,12 @@ packages:
       react-hook-form: ^7.51.3
       validator: ^13.11.0
       zod: 3.21.4
+
+  '@hanzo/vaul-fork@0.99.1':
+    resolution: {integrity: sha512-34g2MLcElHMe+D75JNR5B6Eak8Vv0vo+A5M4kX6nmeCSlYh7w1WsueX5u32pF/V+W6pxzjuiLwdiOH8h3ObhOQ==}
+    peerDependencies:
+      react: ^18.3.1
+      react-dom: ^18.3.1
 
   '@hookform/resolvers@3.3.4':
     resolution: {integrity: sha512-o5cgpGOuJYrd+iMKvkttOclgwRW86EsWJZZRC23prf0uU2i48Htq4PuT73AVb9ionFyZrwYEITuOFGF+BydEtQ==}
@@ -7017,6 +7023,15 @@ snapshots:
       - '@types/react-dom'
       - date-fns
       - tailwindcss
+
+  '@hanzo/vaul-fork@0.99.1(@types/react-dom@18.3.0)(@types/react@18.3.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+    dependencies:
+      '@radix-ui/react-dialog': 1.0.5(@types/react-dom@18.3.0)(@types/react@18.3.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
+    transitivePeerDependencies:
+      - '@types/react'
+      - '@types/react-dom'
 
   '@hookform/resolvers@3.3.4(react-hook-form@7.51.3(react@18.3.1))':
     dependencies:
