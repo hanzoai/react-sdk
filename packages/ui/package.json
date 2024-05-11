@@ -1,6 +1,6 @@
 {
   "name": "@hanzo/ui",
-  "version": "3.7.0",
+  "version": "3.7.12",
   "description": "Library that contains shared UI primitives, support for a common design system, and other boilerplate support.",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
@@ -39,7 +39,8 @@
     "./style/": "./style/*",
     "./tailwind": "./tailwind/index.ts",
     "./types": "./types/index.ts",
-    "./util": "./util/index.ts"
+    "./util": "./util/index.ts",
+    "./util-client": "./util/index-client.ts"
   },
   "dependencies": {
     "@next/third-parties": "^14.1.0",
@@ -82,7 +83,7 @@
     "tailwind-merge": "^2.3.0",
     "tailwindcss-animate": "^1.0.7",
     "tailwindcss-interaction-media": "^0.1.0",
-    "@hanzo/vaul-fork": "^0.99.1"
+    "@hanzo/vaul-fork": "^0.99.10"
   },
   "peerDependencies": {
     "@hookform/resolvers": "^3.3.2",
@@ -95,7 +96,7 @@
     "react-dom": "^18.3.1",
     "react-hook-form": "^7.51.4",
     "validator": "^13.11.0",
-    "zod": "3.21.4"
+    "zod": "3.23.8"
   },
   "devDependencies": {
     "@mdx-js/loader": "^3.0.0",

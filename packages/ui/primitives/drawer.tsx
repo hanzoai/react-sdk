@@ -1,7 +1,7 @@
 'use client'
 
 import * as React from 'react'
-import { Drawer as DrawerPrimitive } from '@hanzo/vaul-fork'
+import { Drawer as DrawerPrimitive, useDrawerContext } from '@hanzo/vaul-fork'
 
 import { cn } from '../util'
 
@@ -18,6 +18,7 @@ Drawer.displayName = 'Drawer'
 
 const DrawerTrigger = DrawerPrimitive.Trigger
 const DrawerPortal = DrawerPrimitive.Portal
+const DrawerHandle = DrawerPrimitive.Handle
 const DrawerClose = DrawerPrimitive.Close
 
 const DrawerOverlay = React.forwardRef<
@@ -36,8 +37,15 @@ const DrawerContent = React.forwardRef<
   React.ElementRef<typeof DrawerPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof DrawerPrimitive.Content> & {
     overlayClx?: string
+    defaultHandle?: boolean
   }
->(({ className, children, overlayClx='', ...props }, ref) => {
+>(({ 
+  className, 
+  children, 
+  overlayClx='', 
+  defaultHandle=true,
+  ...props 
+ }, ref) => {
   
   return (
     <DrawerPortal>
@@ -52,7 +60,9 @@ const DrawerContent = React.forwardRef<
         )}
         {...props}
       >
-        <div className='absolute left-0 right-0 mx-auto top-2 h-2 w-[100px] rounded-full bg-level-3 shrink-0' />
+        {defaultHandle && (
+          <div className='absolute left-0 right-0 mx-auto top-2 h-2 w-[100px] rounded-full bg-level-3 shrink-0' />
+        )}
         {children}
       </DrawerPrimitive.Content>
     </DrawerPortal>
@@ -120,8 +130,10 @@ export {
   DrawerTrigger,
   DrawerClose,
   DrawerContent,
+  DrawerHandle,
   DrawerHeader,
   DrawerFooter,
   DrawerTitle,
   DrawerDescription,
+  useDrawerContext
 }
