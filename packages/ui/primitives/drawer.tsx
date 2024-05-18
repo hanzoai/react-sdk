@@ -1,7 +1,7 @@
 'use client'
 
 import * as React from 'react'
-import { Drawer as DrawerPrimitive, useDrawerContext } from '@hanzo/vaul-fork'
+import { Drawer as DrawerPrimitive } from '@hanzo/react-drawer'
 
 import { cn } from '../util'
 
@@ -134,6 +134,5 @@ export {
   DrawerHeader,
   DrawerFooter,
   DrawerTitle,
-  DrawerDescription,
-  useDrawerContext
+  DrawerDescription
 }

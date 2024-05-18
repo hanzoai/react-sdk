@@ -71,7 +71,6 @@ export {
   DrawerFooter,
   DrawerTitle,
   DrawerDescription,
-  useDrawerContext
 } from './drawer'
 
 export {
